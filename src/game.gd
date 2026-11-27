@@ -40,7 +40,9 @@ enum Game_Phases {
 enum Card_Types {
 	BB,
 	Surprise,
-	Item
+	Item,
+	Place,
+	Unknown
 }
 
 enum Clubs {
@@ -61,7 +63,10 @@ enum Clubs {
 	Sleepover,
 	Retro,
 	Storybook,
-	Art
+	Art,
+	Rock,
+	Stem,
+	Unknown
 }
 
 enum Zone_Flags {
@@ -85,33 +90,12 @@ enum Type_Flags {
 
 
 func get_club_from_name(club_name: String) -> Clubs:
-	var club_names = [
-		"Theater",
-		"Opposites",
-		"Glam",
-		"Glee",
-		"Hip Hop",
-		"Glitterati",
-		"Dance",
-		"Cosplay",
-		"Chill Out",
-		"Swim",
-		"Athletic",
-		"Pop",
-		"Spirit",
-		"Spooky",
-		"Sleepover",
-		"Retro",
-		"Storybook",
-		"Art"
-	]
-	
-	var club_num = club_names.find(club_name)
-	if club_num == -1:
-		print("Error: couldn't find club " + club_name)
-		return Clubs.Theater
-	return Clubs.get(club_name.replace(" ", "_"))
-	
+	var key = club_name.strip_edges().replace(" ", "_")
+	if Clubs.has(key):
+		return Clubs[key]
+	push_warning("Unknown club: " + club_name)
+	return Clubs.Unknown
+
 func get_card_type(card_type) -> Card_Types:
 	match card_type:
 		"Items":
@@ -120,7 +104,9 @@ func get_card_type(card_type) -> Card_Types:
 			return Card_Types.BB
 		"Surprise":
 			return Card_Types.Surprise
-	return Card_Types.BB
+		"Place":
+			return Card_Types.Place
+	return Card_Types.Unknown
 
 func get_game_phase(game_phase) -> Game_Phases:
 	match game_phase:
@@ -135,48 +121,66 @@ func get_game_phase(game_phase) -> Game_Phases:
 	return Game_Phases.Any_Phase
 
 func add_card_db(card_data):
-	if card_data[0] == "":
-		print("Error: Card has no number")
+	# Some numbered rows are placeholders; the final B.B. row has no phase column.
+	if card_data.size() < 8:
+		if not card_data.is_empty() and not card_data[0].strip_edges().is_empty():
+			push_warning("Incomplete card row: " + card_data[0])
 		return
-	if not card_data[0].contains("-"):
-		print("Error: Card doesn't have a valid number")
+	var card_number = card_data[0].strip_edges()
+	var card_name = card_data[1].strip_edges()
+	if card_name.is_empty():
 		return
-		
+	if not card_number.contains("-"):
+		push_warning("Invalid card number: " + card_number)
+		return
+	var card_type = get_card_type(card_data[2].strip_edges())
+	if card_type == Card_Types.Unknown:
+		push_warning("Unknown card type for " + card_number)
+		return
+	if card_type == Card_Types.Surprise and card_data.size() < 9:
+		push_warning("Missing Surprise phase: " + card_number)
+		return
+	if card_database.has(card_number):
+		push_warning("Duplicate card number: " + card_number)
+		return
+
 	var card_data_object = {
-		# card_number,Have,Name,type,rank,style,groove,text,club,phase
-		"number": card_data[0],
-		"name": card_data[1],
-		"type": get_card_type(card_data[2]),
+		"number": card_number,
+		"name": card_name,
+		"type": card_type,
 		"rank": int(card_data[3]),
 		"text": card_data[6]
 	}
-	
-	if card_data_object.type == Card_Types.BB:
+	if card_type == Card_Types.BB:
+		# Preserve unknown printed stats instead of inventing numeric values.
 		card_data_object.style = card_data[4]
 		card_data_object.groove = card_data[5]
-	
-	elif card_data_object.type == Card_Types.Surprise:
-		card_data_object.phase = get_game_phase(card_data[8])
-	
-	if card_data[8] != "":
-		card_data_object.club = get_club_from_name(card_data[7])
-	
-	card_database[card_data[0]] = card_data_object
-	
+		if not card_data[7].strip_edges().is_empty():
+			card_data_object.club = get_club_from_name(card_data[7])
+		else:
+			card_data_object.club = Clubs.Unknown
+	elif card_type == Card_Types.Surprise:
+		card_data_object.phase = get_game_phase(card_data[8].strip_edges())
+
+	card_database[card_number] = card_data_object
 
 func load_cardlist():
-	var csv = FileAccess.open("res://cardlist.txt",FileAccess.READ )
-	
-	if csv:
-		while not csv.eof_reached():
-			var line = csv.get_line()
-			var card_data = line.split("	")
-			add_card_db(card_data)
+	card_database.clear()
+	var csv = FileAccess.open("res://cardlist.txt", FileAccess.READ)
+	if csv == null:
+		push_error("Could not open cardlist.txt")
+		return
+	while not csv.eof_reached():
+		var line = csv.get_line()
+		if not line.strip_edges().is_empty():
+			add_card_db(line.split("\t"))
 
 func get_cards_from_deck(deck) -> Array[Card]:
 	var deck_objects : Array[Card]
 	for card_num in deck:
-		deck_objects.push_front(spawn_card(card_num))
+		var card = spawn_card(card_num)
+		if card != null:
+			deck_objects.push_front(card)
 	return deck_objects
 
 
@@ -197,6 +201,9 @@ func initialize_game(deck, deck2):
 	
 func spawn_card(card_number : String) -> Card:
 	var card_data = card_database.get(card_number)
+	if card_data == null:
+		push_warning("Unknown card number: " + card_number)
+		return null
 	
 	var card_object : Card
 	match card_data.type:
@@ -206,6 +213,9 @@ func spawn_card(card_number : String) -> Card:
 			card_object = load("res://src/cards/Surprise.tscn").instantiate()
 		Card_Types.Item:
 			card_object = load("res://src/cards/Item.tscn").instantiate()
+		_:
+			push_warning("No card scene for " + card_number)
+			return null
 	add_child(card_object)
 	card_object.populate(card_data)
 	return card_object
