@@ -35,7 +35,7 @@ Restore card scene population and preview a few individual cards, then inspect z
 
 ## Continuing work
 
-See [roadmap.md](roadmap.md) for the living checklist. Next: A3b, provenance and verification, with remaining manual edge checks retained. Do not start profile or gameplay work in the same checkpoint.
+See [roadmap.md](roadmap.md) for the living checklist. Next: P1, profile foundation, with remaining manual edge checks retained. Do not start profile or gameplay work in the same checkpoint.
 
 ## A1: Local-first catalogue migration (verified)
 
@@ -84,6 +84,20 @@ Owner-supplied log on Godot 4.8.beta5, restoration at f388570: editor import com
 
 Research branch da0d0c8 contains an archived January 4, 2022 digital configuration with 300 numbered cards (200 B.B., 88 Item, 12 Place; no Surprise entries), five B.B. stat tiers, structured effects, and tutorial strings with a minimum ten-card deck. This is evidence of a different implementation, not an authoritative replacement for printed rules. A concrete collision: digital 1-400 is Sports Stadium, tabletop 1-400 is rare Pop Heart in the owner's transcription. Keep current catalogue tabletop-only; future multi-edition identity must be namespaced and source-aware. In-game collection ownership is a separate concept from the historical digital edition. Research payloads remain on research, with no merge into restoration.
 
-## A3b: Provenance and structural validation (pending local acceptance)
+## A3b: Provenance and structural validation (core verified)
 
-Optional source and verification fields on each tabletop record; existing 400 files unchanged. Manifest explicitly declares tabletop. Typed and verification filters in developer workshop; sources searchable. Verified requires identity and source, and printed changes (including imports) or source edits revoke verified status without deleting evidence. No automatic claims of verification; no historical digital data imported. Added structural Python validator and a disposable Godot provenance fixture. Historical migration verifier now ignores optional metadata but still checks all original printed fields. Manual graphical review and regression pending. See catalogue-schema.md.
+Optional source and verification fields on each tabletop record; existing 400 files unchanged. Manifest explicitly declares tabletop. Typed and verification filters in developer workshop; sources searchable. Verified requires identity and source, and printed changes (including imports) or source edits revoke verified status without deleting evidence. No automatic claims of verification; no historical digital data imported. Added structural Python validator and a disposable Godot provenance fixture. Historical migration verifier now ignores optional metadata but still checks all original printed fields. Automated regression passed; manual graphical review remains. See catalogue-schema.md.
+
+### A3b local acceptance evidence
+
+Owner-supplied complete PowerShell log at 16a1726, Godot 4.8.beta5:
+
+```text
+LOL_VALIDATE edition=tabletop slots=400 typed=311 incomplete=89 verified=0 failures=0
+LOL_WORKSHOP counts={ "B.B.": 161, "Surprise": 75, "Item": 70, "Place": 5 } failures=0
+LOL_ARCHIVIST slots=400 failures=0
+LOL_RECONCILIATION failures=0
+LOL_PROVENANCE edition=tabletop failures=0
+```
+
+All five commands exited 0. Working tree clean. Only expected untyped warnings for 1-055 and 1-244. Automated A3b acceptance complete; manual provenance UI and earlier reconciliation/cancel edge checks remain. No claims of actual physical verification. P1 next; preserve namespace and ownership independence.

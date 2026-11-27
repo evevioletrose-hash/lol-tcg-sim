@@ -45,16 +45,18 @@ Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28
 
 ### A3 — Reconcile external data
 
-A3a core verified at f388570; A3b implemented, awaiting local verification.
+A3a core verified at f388570; A3b core verified at 16a1726.
 - [x] Import TSV/CSV exports (no online dependency).
 - [x] Match by stable card ID, preview field-by-field changes, preserve existing values unless explicitly replaced, and allow skip/accept choices.
 - [x] Block duplicate/unknown IDs and stale or external-file conflicts; validate selected records before writing. Incomplete definitions remain visible in the archivist.
 - [x] Export interoperable TSV/CSV; document limitations for richer fields.
 - [x] Automated round trips, selective save, no-op, stale snapshot, external conflict and duplicate/unknown IDs passed. Source equality restored after discarding owner's intentional test edit.
 - [ ] Manual reconciliation-window review and cancel/confirmation checks. No bulk transaction guarantee; each successful save persists.
-- [ ] A3b: optional source references and verification status (unverified/transcribed/verified/conflicting), independent of personal ownership; complete-only and verification filters.
-- [ ] Distinguish physical tabletop edition from recovered original digital edition in provenance. Do not import digital definitions into the tabletop catalogue by ID alone.
-- [ ] Add a structural catalogue validator for routine regression; retain migration equality verifier as a historical snapshot check only.
+- [x] A3b: optional source references and verification status (unverified/transcribed/verified/conflicting), independent of personal ownership; typed-only and verification filters.
+- [x] Distinguish physical tabletop edition from recovered original digital edition in provenance. Do not import digital definitions into the tabletop catalogue by ID alone.
+- [x] Add a structural catalogue validator for routine regression; retain migration equality verifier as a historical snapshot check only.
+
+- [ ] Manual graphical provenance controls and combined filter review.
 
 ## P — Profiles and two collections
 
@@ -120,8 +122,8 @@ A3a core verified at f388570; A3b implemented, awaiting local verification.
 
 1. A1: schema + lossless migration (verified).
 2. A2: editable workshop + save/reload (core verified; manual edge checks remain).
-3. A3a: import reconciliation (core verified); A3b: provenance and verification (next).
-4. P1–P3: profiles and independent inventories.
+3. A3a: import reconciliation (core verified); A3b: provenance and verification (core verified).
+4. P1: profile foundation (next); P2–P3: independent collections.
 5. Choose the next slice together (presentation, deck building or test pack). Rules work remains independent and may be interleaved in small checkpoints.
 
 At the end of each checkpoint: update this file and the restoration journal; keep the next action small enough for a single shared review.
