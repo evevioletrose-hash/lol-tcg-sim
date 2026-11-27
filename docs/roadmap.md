@@ -19,7 +19,8 @@ Living checklist. Current branch: restoration. Original main is our historical b
 - [x] R3: Reconcile Godot 4.8 migration and card mesh UID references.
 - [x] R4: Restore searchable workshop, type filters and 2D previews for B.B., Item and Surprise; text-only Places.
 - [x] R5: Verify definition population (306 scenes + 5 text-only entries) and graphical workshop launch.
-- [ ] R6: Record full final headless layout/test log if useful; visually inspect the migrated 3D mesh before modifying it.
+- [x] R6a: Record final headless layout/test verification (66e0ab5, zero failures).
+- [ ] R6b: Visually inspect the migrated 3D mesh before modifying it.
 
 Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28c6c14 (graphical workshop screenshot and successful graphical exit). Two known incomplete named records remain. See [restoration.md](restoration.md).
 
@@ -30,9 +31,9 @@ Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28
 - [x] Draft versioned schema and stable IDs; see [catalogue-schema.md](catalogue-schema.md). Review together at checkpoint close.
 - [x] Create deterministic importer and one JSON per ID under data/cards/; preserve original cardlist.txt.
 - [x] Store all 400 slots, including incomplete records; runtime projection retains 311 typed definitions.
-- [x] Route game and workshop through the same catalogue service; preserve existing runtime interface. Runtime verification pending.
-- [ ] Compare every migrated value and original typed-card count; verify 400 unique IDs, 311 typed entries, 89 incomplete slots; rerun card workshop tests.
-- [ ] Review resulting schema and Git diffs together before moving to A2.
+- [x] Route game and workshop through the same catalogue service; preserve existing runtime interface. Runtime verification passed.
+- [x] Compare every migrated value and original typed-card count; verify 400 unique IDs, 311 typed entries, 89 incomplete slots; rerun card workshop tests. Local evidence at 66e0ab5: 3,600 fields verified, zero failures, import and workshop exit 0.
+- [x] Review schema and migration results; A1 accepted for continuation. Keep schema v1 extensible; no premature normalization of unknown values.
 
 ### A2 — Edit and save
 - [ ] Show all slots, with complete/incomplete and verification filters.
@@ -111,8 +112,8 @@ Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28
 
 ## Immediate queue
 
-1. A1: schema + lossless migration.
-2. A2: editable workshop + save/reload.
+1. A1: schema + lossless migration (verified).
+2. A2: editable workshop + save/reload (next).
 3. A3: import reconciliation.
 4. P1–P3: profiles and independent inventories.
 5. Choose the next slice together (presentation, deck building or test pack). Rules work remains independent and may be interleaved in small checkpoints.

@@ -35,8 +35,22 @@ Restore card scene population and preview a few individual cards, then inspect z
 
 ## Continuing work
 
-See [roadmap.md](roadmap.md) for the living checklist. Next: A1, lossless local catalogue migration. Do not start profile or gameplay work in the same checkpoint.
+See [roadmap.md](roadmap.md) for the living checklist. Next: A2, editable workshop. Do not start profile or gameplay work in the same checkpoint.
 
-## A1: Local-first catalogue migration (awaiting local verification)
+## A1: Local-first catalogue migration (verified)
 
-400 versioned JSON records and an ordered manifest generated from the original TSV. All 3600 fields checked in memory against the source (including the missing final phase column if present); typed counts {"BB":161,"Surprise":75,"Items":70,"Place":5}. Original TSV unchanged. Catalogue loader is separate from Game and feeds the existing runtime projection. Python snapshot verifier and Godot smoke tests must pass locally before closing A1. No editing or profiles yet. See [catalogue-schema.md](catalogue-schema.md).
+400 versioned JSON records and an ordered manifest generated from the original TSV. All 3600 fields checked in memory against the source (including the missing final phase column if present); typed counts {"BB":161,"Surprise":75,"Items":70,"Place":5}. Original TSV unchanged. Catalogue loader is separate from Game and feeds the existing runtime projection. Python snapshot verifier and Godot smoke tests passed locally at 66e0ab5. No editing or profiles yet. See [catalogue-schema.md](catalogue-schema.md).
+
+### A1 local acceptance evidence
+
+Owner-supplied PowerShell results on Godot 4.8.beta5, HEAD 66e0ab5:
+
+```text
+LOL_MIGRATION slots=400 typed=311 incomplete=89 fields_verified=3600 failures=0
+LOL_CATALOGUE slots=400 typed=311 incomplete=89
+LOL_RESTORATION catalogue=311
+LOL_WORKSHOP_LAYOUT display=headless viewport=[P: (0.0, 0.0), S: (2.0, 2.0)] root=[P: (0.0, 0.0), S: (1152.0, 648.0)] title=[P: (16.0, 12.0), S: (1120.0, 36.0)] list=[P: (16.0, 153.0), S: (340.0, 483.0)] items=311 filter=0 visible=true
+LOL_WORKSHOP counts={ "B.B.": 161, "Surprise": 75, "Item": 70, "Place": 5 } failures=0
+```
+
+Migration verifier, editor import, and workshop test all exited 0. Expected untyped warnings for 1-055 and 1-244. Only untracked file: Godot-generated src/cards/card_catalogue.gd.uid; preserve via local commit. A1 is sealed; A2 is next. Graphical layout after migration has not been separately re-tested.
