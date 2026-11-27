@@ -38,13 +38,17 @@ func _ready() -> void:
 		return
 
 	var library = game.open_library()
-	if "--card-workshop-test" in OS.get_cmdline_user_args():
-		if library == null or not library.has_method("run_smoke_test"):
-			push_error("LOL_WORKSHOP initialization failed")
+	var testing = "--card-workshop-test" in OS.get_cmdline_user_args()
+	if library == null or not library.has_method("run_smoke_test"):
+		push_error("LOL_WORKSHOP initialization failed")
+		if testing:
 			get_tree().quit(1)
-			return
-		# Containers lay out their children on deferred notifications.
-		await get_tree().process_frame
-		await get_tree().process_frame
+		return
+	# Containers lay out their children on deferred notifications.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if testing:
 		get_tree().quit(library.run_smoke_test())
+	else:
+		library.report_layout()
 	# game.initialize_game(item_deck, sample_deck)

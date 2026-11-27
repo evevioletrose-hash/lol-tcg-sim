@@ -7,8 +7,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+grow_horizontal = 1
+grow_vertical = 1
 script = ExtResource("1_y0lxy")
 
 [node name="Margin" type="MarginContainer" parent="."]
@@ -16,6 +16,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 1
+grow_vertical = 1
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_top = 12

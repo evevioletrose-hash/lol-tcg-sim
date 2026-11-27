@@ -16,21 +16,37 @@ func setup(source: Game) -> void:
 	game = source
 	get_viewport().size_changed.connect(_sync_viewport_layout)
 	_sync_viewport_layout()
-	type_filter.add_item("All types")
+	type_filter.add_item("All types", 0)
 	type_filter.add_item("B.B.", Game.Card_Types.BB + 1)
 	type_filter.add_item("Item", Game.Card_Types.Item + 1)
 	type_filter.add_item("Surprise", Game.Card_Types.Surprise + 1)
 	type_filter.add_item("Place", Game.Card_Types.Place + 1)
+	type_filter.select(0)
 	search.text_changed.connect(_on_search_changed)
 	type_filter.item_selected.connect(_on_filter_changed)
 	cards.item_selected.connect(_on_card_selected)
 	refresh_list()
 
+func layout_size() -> Vector2:
+	# Headless DisplayServer has a tiny dummy window; use a virtual test area.
+	if DisplayServer.get_name() == "headless":
+		return Vector2(1152, 648)
+	return get_viewport().get_visible_rect().size
+
 func _sync_viewport_layout() -> void:
-	# Explicitly size the root against the viewport, not the Node2D board.
 	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	grow_horizontal = Control.GROW_DIRECTION_END
+	grow_vertical = Control.GROW_DIRECTION_END
+	size = layout_size()
 	position = Vector2.ZERO
-	size = get_viewport_rect().size
+
+func report_layout() -> void:
+	var title: Label = $Margin/Layout/Title
+	print("LOL_WORKSHOP_LAYOUT display=%s viewport=%s root=%s title=%s list=%s items=%d filter=%d visible=%s" % [
+		DisplayServer.get_name(), get_viewport().get_visible_rect(), get_global_rect(),
+		title.get_global_rect(), cards.get_global_rect(), cards.item_count,
+		type_filter.get_selected_id(), is_visible_in_tree()
+	])
 
 func _on_search_changed(_value: String) -> void:
 	refresh_list()
@@ -77,7 +93,7 @@ func refresh_list() -> void:
 		if filter_id > 0 and data.type != filter_id - 1:
 			continue
 		var searchable = "%s %s %s %s %s" % [id, data.name, club_name(data), data.text, phase_name(data)]
-		if not searchable.to_lower().contains(query):
+		if not query.is_empty() and not searchable.to_lower().contains(query):
 			continue
 		var index = cards.add_item("%s  %s" % [id, data.name])
 		cards.set_item_metadata(index, id)
@@ -130,11 +146,8 @@ func run_smoke_test() -> int:
 	var counts: Dictionary = {}
 	var failures: Array[String] = []
 	var title: Label = $Margin/Layout/Title
-	var viewport_rect = get_viewport_rect()
-	print("LOL_WORKSHOP_LAYOUT viewport=%s root=%s title=%s list=%s visible=%s" % [
-		viewport_rect, get_global_rect(), title.get_global_rect(),
-		cards.get_global_rect(), is_visible_in_tree()
-	])
+	var viewport_rect = Rect2(Vector2.ZERO, layout_size())
+	report_layout()
 	if not is_visible_in_tree() or size.x <= 0 or size.y <= 0:
 		failures.append("Workshop root is hidden or has no size")
 	if not title.is_visible_in_tree() or not viewport_rect.intersects(title.get_global_rect()):
@@ -143,6 +156,30 @@ func run_smoke_test() -> int:
 		failures.append("Catalogue has no layout area")
 	if cards.item_count != game.card_database.size():
 		failures.append("Initial catalogue list is incomplete")
+	if not viewport_rect.encloses(get_global_rect()):
+		failures.append("Workshop root lies outside layout area")
+	if not viewport_rect.intersects(cards.get_global_rect()):
+		failures.append("Catalogue list lies outside layout area")
+	# Exercise filters through the same refresh path used by signals.
+	for index in range(1, type_filter.item_count):
+		type_filter.select(index)
+		refresh_list()
+		var wanted = type_filter.get_selected_id() - 1
+		var expected = 0
+		for data in game.card_database.values():
+			if data.type == wanted:
+				expected += 1
+		if cards.item_count != expected:
+			failures.append("Type filter count mismatch: " + type_name(wanted))
+	type_filter.select(0)
+	search.text = "1-001"
+	refresh_list()
+	if cards.item_count != 1 or selected_id != "1-001":
+		failures.append("Card ID search failed")
+	search.text = ""
+	refresh_list()
+	if cards.item_count != game.card_database.size():
+		failures.append("Clearing search failed")
 	for id in game.card_database:
 		var data: Dictionary = game.card_database[id]
 		show_card(id)
@@ -163,7 +200,7 @@ func run_smoke_test() -> int:
 					failures.append(id + ": stat mismatch")
 			if preview.get_node("Card/Text/card_text").text != data.text:
 				failures.append(id + ": effect text mismatch")
-	clear_preview()
+	refresh_list()
 	if counts != {"B.B.": 161, "Item": 70, "Surprise": 75, "Place": 5}:
 		failures.append("Unexpected catalogue counts")
 	for failure in failures:
