@@ -35,7 +35,7 @@ Restore card scene population and preview a few individual cards, then inspect z
 
 ## Continuing work
 
-See [roadmap.md](roadmap.md) for the living checklist. Next: A2, editable workshop. Do not start profile or gameplay work in the same checkpoint.
+See [roadmap.md](roadmap.md) for the living checklist. Next: A3, import reconciliation, with A2 manual edge checks retained. Do not start profile or gameplay work in the same checkpoint.
 
 ## A1: Local-first catalogue migration (verified)
 
@@ -55,6 +55,19 @@ LOL_WORKSHOP counts={ "B.B.": 161, "Surprise": 75, "Item": 70, "Place": 5 } fail
 
 Migration verifier, editor import, and workshop test all exited 0. Expected untyped warnings for 1-055 and 1-244. Only untracked file: Godot-generated src/cards/card_catalogue.gd.uid; preserve via local commit. A1 is sealed; A2 is next. Graphical layout after migration has not been separately re-tested.
 
-## A2: Archivist editor (implementation pending local acceptance)
+## A2: Archivist editor (core verified)
 
-Launch with `-- --catalogue-editor` in the Godot editor build. Normal startup remains read-only. All numbered slots are searchable; incomplete filter shows slots without runtime definitions. Drafts update preview using the shared factory without altering runtime data, save/revert unlocks navigation, closing prompts before discarding. Saves validate fields, detect changed disk records, write a temporary sibling and replace the original without deleting it first. Partial transcriptions remain legal; hidden type-specific fields are preserved. A test uses a disposable user:// copy of 1-055, not real catalogue data. Run `-- --catalogue-editor-test` and the original `-- --card-workshop-test`. Verify actual UI and Windows replacement behavior before checking off A2. Verification metadata and external reconciliation remain A3; profile data remains separate.
+Launch with `-- --catalogue-editor` in the Godot editor build. Normal startup remains read-only. All numbered slots are searchable; incomplete filter shows slots without runtime definitions. Drafts update preview using the shared factory without altering runtime data, save/revert unlocks navigation, closing prompts before discarding. Saves validate fields, detect changed disk records, write a temporary sibling and replace the original without deleting it first. Partial transcriptions remain legal; hidden type-specific fields are preserved. A test uses a disposable user:// copy of 1-055, not real catalogue data. Run `-- --catalogue-editor-test` and the original `-- --card-workshop-test`. Owner inspected graphical UI; Windows replacement on a disposable fixture passed. Real developer-file save and dirty-close/conflict edge checks remain. Verification metadata and external reconciliation remain A3; profile data remains separate.
+
+### A2 local acceptance evidence
+
+Owner-supplied log at 40051ed, Godot 4.8.beta5:
+
+```text
+LOL_CATALOGUE slots=400 typed=311 incomplete=89
+LOL_WORKSHOP counts={ "B.B.": 161, "Surprise": 75, "Item": 70, "Place": 5 } failures=0
+LOL_ARCHIVIST slots=400 failures=0
+LOL_MIGRATION slots=400 typed=311 incomplete=89 fields_verified=3600 failures=0
+```
+
+All three checks exited 0. Working tree clean. Owner inspected editor and reported satisfaction with the graphical interface. Fixture save/replace exercised on Windows in user://; source data unchanged. No claim that every interaction or actual res:// save has been manually tested. Expected warnings for two untyped records. A2 core accepted; A3 next, with deferred manual checks and verification filtering recorded in roadmap. Catalogue UID was preserved in ea1b2e4.

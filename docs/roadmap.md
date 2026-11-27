@@ -35,12 +35,13 @@ Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28
 - [x] Compare every migrated value and original typed-card count; verify 400 unique IDs, 311 typed entries, 89 incomplete slots; rerun card workshop tests. Local evidence at 66e0ab5: 3,600 fields verified, zero failures, import and workshop exit 0.
 - [x] Review schema and migration results; A1 accepted for continuation. Keep schema v1 extensible; no premature normalization of unknown values.
 
-### A2 — Edit and save
-- [ ] Show all slots, with complete/incomplete and verification filters.
-- [ ] Editable card identity fields, type-specific fields, rank, club, printed stats, text; live preview where a supported type exists.
-- [ ] Save/revert, unsaved-change protection, field validation; unknown data remains editable.
-- [ ] Save to the canonical local dataset with atomic writes and explicit developer/editor mode; no user collection fields in canonical records.
-- [ ] Test save/reload, preview refresh, switching records, invalid input and cancel; ensure edits touch only intended files.
+### A2 — Edit and save (core verified)
+- [x] Show all slots, with all-types, per-type and incomplete filters. Complete-only and verification filters can follow with A3.
+- [x] Editable card fields, type-specific fields, rank, club, printed stats, text; live preview where a supported type exists.
+- [x] Save/revert, field validation, and unsaved-change protection implemented; unknown data remains editable.
+- [x] Save to canonical local dataset with same-directory verified temporary write and replacement; explicit developer/editor mode; no profile fields.
+- [x] Local regression and fixture test passed at 40051ed: draft isolation, preview, invalid rank, revert, replacement, reload, runtime refresh and source preservation. Owner inspected graphical editor.
+- [ ] Manual edge checks: dirty selection/close confirmation, external-file conflict, real developer-file save and diff review when first transcribing. Do not change actual data merely to test.
 
 ### A3 — Reconcile external data
 - [ ] Import TSV/CSV exports of the original spreadsheet (no online dependency).
@@ -113,8 +114,8 @@ Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28
 ## Immediate queue
 
 1. A1: schema + lossless migration (verified).
-2. A2: editable workshop + save/reload (next).
-3. A3: import reconciliation.
+2. A2: editable workshop + save/reload (core verified; manual edge checks remain).
+3. A3: import reconciliation (next).
 4. P1–P3: profiles and independent inventories.
 5. Choose the next slice together (presentation, deck building or test pack). Rules work remains independent and may be interleaved in small checkpoints.
 
