@@ -45,13 +45,16 @@ Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28
 
 ### A3 — Reconcile external data
 
-A3a: import/export and field reconciliation implemented, pending local verification. A3b: source references and verification filters after acceptance.
-- [ ] Import TSV/CSV exports of the original spreadsheet (no online dependency).
-- [ ] Match by stable card ID, preview field-by-field changes, preserve existing values unless explicitly replaced, and allow skip/accept choices.
-- [ ] Flag duplicate IDs, conflicts and incomplete records. No silent destructive bulk import.
-- [ ] Export interoperable TSV/CSV; document limitations for richer fields.
-- [ ] Add optional source references and verification status (e.g. unverified/transcribed/verified/conflicting), independent of personal ownership.
-- [ ] Test round trip, conflicts, cancellation and no-op imports.
+A3a core verified at f388570; A3b is next.
+- [x] Import TSV/CSV exports (no online dependency).
+- [x] Match by stable card ID, preview field-by-field changes, preserve existing values unless explicitly replaced, and allow skip/accept choices.
+- [x] Block duplicate/unknown IDs and stale or external-file conflicts; validate selected records before writing. Incomplete definitions remain visible in the archivist.
+- [x] Export interoperable TSV/CSV; document limitations for richer fields.
+- [x] Automated round trips, selective save, no-op, stale snapshot, external conflict and duplicate/unknown IDs passed. Source equality restored after discarding owner's intentional test edit.
+- [ ] Manual reconciliation-window review and cancel/confirmation checks. No bulk transaction guarantee; each successful save persists.
+- [ ] A3b: optional source references and verification status (unverified/transcribed/verified/conflicting), independent of personal ownership; complete-only and verification filters.
+- [ ] Distinguish physical tabletop edition from recovered original digital edition in provenance. Do not import digital definitions into the tabletop catalogue by ID alone.
+- [ ] Add a structural catalogue validator for routine regression; retain migration equality verifier as a historical snapshot check only.
 
 ## P — Profiles and two collections
 
@@ -117,7 +120,7 @@ A3a: import/export and field reconciliation implemented, pending local verificat
 
 1. A1: schema + lossless migration (verified).
 2. A2: editable workshop + save/reload (core verified; manual edge checks remain).
-3. A3: import reconciliation (next).
+3. A3a: import reconciliation (core verified); A3b: provenance and verification (next).
 4. P1–P3: profiles and independent inventories.
 5. Choose the next slice together (presentation, deck building or test pack). Rules work remains independent and may be interleaved in small checkpoints.
 

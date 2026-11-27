@@ -35,7 +35,7 @@ Restore card scene population and preview a few individual cards, then inspect z
 
 ## Continuing work
 
-See [roadmap.md](roadmap.md) for the living checklist. Next: A3, import reconciliation, with A2 manual edge checks retained. Do not start profile or gameplay work in the same checkpoint.
+See [roadmap.md](roadmap.md) for the living checklist. Next: A3b, provenance and verification, with remaining manual edge checks retained. Do not start profile or gameplay work in the same checkpoint.
 
 ## A1: Local-first catalogue migration (verified)
 
@@ -72,6 +72,14 @@ LOL_MIGRATION slots=400 typed=311 incomplete=89 fields_verified=3600 failures=0
 
 All three checks exited 0. Working tree clean. Owner inspected editor and reported satisfaction with the graphical interface. Fixture save/replace exercised on Windows in user://; source data unchanged. No claim that every interaction or actual res:// save has been manually tested. Expected warnings for two untyped records. A2 core accepted; A3 next, with deferred manual checks and verification filtering recorded in roadmap. Catalogue UID was preserved in ea1b2e4.
 
-## A3a: Spreadsheet reconciliation (pending local verification)
+## A3a: Spreadsheet reconciliation (core verified)
 
-Developer archivist toolbar opens CSV/TSV import and export. Preview shows per-card local/incoming field differences; no fields selected by default. Blank-fill shortcut, explicit field acceptance, no-op and cancel, duplicate and unknown ID rejection, preflight validation and external-change checks. No canonical source or profile changes during tests. Test `-- --catalogue-reconciliation-test` exercises both export round trips, original TSV literal quotes, multiline quoted text, selective save, no-op, stale baseline, external change, duplicate and unknown IDs. Actual graphical interaction pending. Source references and verification filtering deferred to A3b.
+Developer archivist toolbar opens CSV/TSV import and export. Preview shows per-card local/incoming field differences; no fields selected by default. Blank-fill shortcut, explicit field acceptance, no-op and cancel, duplicate and unknown ID rejection, preflight validation and external-change checks. No canonical source or profile changes during tests. Test `-- --catalogue-reconciliation-test` exercises both export round trips, original TSV literal quotes, multiline quoted text, selective save, no-op, stale baseline, external change, duplicate and unknown IDs. Actual reconciliation-window interaction remains pending. Source references and verification filtering deferred to A3b.
+
+### A3a local acceptance evidence
+
+Owner-supplied log on Godot 4.8.beta5, restoration at f388570: editor import completed, LOL_WORKSHOP failures=0, LOL_ARCHIVIST slots=400 failures=0, LOL_RECONCILIATION failures=0. The first migration verifier invocation stopped on a changed 1-010.json. Owner confirmed this was an intentional test edit and explicitly restored only that file; repeat verifier printed LOL_MIGRATION slots=400 typed=311 incomplete=89 fields_verified=3600 failures=0. Only two generated script UID files remained untracked. This establishes a real developer-file modification as well as fixture-based verification; exact edit content and manual reconciliation UI behavior were not inspected. Final exit codes from the earlier combined run were not captured. Keep snapshot equality out of ordinary regression once intentional corrections begin.
+
+### Edition boundary from parallel research
+
+Research branch da0d0c8 contains an archived January 4, 2022 digital configuration with 300 numbered cards (200 B.B., 88 Item, 12 Place; no Surprise entries), five B.B. stat tiers, structured effects, and tutorial strings with a minimum ten-card deck. This is evidence of a different implementation, not an authoritative replacement for printed rules. A concrete collision: digital 1-400 is Sports Stadium, tabletop 1-400 is rare Pop Heart in the owner's transcription. Keep current catalogue tabletop-only; future multi-edition identity must be namespaced and source-aware. In-game collection ownership is a separate concept from the historical digital edition. Research payloads remain on research, with no merge into restoration.
