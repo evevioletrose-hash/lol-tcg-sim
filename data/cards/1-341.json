@@ -1,0 +1,11 @@
+{
+  "id": "1-341",
+  "name": "Theater Hat",
+  "type": "Items",
+  "rank": "1",
+  "style": "",
+  "groove": "",
+  "text": " +1 Style AND counts as Theater Club.",
+  "club": "Theater",
+  "phase": ""
+}

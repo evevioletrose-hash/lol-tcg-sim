@@ -36,3 +36,7 @@ Restore card scene population and preview a few individual cards, then inspect z
 ## Continuing work
 
 See [roadmap.md](roadmap.md) for the living checklist. Next: A1, lossless local catalogue migration. Do not start profile or gameplay work in the same checkpoint.
+
+## A1: Local-first catalogue migration (awaiting local verification)
+
+400 versioned JSON records and an ordered manifest generated from the original TSV. All 3600 fields checked in memory against the source (including the missing final phase column if present); typed counts {"BB":161,"Surprise":75,"Items":70,"Place":5}. Original TSV unchanged. Catalogue loader is separate from Game and feeds the existing runtime projection. Python snapshot verifier and Godot smoke tests must pass locally before closing A1. No editing or profiles yet. See [catalogue-schema.md](catalogue-schema.md).

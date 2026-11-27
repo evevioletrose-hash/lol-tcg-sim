@@ -26,11 +26,11 @@ Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28
 ## A — Card Archivist (next)
 
 ### A1 — Lossless catalogue migration
-- [ ] Review actual TSV columns and original entries, including 87 unnamed slots and two named but untyped slots.
-- [ ] Agree a small versioned schema and stable card ID (e.g. 1-001). Distinguish unknown, absent, and zero; retain original printed text and raw imported values where needed.
-- [ ] Create a deterministic importer for existing TSV and a local JSON dataset (proposed: one file per ID under data/cards/). Keep original cardlist.txt as a provenance snapshot.
-- [ ] Store all 400 slots, including incomplete records. Expose usable definitions separately from incomplete records.
-- [ ] Route game and workshop through the same catalogue service; preserve existing runtime interface during migration where practical.
+- [x] Review actual TSV columns and original entries, including 87 unnamed slots and two named but untyped slots.
+- [x] Draft versioned schema and stable IDs; see [catalogue-schema.md](catalogue-schema.md). Review together at checkpoint close.
+- [x] Create deterministic importer and one JSON per ID under data/cards/; preserve original cardlist.txt.
+- [x] Store all 400 slots, including incomplete records; runtime projection retains 311 typed definitions.
+- [x] Route game and workshop through the same catalogue service; preserve existing runtime interface. Runtime verification pending.
 - [ ] Compare every migrated value and original typed-card count; verify 400 unique IDs, 311 typed entries, 89 incomplete slots; rerun card workshop tests.
 - [ ] Review resulting schema and Git diffs together before moving to A2.
 

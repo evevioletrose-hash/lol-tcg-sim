@@ -31,6 +31,10 @@ func _ready() -> void:
 	var game = preload("res://src/game.tscn").instantiate()
 	add_child(game)
 	game.load_cardlist()
+	if not game.catalogue_loaded:
+		push_error("LOL_CATALOGUE load failed")
+		get_tree().quit(1)
+		return
 	print("LOL_RESTORATION catalogue=%d" % game.card_database.size())
 	if "--board" in OS.get_cmdline_user_args():
 		game.get_node("phasetext").text = "Restoration"

@@ -5,6 +5,8 @@ class_name Game
 
 
 var card_database = {}
+var catalogue = preload("res://src/cards/card_catalogue.gd").new()
+var catalogue_loaded: bool = false
 
 
 @onready
@@ -166,14 +168,19 @@ func add_card_db(card_data):
 
 func load_cardlist():
 	card_database.clear()
-	var csv = FileAccess.open("res://cardlist.txt", FileAccess.READ)
-	if csv == null:
-		push_error("Could not open cardlist.txt")
+	catalogue_loaded = catalogue.load_records()
+	if not catalogue_loaded:
+		for problem in catalogue.errors:
+			push_error(problem)
 		return
-	while not csv.eof_reached():
-		var line = csv.get_line()
-		if not line.strip_edges().is_empty():
-			add_card_db(line.split("\t"))
+	var ids = catalogue.records.keys()
+	ids.sort()
+	for id in ids:
+		add_card_db(catalogue.legacy_row(catalogue.records[id]))
+	print("LOL_CATALOGUE slots=%d typed=%d incomplete=%d" % [
+		catalogue.records.size(), card_database.size(),
+		catalogue.records.size() - card_database.size()
+	])
 
 func get_cards_from_deck(deck) -> Array[Card]:
 	var deck_objects : Array[Card]
