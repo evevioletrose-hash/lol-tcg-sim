@@ -91,7 +91,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 ## D — Deck builder
 
 - [x] D1: Profile-local named deck index, immediate save/edit, composition summary and unrestricted Workshop deck mode verified at 5a93af3; owner created a deck and approved core workflow.
-- [ ] D2: Three non-destructive collection-aware building policies implemented; pending local verification.
+- [x] D2: Three non-destructive collection-aware building policies verified at fc00dda; owner confirmed policies work in GUI.
 - [ ] D3: Championship validation per rulebook p.10: 24–30 cards, one of each unique B.B./Surprise/Place, at most three of the same Item; opponent total Rank difference at most two. Approx. half B.B.s is advice, not mandatory. Flag unknown definitions or ranks; resolve unique-character/variant semantics before enforcement.
 - [ ] D4: Build two decks, compare rank and legality, test boundary values and inventory caps. Do not assume both decks must have the same size.
 
@@ -128,7 +128,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 3. A3a: import reconciliation (core verified); A3b: provenance and verification (core verified).
 4. P1: profile foundation (core verified); P2: physical collection (core verified); P3: in-game collection (core verified).
 5. V1: artwork binding and fallback (verified); V2: first polished B.B. presentation (verified, artwork workflow deferred); V3: Item, Surprise and Place (automated core verified); V4: optional 3D presentation and live illustration proof of concept (verified); further visual work deferred.
-6. D1: Profile-local named deck persistence and deck composition summary (core verified). D2 collection-aware building modes next, then D3 championship validation and D4 two-deck comparison.
+6. D1: Profile-local named deck persistence and deck composition summary (core verified). D2 collection-aware building modes (verified); D3 championship validation next, then D4 two-deck comparison.
 7. B: Seedable product/pack experiments; G: rules laboratory. Rules work remains independent and may be interleaved in small checkpoints.
 
 At the end of each checkpoint: update this file and the restoration journal; keep the next action small enough for a single shared review.
