@@ -132,6 +132,7 @@ func apply_selected(catalogue, selected: Dictionary) -> Dictionary:
 			record[field] = changes[id][field].incoming
 		if record == baseline[id]:
 			continue
+		catalogue.invalidate_verification(record)
 		var problem: String = catalogue.validate_edit(id, record)
 		if not problem.is_empty():
 			result.error = id + ": " + problem

@@ -37,7 +37,7 @@ def main():
     records = read_source()
     if len(records) != 400:
         raise ValueError("Expected 400 source records")
-    manifest = {"schema_version": 1, "ids": list(records)}
+    manifest = {"schema_version": 1, "edition": "tabletop", "ids": list(records)}
     data_dir = ROOT / "data"
     manifest_path = data_dir / "catalogue.json"
     cards_dir = data_dir / "cards"
@@ -49,14 +49,14 @@ def main():
             (cards_dir / f"{card_id}.json").write_text(encode(record), encoding="utf-8")
         manifest_path.write_text(encode(manifest), encoding="utf-8")
     actual_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if actual_manifest != manifest:
+    if actual_manifest.get("schema_version") != 1 or actual_manifest.get("edition", "tabletop") != "tabletop" or actual_manifest.get("ids") != manifest["ids"]:
         raise ValueError("Manifest differs from source")
     if {p.stem for p in cards_dir.glob("*.json")} != set(records):
         raise ValueError("Missing or extra card files")
     counts = {"BB": 0, "Surprise": 0, "Items": 0, "Place": 0}
     for card_id, expected in records.items():
         actual = json.loads((cards_dir / f"{card_id}.json").read_text(encoding="utf-8"))
-        if actual != expected:
+        if any(key not in actual or actual[key] != value for key, value in expected.items()):
             raise ValueError(f"Source mismatch: {card_id}")
         if actual["name"].strip() and actual["type"] in counts:
             counts[actual["type"]] += 1

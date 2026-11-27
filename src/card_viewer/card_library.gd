@@ -17,6 +17,10 @@ var close_dialog: ConfirmationDialog
 var import_button: Button
 var export_button: Button
 var sheet_status: Label
+var verification_filter: OptionButton
+var verification_input: OptionButton
+var source_input: LineEdit
+const TYPED_FILTER = 101
 const Reconciliation = preload("res://src/cards/catalogue_reconciliation.gd")
 const ReconciliationWindow = preload("res://src/card_viewer/reconciliation_window.gd")
 const INCOMPLETE_FILTER = 100
@@ -39,6 +43,7 @@ func setup(source: Game, edit_mode: bool = false) -> void:
 	type_filter.add_item("Surprise", Game.Card_Types.Surprise + 1)
 	type_filter.add_item("Place", Game.Card_Types.Place + 1)
 	if archivist:
+		type_filter.add_item("Typed slots", TYPED_FILTER)
 		type_filter.add_item("Incomplete slots", INCOMPLETE_FILTER)
 		build_editor()
 	type_filter.select(0)
@@ -122,9 +127,15 @@ func refresh_list() -> void:
 		if filter_id == INCOMPLETE_FILTER:
 			if typed:
 				continue
+		elif filter_id == TYPED_FILTER:
+			if not typed:
+				continue
 		elif filter_id > 0 and (not typed or kind != filter_id - 1):
 			continue
-		var searchable = "%s %s %s %s %s" % [id, raw.name, raw.club, raw.text, raw.phase]
+		if archivist and verification_filter.selected > 0:
+			if game.catalogue.verification(raw) != verification_filter.get_item_metadata(verification_filter.selected):
+				continue
+		var searchable = "%s %s %s %s %s %s" % [id, raw.name, raw.club, raw.text, raw.phase, game.catalogue.source_reference(raw)]
 		if not query.is_empty() and not searchable.to_lower().contains(query):
 			continue
 		var display_name = "" if raw.name == null else str(raw.name)
@@ -132,6 +143,8 @@ func refresh_list() -> void:
 			display_name = "(unnamed)"
 		if not typed:
 			display_name += " [incomplete]"
+		if archivist and game.catalogue.verification(raw) != "unverified":
+			display_name += " [" + game.catalogue.verification(raw) + "]"
 		var index = cards.add_item("%s  %s" % [id, display_name])
 		cards.set_item_metadata(index, id)
 		if id == previous_id:
@@ -253,7 +266,17 @@ func run_smoke_test() -> int:
 	return 0 if failures.is_empty() else 1
 
 func build_editor() -> void:
-	$Margin/Layout/Title.text = "Dance Off / Card Archivist"
+	$Margin/Layout/Title.text = "Dance Off / Card Archivist (Tabletop)"
+	verification_filter = OptionButton.new()
+	verification_filter.add_item("All verification states")
+	for state in game.catalogue.VERIFICATION_STATES:
+		verification_filter.add_item(state.capitalize())
+		verification_filter.set_item_metadata(verification_filter.item_count - 1, state)
+	verification_filter.select(0)
+	var catalogue_panel = type_filter.get_parent()
+	catalogue_panel.add_child(verification_filter)
+	catalogue_panel.move_child(verification_filter, type_filter.get_index() + 1)
+	verification_filter.item_selected.connect(_on_filter_changed)
 	$Margin/Layout/Body.split_offset = 270
 	details.hide()
 	var toolbar = HBoxContainer.new()
@@ -304,6 +327,22 @@ func build_editor() -> void:
 			row.add_child(line)
 			inputs[field] = line
 			line.text_changed.connect(_set_draft_field.bind(field))
+	editor_panel.add_child(HSeparator.new())
+	var source_label = Label.new()
+	source_label.text = "Source reference / evidence (tabletop)"
+	editor_panel.add_child(source_label)
+	source_input = LineEdit.new()
+	source_input.placeholder_text = "Scan path, URL, or transcription note"
+	source_input.text_changed.connect(_source_changed)
+	editor_panel.add_child(source_input)
+	var verification_label = Label.new()
+	verification_label.text = "Verification"
+	editor_panel.add_child(verification_label)
+	verification_input = OptionButton.new()
+	for state in game.catalogue.VERIFICATION_STATES:
+		verification_input.add_item(state.capitalize())
+	verification_input.item_selected.connect(_verification_changed)
+	editor_panel.add_child(verification_input)
 	status = Label.new()
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	editor_panel.add_child(status)
@@ -361,6 +400,8 @@ func load_draft(id: String) -> void:
 			control.select(options.find(value))
 		else:
 			control.text = value
+	source_input.text = game.catalogue.source_reference(draft)
+	verification_input.select(game.catalogue.VERIFICATION_STATES.find(game.catalogue.verification(draft)))
 	filling = false
 	update_draft()
 
@@ -373,7 +414,25 @@ func _effect_changed() -> void:
 func _set_draft_field(value: String, field: String) -> void:
 	if filling or draft.is_empty():
 		return
-	draft[field] = value
+	if draft.get(field) != value:
+		draft[field] = value
+		game.catalogue.invalidate_verification(draft)
+		verification_input.select(game.catalogue.VERIFICATION_STATES.find(game.catalogue.verification(draft)))
+	update_draft()
+
+func _source_changed(value: String) -> void:
+	if filling or draft.is_empty():
+		return
+	if value != game.catalogue.source_reference(draft):
+		draft["source"] = value
+		game.catalogue.invalidate_verification(draft)
+		verification_input.select(game.catalogue.VERIFICATION_STATES.find(game.catalogue.verification(draft)))
+	update_draft()
+
+func _verification_changed(index: int) -> void:
+	if filling or draft.is_empty():
+		return
+	draft["verification"] = game.catalogue.VERIFICATION_STATES[index]
 	update_draft()
 
 func is_dirty() -> bool:
@@ -386,6 +445,7 @@ func update_draft() -> void:
 	revert_button.disabled = not dirty
 	search.editable = not dirty
 	type_filter.disabled = dirty
+	verification_filter.disabled = dirty
 	import_button.disabled = dirty
 	export_button.disabled = dirty
 	cards.mouse_filter = Control.MOUSE_FILTER_IGNORE if dirty else Control.MOUSE_FILTER_STOP
@@ -425,6 +485,7 @@ func save_draft() -> void:
 	# Keep the saved card selected if a type change would hide it.
 	search.text = ""
 	type_filter.select(0)
+	verification_filter.select(0)
 	refresh_list()
 	status.text = selected_id + " / Saved to catalogue"
 
@@ -601,4 +662,74 @@ func run_reconciliation_test() -> int:
 	for failure in failures:
 		push_error(failure)
 	print("LOL_RECONCILIATION failures=%d" % failures.size())
+	return 0 if failures.is_empty() else 1
+
+func run_provenance_test() -> int:
+	var failures: Array[String] = []
+	var id = "1-001"
+	var original: Dictionary = game.catalogue.records[id].duplicate(true)
+	var original_dir: String = game.catalogue.card_dir
+	var fixture = "user://provenance-test-" + str(Time.get_ticks_usec()) + "/"
+	if DirAccess.make_dir_recursive_absolute(fixture) != OK:
+		push_error("Cannot create provenance fixture")
+		return 1
+	var path = fixture.path_join(id + ".json")
+	if DirAccess.copy_absolute(original_dir.path_join(id + ".json"), path) != OK:
+		push_error("Cannot copy provenance fixture")
+		return 1
+	game.catalogue.card_dir = fixture
+	search.text = id
+	refresh_list()
+	_set_draft_field("Fixture Pop Heart", "name")
+	_set_draft_field("BB", "type")
+	_set_draft_field("1", "rank")
+	_source_changed("")
+	_verification_changed(2)
+	if not save_button.disabled:
+		failures.append("Verified without evidence accepted")
+	_source_changed("fixture scan reference")
+	_verification_changed(2)
+	if save_button.disabled:
+		failures.append("Valid verification rejected")
+	save_draft()
+	if game.catalogue.verification(game.catalogue.records[id]) != "verified" or game.catalogue.read_json(path) != game.catalogue.records[id]:
+		failures.append("Provenance save/reload failed")
+	verification_filter.select(3)
+	refresh_list()
+	var found = false
+	for index in range(cards.item_count):
+		if cards.get_item_metadata(index) == id:
+			found = true
+	if not found:
+		failures.append("Verified filter omitted fixture")
+	show_card(id)
+	_set_draft_field("Fixture changed", "name")
+	if game.catalogue.verification(draft) != "unverified" or game.catalogue.source_reference(draft) != "fixture scan reference":
+		failures.append("Printed edit did not invalidate verification")
+	revert_draft()
+	if game.catalogue.verification(draft) != "verified":
+		failures.append("Revert lost verification")
+	var comparison = Reconciliation.new()
+	comparison.rows[id] = {"id": id, "text": "fixture changed effect"}
+	if not comparison.compare(game.catalogue):
+		failures.append("Provenance reconciliation comparison failed")
+	else:
+		var result: Dictionary = comparison.apply_selected(game.catalogue, {id: {"text": true}})
+		if not result.error.is_empty() or game.catalogue.verification(game.catalogue.records[id]) != "unverified" or game.catalogue.source_reference(game.catalogue.records[id]) != "fixture scan reference":
+			failures.append("Import did not invalidate verification")
+	# Reset selection/draft before replacing the in-memory fixture.
+	draft.clear()
+	selected_id = ""
+	game.catalogue.card_dir = original_dir
+	game.load_cardlist()
+	verification_filter.select(0)
+	search.text = ""
+	refresh_list()
+	DirAccess.remove_absolute(path)
+	DirAccess.remove_absolute(fixture)
+	if game.catalogue.records[id] != original:
+		failures.append("Canonical record changed")
+	for failure in failures:
+		push_error(failure)
+	print("LOL_PROVENANCE edition=tabletop failures=%d" % failures.size())
 	return 0 if failures.is_empty() else 1

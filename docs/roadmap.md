@@ -45,7 +45,7 @@ Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28
 
 ### A3 — Reconcile external data
 
-A3a core verified at f388570; A3b is next.
+A3a core verified at f388570; A3b implemented, awaiting local verification.
 - [x] Import TSV/CSV exports (no online dependency).
 - [x] Match by stable card ID, preview field-by-field changes, preserve existing values unless explicitly replaced, and allow skip/accept choices.
 - [x] Block duplicate/unknown IDs and stale or external-file conflicts; validate selected records before writing. Incomplete definitions remain visible in the archivist.

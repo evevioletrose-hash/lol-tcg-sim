@@ -5,6 +5,8 @@ const MANIFEST = "res://data/catalogue.json"
 const CARD_DIR = "res://data/cards/"
 const FIELDS = ["id", "name", "type", "rank", "style", "groove", "text", "club", "phase"]
 const KNOWN_TYPES = ["BB", "Items", "Surprise", "Place"]
+const VERIFICATION_STATES = ["unverified", "transcribed", "verified", "conflicting"]
+const EDITION = "tabletop"
 
 var card_dir: String = CARD_DIR
 var records: Dictionary = {}
@@ -31,6 +33,9 @@ func load_records() -> bool:
 	if manifest.get("schema_version") != 1 or not manifest.get("ids") is Array:
 		errors.append("Unsupported catalogue schema or missing IDs")
 		return false
+	if manifest.get("edition", EDITION) != EDITION:
+		errors.append("Wrong catalogue edition; expected tabletop")
+		return false
 	var pattern = RegEx.new()
 	pattern.compile("^[0-9]+-[0-9]+$")
 	for id in manifest.ids:
@@ -52,6 +57,10 @@ func load_records() -> bool:
 			elif record[field] != null and not record[field] is String:
 				errors.append(id + ": invalid field type " + field)
 				valid = false
+		var problem = validate_provenance(record)
+		if not problem.is_empty():
+			errors.append(id + ": " + problem)
+			valid = false
 		if valid:
 			records[id] = record
 	return errors.is_empty()
@@ -76,6 +85,29 @@ func typed_count() -> int:
 			count += 1
 	return count
 
+func verification(record: Dictionary) -> String:
+	return str(record.get("verification", "unverified"))
+
+func source_reference(record: Dictionary) -> String:
+	return str(record.get("source", ""))
+
+func validate_provenance(record: Dictionary) -> String:
+	if not record.get("verification", "unverified") is String or not verification(record) in VERIFICATION_STATES:
+		return "Invalid verification status."
+	if not record.get("source", "") is String:
+		return "Source reference must be text."
+	if verification(record) == "verified":
+		if not is_typed(record):
+			return "A verified definition needs a name and known type."
+		if source_reference(record).strip_edges().is_empty():
+			return "A verified definition needs a source reference."
+	return ""
+
+# Changed printed data invalidates a previous verification, not its evidence.
+func invalidate_verification(record: Dictionary) -> void:
+	if verification(record) == "verified":
+		record["verification"] = "unverified"
+
 # Accept partial transcriptions. Preserve unknown values.
 func validate_edit(id: String, record: Dictionary) -> String:
 	if not records.has(id) or record.get("id") != id:
@@ -94,7 +126,7 @@ func validate_edit(id: String, record: Dictionary) -> String:
 		if value != null and not value in ["", "?", "."]:
 			if not value.is_valid_int() or int(value) < 0:
 				return field.capitalize() + " must be nonnegative, ?, . or blank."
-	return ""
+	return validate_provenance(record)
 
 func save_record(id: String, record: Dictionary) -> String:
 	var problem = validate_edit(id, record)
