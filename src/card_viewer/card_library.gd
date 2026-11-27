@@ -24,6 +24,19 @@ var profile_store
 var profile_selector: OptionButton
 var profile_name: LineEdit
 var profile_status: Label
+var physical_mode: bool = false
+var physical_toggle: CheckButton
+var physical_summary: Label
+var physical_controls: VBoxContainer
+var ownership_filter: OptionButton
+var physical_selected: Label
+var physical_quantity: LineEdit
+var physical_minus: Button
+var physical_plus: Button
+var physical_apply: Button
+var physical_next: Button
+var physical_notice: Label
+const ProfileStore = preload("res://src/profiles/profile_store.gd")
 const TYPED_FILTER = 101
 const Reconciliation = preload("res://src/cards/catalogue_reconciliation.gd")
 const ReconciliationWindow = preload("res://src/card_viewer/reconciliation_window.gd")
@@ -119,12 +132,18 @@ func phase_name(data: Dictionary) -> String:
 func refresh_list() -> void:
 	var previous_id = selected_id
 	cards.clear()
-	var ids = game.catalogue.records.keys() if archivist else game.card_database.keys()
+	var ids = game.catalogue.records.keys() if archivist or physical_mode else game.card_database.keys()
 	ids.sort()
 	var query = search.text.strip_edges().to_lower()
+	var exact_number = ""
+	# In collection mode a short numeric query is an exact set-one card number.
+	if physical_mode and query.is_valid_int() and query.length() <= 3 and int(query) > 0:
+		exact_number = "1-%03d" % int(query)
 	var filter_id = type_filter.get_selected_id()
 	var selection_index = -1
 	for id in ids:
+		if not exact_number.is_empty() and id != exact_number:
+			continue
 		var raw: Dictionary = game.catalogue.records[id]
 		var typed = game.card_database.has(id)
 		var kind = game.get_card_type(str(raw.get("type", "")))
@@ -139,8 +158,15 @@ func refresh_list() -> void:
 		if archivist and verification_filter.selected > 0:
 			if game.catalogue.verification(raw) != verification_filter.get_item_metadata(verification_filter.selected):
 				continue
+		var quantity = 0
+		if physical_mode:
+			quantity = profile_store.count("physical", profile_store.card_key("tabletop", id))
+			if ownership_filter.selected == 1 and quantity == 0:
+				continue
+			if ownership_filter.selected == 2 and quantity > 0:
+				continue
 		var searchable = "%s %s %s %s %s %s" % [id, raw.name, raw.club, raw.text, raw.phase, game.catalogue.source_reference(raw)]
-		if not query.is_empty() and not searchable.to_lower().contains(query):
+		if exact_number.is_empty() and not query.is_empty() and not searchable.to_lower().contains(query):
 			continue
 		var display_name = "" if raw.name == null else str(raw.name)
 		if display_name.is_empty():
@@ -149,17 +175,24 @@ func refresh_list() -> void:
 			display_name += " [incomplete]"
 		if archivist and game.catalogue.verification(raw) != "unverified":
 			display_name += " [" + game.catalogue.verification(raw) + "]"
-		var index = cards.add_item("%s  %s" % [id, display_name])
+		var display = "%s  %s" % [id, display_name]
+		if physical_mode:
+			display += "  ×" + str(quantity)
+		var index = cards.add_item(display)
 		cards.set_item_metadata(index, id)
 		if id == previous_id:
 			selection_index = index
 	count_label.text = "%d / %d cards" % [cards.item_count, ids.size()]
+	if physical_mode:
+		_update_physical_summary()
 	if cards.item_count == 0:
 		clear_preview()
 		details.text = "No matching cards."
 		if archivist:
 			draft.clear()
 			editor_panel.hide()
+		if physical_mode:
+			_update_physical_selection()
 		return
 	if selection_index < 0:
 		selection_index = 0
@@ -177,6 +210,13 @@ func show_card(id: String) -> void:
 	selected_id = id
 	if archivist:
 		load_draft(id)
+		return
+	if not game.card_database.has(id):
+		var raw: Dictionary = game.catalogue.records[id]
+		var raw_name = "(unnamed)" if raw.name == null or str(raw.name).is_empty() else str(raw.name)
+		details.text = "%s\n%s\nIncomplete definition. Physical copies can still be recorded." % [raw_name, id]
+		if physical_mode:
+			_update_physical_selection()
 		return
 	var data: Dictionary = game.card_database[id]
 	var lines: PackedStringArray = [
@@ -201,6 +241,8 @@ func show_card(id: String) -> void:
 			preview.size = Vector2(333, 442)
 			preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
 	details.text = "\n".join(lines)
+	if physical_mode:
+		_update_physical_selection()
 
 func run_smoke_test() -> int:
 	var counts: Dictionary = {}
@@ -775,6 +817,7 @@ func attach_profiles(store) -> void:
 		profile_name.editable = false
 		create.disabled = true
 		return
+	_build_physical_controls()
 	_refresh_profiles()
 
 func _refresh_profiles(message: String = "") -> void:
@@ -793,6 +836,11 @@ func _refresh_profiles(message: String = "") -> void:
 		message += " | " + "; ".join(PackedStringArray(profile_store.warnings))
 	profile_status.text = message
 	profile_status.tooltip_text = message
+	if is_instance_valid(physical_summary):
+		_update_physical_summary()
+	if physical_mode:
+		physical_notice.text = ""
+		refresh_list()
 
 func _profile_selected(index: int) -> void:
 	var id = str(profile_selector.get_item_metadata(index))
@@ -807,3 +855,252 @@ func _create_profile() -> void:
 	profile_name.clear()
 	var problem: String = profile_store.switch_profile(result.id)
 	_refresh_profiles(problem)
+
+func _build_physical_controls() -> void:
+	var layout = $Margin/Layout
+	var mode_row = HBoxContainer.new()
+	layout.add_child(mode_row)
+	layout.move_child(mode_row, 3)
+	physical_toggle = CheckButton.new()
+	physical_toggle.text = "Physical collection"
+	physical_toggle.toggled.connect(_set_physical_mode)
+	mode_row.add_child(physical_toggle)
+	physical_summary = Label.new()
+	physical_summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	physical_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	mode_row.add_child(physical_summary)
+	physical_controls = VBoxContainer.new()
+	layout.add_child(physical_controls)
+	layout.move_child(physical_controls, 4)
+	var row = HBoxContainer.new()
+	physical_controls.add_child(row)
+	ownership_filter = OptionButton.new()
+	for option in ["All slots", "Owned", "Missing"]:
+		ownership_filter.add_item(option)
+	ownership_filter.select(0)
+	ownership_filter.item_selected.connect(_on_filter_changed)
+	row.add_child(ownership_filter)
+	physical_selected = Label.new()
+	physical_selected.custom_minimum_size.x = 110
+	row.add_child(physical_selected)
+	physical_minus = Button.new()
+	physical_minus.text = "−1"
+	physical_minus.pressed.connect(_adjust_physical.bind(-1))
+	row.add_child(physical_minus)
+	physical_quantity = LineEdit.new()
+	physical_quantity.custom_minimum_size.x = 100
+	physical_quantity.max_length = 10
+	physical_quantity.placeholder_text = "Copies"
+	physical_quantity.text_submitted.connect(func(_value: String): _apply_physical_quantity())
+	row.add_child(physical_quantity)
+	physical_plus = Button.new()
+	physical_plus.text = "+1"
+	physical_plus.pressed.connect(_adjust_physical.bind(1))
+	row.add_child(physical_plus)
+	physical_apply = Button.new()
+	physical_apply.text = "Set copies"
+	physical_apply.pressed.connect(_apply_physical_quantity)
+	row.add_child(physical_apply)
+	physical_next = Button.new()
+	physical_next.text = "Next card"
+	physical_next.pressed.connect(_next_physical_card)
+	row.add_child(physical_next)
+	physical_notice = Label.new()
+	physical_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	physical_controls.add_child(physical_notice)
+	physical_controls.hide()
+	_update_physical_summary()
+
+func _set_physical_mode(enabled: bool) -> void:
+	physical_mode = enabled
+	physical_toggle.set_pressed_no_signal(enabled)
+	physical_controls.visible = enabled
+	physical_notice.text = ""
+	$Margin/Layout/Title.text = "Dance Off / Physical Collection" if enabled else "Dance Off / Card Workshop"
+	search.placeholder_text = "Card number (e.g. 55), name, club or effect..." if enabled else "Search number, name, club or effect..."
+	type_filter.select(0)
+	ownership_filter.select(0)
+	refresh_list()
+
+func _update_physical_summary() -> void:
+	var known = 0
+	var copies = 0
+	var outside = 0
+	var counts: Dictionary = profile_store.collection("physical")
+	for key in counts:
+		var card_id = str(key).trim_prefix("tabletop:")
+		if str(key).begins_with("tabletop:") and game.catalogue.records.has(card_id):
+			known += 1
+			copies += int(counts[key])
+		else:
+			outside += 1
+	physical_summary.text = "Physical: %d / %d slots • %d copies • %d duplicates" % [known, game.catalogue.records.size(), copies, copies - known]
+	if outside > 0:
+		physical_summary.text += " • %d other keys preserved" % outside
+
+func _update_physical_selection() -> void:
+	var valid = not selected_id.is_empty() and game.catalogue.records.has(selected_id)
+	var quantity = profile_store.count("physical", profile_store.card_key("tabletop", selected_id)) if valid else 0
+	physical_selected.text = selected_id if valid else "No card"
+	physical_quantity.text = str(quantity) if valid else ""
+	physical_quantity.editable = valid
+	physical_minus.disabled = not valid or quantity == 0
+	physical_plus.disabled = not valid or quantity >= ProfileStore.MAX_COUNT
+	physical_apply.disabled = not valid
+	var selected = cards.get_selected_items()
+	physical_next.disabled = not valid or selected.is_empty() or selected[0] + 1 >= cards.item_count
+
+func _adjust_physical(delta: int) -> void:
+	if not physical_mode or not game.catalogue.records.has(selected_id):
+		return
+	var id = selected_id
+	var problem: String = profile_store.adjust("physical", profile_store.card_key("tabletop", id), delta)
+	_finish_physical_write(id, problem)
+
+func _apply_physical_quantity() -> void:
+	if not physical_mode or not game.catalogue.records.has(selected_id):
+		return
+	var value = physical_quantity.text.strip_edges()
+	if not value.is_valid_int() or int(value) < 0 or int(value) > ProfileStore.MAX_COUNT:
+		physical_notice.text = "Enter a whole number from 0 to " + str(ProfileStore.MAX_COUNT) + "."
+		return
+	var id = selected_id
+	var key: String = profile_store.card_key("tabletop", id)
+	var delta: int = int(value) - profile_store.count("physical", key)
+	var problem: String = profile_store.adjust("physical", key, delta)
+	_finish_physical_write(id, problem)
+
+func _finish_physical_write(id: String, problem: String) -> void:
+	if not problem.is_empty():
+		physical_notice.text = problem
+		_update_physical_selection()
+		return
+	var quantity: int = profile_store.count("physical", profile_store.card_key("tabletop", id))
+	refresh_list()
+	physical_notice.text = "%s: %d physical copies saved." % [id, quantity]
+	# Keep the selected row visible during long collection-entry sessions.
+	if cards.item_count > 0:
+		cards.ensure_current_is_visible()
+
+func _next_physical_card() -> void:
+	var selected = cards.get_selected_items()
+	if not physical_mode or selected.is_empty() or selected[0] + 1 >= cards.item_count:
+		return
+	var index = selected[0] + 1
+	cards.select(index)
+	_on_card_selected(index)
+	cards.ensure_current_is_visible()
+	physical_notice.text = ""
+
+func run_physical_collection_test() -> int:
+	var failures: Array[String] = []
+	var store = ProfileStore.new()
+	store.root = "user://physical-test-" + Crypto.new().generate_random_bytes(12).hex_encode() + "/"
+	attach_profiles(store)
+	if store.active_id.is_empty() or not is_instance_valid(physical_toggle):
+		push_error("Physical fixture initialization failed")
+		return 1
+	var id = "1-001"
+	var incomplete = "1-055"
+	var key = store.card_key("tabletop", id)
+	var incomplete_key = store.card_key("tabletop", incomplete)
+	var original: Dictionary = game.catalogue.records[id].duplicate(true)
+	if not store.add("digital", key, 4).is_empty():
+		failures.append("Digital fixture failed")
+	if not store.add("physical", "digital:1-001", 7).is_empty():
+		failures.append("Outside edition fixture failed")
+	_set_physical_mode(true)
+	if cards.item_count != game.catalogue.records.size():
+		failures.append("All numbered slots not visible")
+	search.text = "1"
+	refresh_list()
+	if cards.item_count != 1 or selected_id != id:
+		failures.append("Short card number search")
+	_adjust_physical(1)
+	_adjust_physical(1)
+	if store.count("physical", key) != 2 or physical_quantity.text != "2":
+		failures.append("Quick add")
+	physical_quantity.text = "5"
+	_apply_physical_quantity()
+	if store.count("physical", key) != 5:
+		failures.append("Set copies")
+	physical_quantity.text = "-1"
+	_apply_physical_quantity()
+	if store.count("physical", key) != 5:
+		failures.append("Negative entry accepted")
+	_adjust_physical(-1)
+	if store.count("physical", key) != 4:
+		failures.append("Quick remove")
+	search.text = incomplete
+	refresh_list()
+	if selected_id != incomplete:
+		failures.append("Incomplete card missing")
+	_adjust_physical(1)
+	if store.count("physical", incomplete_key) != 1:
+		failures.append("Incomplete slot ownership")
+	search.text = ""
+	ownership_filter.select(1)
+	refresh_list()
+	if cards.item_count != 2 or not physical_summary.text.contains("2 / ") or not physical_summary.text.contains("5 copies"):
+		failures.append("Owned filter or summary")
+	ownership_filter.select(2)
+	refresh_list()
+	if cards.item_count != game.catalogue.records.size() - 2:
+		failures.append("Missing filter")
+	ownership_filter.select(0)
+	search.text = id
+	refresh_list()
+	physical_quantity.text = "0"
+	_apply_physical_quantity()
+	if store.collection("physical").has(key) or store.count("digital", key) != 4:
+		failures.append("Zero removal or digital isolation")
+	profile_name.text = "Second collector"
+	_create_profile()
+	var second_id: String = store.active_id
+	if second_id == "default" or store.count("physical", incomplete_key) != 0:
+		failures.append("Profile creation/isolation")
+	search.text = incomplete
+	refresh_list()
+	_adjust_physical(1)
+	_adjust_physical(1)
+	for index in range(profile_selector.item_count):
+		if profile_selector.get_item_metadata(index) == "default":
+			_profile_selected(index)
+			break
+	if store.active_id != "default" or store.count("physical", incomplete_key) != 1 or physical_quantity.text != "1":
+		failures.append("Profile switch refresh")
+	var reopened = ProfileStore.new()
+	reopened.root = store.root
+	if not reopened.initialize().is_empty() or reopened.count("physical", incomplete_key) != 1 or reopened.count("digital", key) != 4 or reopened.count("physical", "digital:1-001") != 7:
+		failures.append("Collection reload or outside edition preservation")
+	if second_id != "default":
+		if not reopened.switch_profile(second_id).is_empty() or reopened.count("physical", incomplete_key) != 2:
+			failures.append("Second profile reload")
+	if game.catalogue.records[id] != original:
+		failures.append("Canonical definition changed")
+	_set_physical_mode(false)
+	if cards.item_count != (1 if game.card_database.has(incomplete) else 0):
+		failures.append("Normal workshop search after collection mode")
+	search.text = ""
+	refresh_list()
+	if cards.item_count != game.card_database.size():
+		failures.append("Normal workshop scope")
+	# Remove only the disposable fixture's explicitly known files.
+	for entry in store.list_profiles():
+		var directory = store.root.path_join(entry.profile_id)
+		for filename in ["profile.json", "physical_collection.json", "digital_collection.json"]:
+			for suffix in ["", ".bak"]:
+				var path = directory.path_join(filename + suffix)
+				if FileAccess.file_exists(path):
+					DirAccess.remove_absolute(path)
+		DirAccess.remove_absolute(directory.path_join("decks"))
+		DirAccess.remove_absolute(directory)
+	for suffix in ["", ".bak"]:
+		var path = store.root.path_join("active_profile.json" + suffix)
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(path)
+	DirAccess.remove_absolute(store.root)
+	for failure in failures:
+		push_error(failure)
+	print("LOL_PHYSICAL slots=%d failures=%d" % [game.catalogue.records.size(), failures.size()])
+	return 0 if failures.is_empty() else 1

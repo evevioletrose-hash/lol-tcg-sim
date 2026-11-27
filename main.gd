@@ -53,7 +53,8 @@ func _ready() -> void:
 		get_tree().quit(1)
 		return
 	var library = game.open_library(archivist)
-	var testing = editor_test or reconciliation_test or provenance_test or "--card-workshop-test" in OS.get_cmdline_user_args()
+	var physical_test = "--physical-collection-test" in OS.get_cmdline_user_args()
+	var testing = editor_test or reconciliation_test or provenance_test or physical_test or "--card-workshop-test" in OS.get_cmdline_user_args()
 	if library == null or not library.has_method("run_smoke_test"):
 		push_error("LOL_WORKSHOP initialization failed")
 		if testing:
@@ -63,7 +64,9 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if testing:
-		if provenance_test:
+		if physical_test:
+			get_tree().quit(library.run_physical_collection_test())
+		elif provenance_test:
 			get_tree().quit(library.run_provenance_test())
 		elif reconciliation_test:
 			get_tree().quit(library.run_reconciliation_test())

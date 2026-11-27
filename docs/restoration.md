@@ -113,3 +113,7 @@ At d46b059, owner reported editor import, structural validation and all four cat
 ### P1 local acceptance evidence
 
 Owner-supplied Godot 4.8.beta5 log at 74674d8: LOL_PROFILES profiles=2 namespaces=2 failures=0, exit 0. Owner confirmed graphical profile creation and switching, and active profile persists after closing/reopening. The d46b059 run had editor import, structural validation and all four catalogue tests exit 0 before the initial profile-save failure; the corrective patch was tested with the targeted profile test, not a repeat of the full catalogue suite. Two new script UID files were untracked at acceptance and owner instructed to commit them. No canonical card edits. P1 core accepted; P2 next. Single-writer design, manual recovery limits and no deletion/rename UI remain documented in profile-schema.md.
+
+## P2: Physical collection core (pending local acceptance)
+
+Opt-in normal Workshop mode with all numbered tabletop slots, short numeric lookup, owned/missing filters, per-row quantities, quick increment/decrement, direct set/Enter, next visible card, and collection-wide summary. Active profile only; incomplete definitions may be owned, other-edition/unknown IDs preserved outside tabletop completion. No digital inventory or canonical edits. Disposable --physical-collection-test exercises the same handlers, two profiles, persistence and isolation. Notes/condition/wishlist and ownership import/export remain deferred. See profile-schema.md. Full regression and graphical review pending.

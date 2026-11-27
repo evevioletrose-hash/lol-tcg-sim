@@ -65,7 +65,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 - [x] Shared inventory operations keyed by stable card ID: count, add, remove, validate nonnegative quantities; handle unknown IDs without losing data.
 - [x] Two-profile fixture test passed; owner verified graphical creation/switching and active profile persistence across process restart. No res:// data changes.
 
-### P2 — Physical collection
+### P2 — Physical collection (core implemented, pending local verification)
 - [ ] Track real card quantities independently of digital inventory; fast increment/decrement and completion filters.
 - [ ] Optional condition, wishlist and personal notes. Keep source verification of definitions separate from personal notes.
 - [ ] Physical collection import/export later, with explicit quantities and merge behavior.
