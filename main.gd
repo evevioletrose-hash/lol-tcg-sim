@@ -54,7 +54,8 @@ func _ready() -> void:
 		return
 	var library = game.open_library(archivist)
 	var physical_test = "--physical-collection-test" in OS.get_cmdline_user_args()
-	var testing = editor_test or reconciliation_test or provenance_test or physical_test or "--card-workshop-test" in OS.get_cmdline_user_args()
+	var digital_test = "--digital-collection-test" in OS.get_cmdline_user_args()
+	var testing = editor_test or reconciliation_test or provenance_test or physical_test or digital_test or "--card-workshop-test" in OS.get_cmdline_user_args()
 	if library == null or not library.has_method("run_smoke_test"):
 		push_error("LOL_WORKSHOP initialization failed")
 		if testing:
@@ -64,7 +65,9 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if testing:
-		if physical_test:
+		if digital_test:
+			get_tree().quit(library.run_digital_collection_test())
+		elif physical_test:
 			get_tree().quit(library.run_physical_collection_test())
 		elif provenance_test:
 			get_tree().quit(library.run_provenance_test())
@@ -74,6 +77,6 @@ func _ready() -> void:
 			get_tree().quit(library.run_editor_test() if editor_test else library.run_smoke_test())
 	else:
 		if not archivist:
-			library.attach_profiles(preload("res://src/profiles/profile_store.gd").new())
+			library.attach_profiles(preload("res://src/profiles/profile_store.gd").new(), "--dev-grants" in OS.get_cmdline_user_args())
 		library.report_layout()
 	# game.initialize_game(item_deck, sample_deck)

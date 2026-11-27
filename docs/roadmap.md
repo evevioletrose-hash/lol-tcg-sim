@@ -71,7 +71,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 - [ ] Physical collection import/export later, with explicit quantities and merge behavior.
 - [x] Automated zero, duplicates, missing IDs, persistence and isolation checks passed; owner inspected graphical collection mode and reported it works.
 
-### P3 — Digital collection
+### P3 — Digital collection (core implemented, pending local verification)
 - [ ] Separate digital inventory and acquisition operations; no automatic physical-to-digital conversion.
 - [ ] View owned/unowned, duplicate counts, completion, and acquisition history if useful.
 - [ ] Test additions/removals, persistence and physical/digital independence.

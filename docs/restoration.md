@@ -121,3 +121,7 @@ Opt-in normal Workshop mode with all numbered tabletop slots, short numeric look
 ### P2 local acceptance evidence
 
 Owner-supplied complete regression log at 922b5e2, Godot 4.8.beta5: LOL_VALIDATE edition=tabletop slots=400 typed=311 incomplete=89 verified=0 failures=0; LOL_WORKSHOP failures=0; LOL_ARCHIVIST slots=400 failures=0; LOL_RECONCILIATION failures=0; LOL_PROVENANCE edition=tabletop failures=0; LOL_PROFILES profiles=2 namespaces=2 failures=0; LOL_PHYSICAL slots=400 failures=0. All seven commands exited 0. Working tree clean; expected unknown type warnings only. Owner inspected graphical mode and reported it works and is satisfactory. Core P2 accepted. Individual manual edge cases were not separately reported. Condition, wishlist, personal notes and ownership spreadsheet import/export remain deferred. P3 next: earned-in-game collection, independent of physical ownership and of the original historical digital edition.
+
+## P3: In-game collection core (pending local acceptance)
+
+Shared collection browser with explicit three-way mode selector, read-only earned inventory, editor-build --dev-grants for testing, and acquisition batch API scoped to expected active profile. Reuses physical browser and existing safe profile saves. No starter grant, reward economy, acquisition history or historical digital-edition import. Full P2 and new P3 regressions pending. See profile-schema.md.

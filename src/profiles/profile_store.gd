@@ -242,27 +242,46 @@ func collection(kind: String) -> Dictionary:
 		return {}
 	return inventories[kind].counts.duplicate(true)
 
-func adjust(kind: String, key: String, delta: int) -> String:
-	if active_id.is_empty() or not inventories.has(kind) or not _valid_key(key):
-		return "Invalid inventory or edition-qualified card key."
-	var current = count(kind, key)
-	if delta < -current or delta > MAX_COUNT - current:
-		return "Quantity must remain between 0 and " + str(MAX_COUNT) + "."
-	if delta == 0:
+# A batch is preflighted in full and committed as a single inventory snapshot.
+# expected_profile prevents a delayed reward from landing in another profile.
+func adjust_many(kind: String, changes: Dictionary, expected_profile: String) -> String:
+	if active_id.is_empty() or active_id != expected_profile or not inventories.has(kind):
+		return "Invalid inventory or changed active profile."
+	var next: Dictionary = inventories[kind].duplicate(true)
+	for key in changes:
+		if not key is String or not _valid_key(key) or not changes[key] is int:
+			return "Invalid edition-qualified card key or integer quantity."
+		var current = int(next.counts.get(key, 0))
+		var delta: int = changes[key]
+		if delta < -current or delta > MAX_COUNT - current:
+			return "Quantity must remain between 0 and " + str(MAX_COUNT) + "."
+		var quantity = current + delta
+		if quantity == 0:
+			next.counts.erase(key)
+		else:
+			next.counts[key] = quantity
+	if next == inventories[kind]:
 		return ""
 	var path = _inventory_path(active_id, kind)
 	if _load(_active_path(), "active").get("active_id") != active_id or _load(path, kind, active_id) != inventories[kind]:
 		return "Profile changed outside this session. Restart before editing."
-	var next: Dictionary = inventories[kind].duplicate(true)
-	var quantity = current + delta
-	if quantity == 0:
-		next.counts.erase(key)
-	else:
-		next.counts[key] = quantity
 	var problem = _save(path, next, kind, active_id)
 	if problem.is_empty():
 		inventories[kind] = next
 	return problem
+
+func adjust(kind: String, key: String, delta: int) -> String:
+	return adjust_many(kind, {key: delta}, active_id)
+
+# Game systems award positive quantities explicitly, never by copying physical ownership.
+# The caller chooses the reward pool and edition; storage preserves unknown keys.
+func acquire_cards(rewards: Dictionary, expected_profile: String) -> String:
+	if rewards.is_empty():
+		return "No cards to acquire."
+	for key in rewards:
+		if not rewards[key] is int or rewards[key] <= 0:
+			return "Acquisition quantities must be positive integers."
+	return adjust_many("digital", rewards, expected_profile)
 
 func add(kind: String, key: String, quantity: int = 1) -> String:
 	if quantity <= 0:

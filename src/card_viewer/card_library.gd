@@ -24,18 +24,21 @@ var profile_store
 var profile_selector: OptionButton
 var profile_name: LineEdit
 var profile_status: Label
-var physical_mode: bool = false
-var physical_toggle: CheckButton
-var physical_summary: Label
-var physical_controls: VBoxContainer
+var collection_kind: String = ""
+var collection_mode: OptionButton
+var developer_grants: bool = false
+var grant_button: Button
+var revoke_button: Button
+var collection_summary: Label
+var collection_controls: VBoxContainer
 var ownership_filter: OptionButton
-var physical_selected: Label
-var physical_quantity: LineEdit
-var physical_minus: Button
-var physical_plus: Button
-var physical_apply: Button
-var physical_next: Button
-var physical_notice: Label
+var collection_selected: Label
+var collection_quantity: LineEdit
+var collection_minus: Button
+var collection_plus: Button
+var collection_apply: Button
+var collection_next: Button
+var collection_notice: Label
 const ProfileStore = preload("res://src/profiles/profile_store.gd")
 const TYPED_FILTER = 101
 const Reconciliation = preload("res://src/cards/catalogue_reconciliation.gd")
@@ -132,12 +135,12 @@ func phase_name(data: Dictionary) -> String:
 func refresh_list() -> void:
 	var previous_id = selected_id
 	cards.clear()
-	var ids = game.catalogue.records.keys() if archivist or physical_mode else game.card_database.keys()
+	var ids = game.catalogue.records.keys() if archivist or not collection_kind.is_empty() else game.card_database.keys()
 	ids.sort()
 	var query = search.text.strip_edges().to_lower()
 	var exact_number = ""
 	# In collection mode a short numeric query is an exact set-one card number.
-	if physical_mode and query.is_valid_int() and query.length() <= 3 and int(query) > 0:
+	if not collection_kind.is_empty() and query.is_valid_int() and query.length() <= 3 and int(query) > 0:
 		exact_number = "1-%03d" % int(query)
 	var filter_id = type_filter.get_selected_id()
 	var selection_index = -1
@@ -159,8 +162,8 @@ func refresh_list() -> void:
 			if game.catalogue.verification(raw) != verification_filter.get_item_metadata(verification_filter.selected):
 				continue
 		var quantity = 0
-		if physical_mode:
-			quantity = profile_store.count("physical", profile_store.card_key("tabletop", id))
+		if not collection_kind.is_empty():
+			quantity = profile_store.count(collection_kind, profile_store.card_key("tabletop", id))
 			if ownership_filter.selected == 1 and quantity == 0:
 				continue
 			if ownership_filter.selected == 2 and quantity > 0:
@@ -176,23 +179,23 @@ func refresh_list() -> void:
 		if archivist and game.catalogue.verification(raw) != "unverified":
 			display_name += " [" + game.catalogue.verification(raw) + "]"
 		var display = "%s  %s" % [id, display_name]
-		if physical_mode:
+		if not collection_kind.is_empty():
 			display += "  ×" + str(quantity)
 		var index = cards.add_item(display)
 		cards.set_item_metadata(index, id)
 		if id == previous_id:
 			selection_index = index
 	count_label.text = "%d / %d cards" % [cards.item_count, ids.size()]
-	if physical_mode:
-		_update_physical_summary()
+	if not collection_kind.is_empty():
+		_update_collection_summary()
 	if cards.item_count == 0:
 		clear_preview()
 		details.text = "No matching cards."
 		if archivist:
 			draft.clear()
 			editor_panel.hide()
-		if physical_mode:
-			_update_physical_selection()
+		if not collection_kind.is_empty():
+			_update_collection_selection()
 		return
 	if selection_index < 0:
 		selection_index = 0
@@ -214,9 +217,9 @@ func show_card(id: String) -> void:
 	if not game.card_database.has(id):
 		var raw: Dictionary = game.catalogue.records[id]
 		var raw_name = "(unnamed)" if raw.name == null or str(raw.name).is_empty() else str(raw.name)
-		details.text = "%s\n%s\nIncomplete definition. Physical copies can still be recorded." % [raw_name, id]
-		if physical_mode:
-			_update_physical_selection()
+		details.text = "%s\n%s\nIncomplete definition. Ownership can still be displayed; development grants require a typed card." % [raw_name, id]
+		if not collection_kind.is_empty():
+			_update_collection_selection()
 		return
 	var data: Dictionary = game.card_database[id]
 	var lines: PackedStringArray = [
@@ -241,8 +244,8 @@ func show_card(id: String) -> void:
 			preview.size = Vector2(333, 442)
 			preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
 	details.text = "\n".join(lines)
-	if physical_mode:
-		_update_physical_selection()
+	if not collection_kind.is_empty():
+		_update_collection_selection()
 
 func run_smoke_test() -> int:
 	var counts: Dictionary = {}
@@ -781,8 +784,9 @@ func run_provenance_test() -> int:
 	return 0 if failures.is_empty() else 1
 
 # Player profiles are intentionally absent from the developer archivist.
-func attach_profiles(store) -> void:
+func attach_profiles(store, allow_developer_grants: bool = false) -> void:
 	profile_store = store
+	developer_grants = allow_developer_grants and OS.has_feature("editor")
 	var layout = $Margin/Layout
 	var toolbar = HBoxContainer.new()
 	layout.add_child(toolbar)
@@ -817,7 +821,7 @@ func attach_profiles(store) -> void:
 		profile_name.editable = false
 		create.disabled = true
 		return
-	_build_physical_controls()
+	_build_collection_controls()
 	_refresh_profiles()
 
 func _refresh_profiles(message: String = "") -> void:
@@ -836,10 +840,10 @@ func _refresh_profiles(message: String = "") -> void:
 		message += " | " + "; ".join(PackedStringArray(profile_store.warnings))
 	profile_status.text = message
 	profile_status.tooltip_text = message
-	if is_instance_valid(physical_summary):
-		_update_physical_summary()
-	if physical_mode:
-		physical_notice.text = ""
+	if is_instance_valid(collection_summary):
+		_update_collection_summary()
+	if not collection_kind.is_empty():
+		collection_notice.text = ""
 		refresh_list()
 
 func _profile_selected(index: int) -> void:
@@ -856,77 +860,106 @@ func _create_profile() -> void:
 	var problem: String = profile_store.switch_profile(result.id)
 	_refresh_profiles(problem)
 
-func _build_physical_controls() -> void:
+func _build_collection_controls() -> void:
 	var layout = $Margin/Layout
 	var mode_row = HBoxContainer.new()
 	layout.add_child(mode_row)
 	layout.move_child(mode_row, 3)
-	physical_toggle = CheckButton.new()
-	physical_toggle.text = "Physical collection"
-	physical_toggle.toggled.connect(_set_physical_mode)
-	mode_row.add_child(physical_toggle)
-	physical_summary = Label.new()
-	physical_summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	physical_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	mode_row.add_child(physical_summary)
-	physical_controls = VBoxContainer.new()
-	layout.add_child(physical_controls)
-	layout.move_child(physical_controls, 4)
+	collection_mode = OptionButton.new()
+	for label in ["Card Workshop", "Physical collection", "In-game collection"]:
+		collection_mode.add_item(label)
+	collection_mode.item_selected.connect(_collection_mode_selected)
+	mode_row.add_child(collection_mode)
+	collection_summary = Label.new()
+	collection_summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	collection_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	mode_row.add_child(collection_summary)
+	collection_controls = VBoxContainer.new()
+	layout.add_child(collection_controls)
+	layout.move_child(collection_controls, 4)
 	var row = HBoxContainer.new()
-	physical_controls.add_child(row)
+	collection_controls.add_child(row)
 	ownership_filter = OptionButton.new()
 	for option in ["All slots", "Owned", "Missing"]:
 		ownership_filter.add_item(option)
 	ownership_filter.select(0)
 	ownership_filter.item_selected.connect(_on_filter_changed)
 	row.add_child(ownership_filter)
-	physical_selected = Label.new()
-	physical_selected.custom_minimum_size.x = 110
-	row.add_child(physical_selected)
-	physical_minus = Button.new()
-	physical_minus.text = "−1"
-	physical_minus.pressed.connect(_adjust_physical.bind(-1))
-	row.add_child(physical_minus)
-	physical_quantity = LineEdit.new()
-	physical_quantity.custom_minimum_size.x = 100
-	physical_quantity.max_length = 10
-	physical_quantity.placeholder_text = "Copies"
-	physical_quantity.text_submitted.connect(func(_value: String): _apply_physical_quantity())
-	row.add_child(physical_quantity)
-	physical_plus = Button.new()
-	physical_plus.text = "+1"
-	physical_plus.pressed.connect(_adjust_physical.bind(1))
-	row.add_child(physical_plus)
-	physical_apply = Button.new()
-	physical_apply.text = "Set copies"
-	physical_apply.pressed.connect(_apply_physical_quantity)
-	row.add_child(physical_apply)
-	physical_next = Button.new()
-	physical_next.text = "Next card"
-	physical_next.pressed.connect(_next_physical_card)
-	row.add_child(physical_next)
-	physical_notice = Label.new()
-	physical_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	physical_controls.add_child(physical_notice)
-	physical_controls.hide()
-	_update_physical_summary()
+	collection_selected = Label.new()
+	collection_selected.custom_minimum_size.x = 110
+	row.add_child(collection_selected)
+	collection_minus = Button.new()
+	collection_minus.text = "−1"
+	collection_minus.pressed.connect(_adjust_physical.bind(-1))
+	row.add_child(collection_minus)
+	collection_quantity = LineEdit.new()
+	collection_quantity.custom_minimum_size.x = 100
+	collection_quantity.max_length = 10
+	collection_quantity.placeholder_text = "Copies"
+	collection_quantity.text_submitted.connect(func(_value: String): _apply_physical_quantity())
+	row.add_child(collection_quantity)
+	collection_plus = Button.new()
+	collection_plus.text = "+1"
+	collection_plus.pressed.connect(_adjust_physical.bind(1))
+	row.add_child(collection_plus)
+	collection_apply = Button.new()
+	collection_apply.text = "Set copies"
+	collection_apply.pressed.connect(_apply_physical_quantity)
+	row.add_child(collection_apply)
+	grant_button = Button.new()
+	grant_button.text = "Dev grant +1"
+	grant_button.pressed.connect(_developer_adjust.bind(1))
+	row.add_child(grant_button)
+	revoke_button = Button.new()
+	revoke_button.text = "Dev remove −1"
+	revoke_button.pressed.connect(_developer_adjust.bind(-1))
+	row.add_child(revoke_button)
+	collection_next = Button.new()
+	collection_next.text = "Next card"
+	collection_next.pressed.connect(_next_collection_card)
+	row.add_child(collection_next)
+	collection_notice = Label.new()
+	collection_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	collection_controls.add_child(collection_notice)
+	collection_controls.hide()
+	_update_collection_summary()
 
+func _collection_mode_selected(index: int) -> void:
+	_set_collection_mode(["", "physical", "digital"][index])
+
+# Keep the physical regression exercising the same shared browser.
 func _set_physical_mode(enabled: bool) -> void:
-	physical_mode = enabled
-	physical_toggle.set_pressed_no_signal(enabled)
-	physical_controls.visible = enabled
-	physical_notice.text = ""
-	$Margin/Layout/Title.text = "Dance Off / Physical Collection" if enabled else "Dance Off / Card Workshop"
-	search.placeholder_text = "Card number (e.g. 55), name, club or effect..." if enabled else "Search number, name, club or effect..."
+	_set_collection_mode("physical" if enabled else "")
+
+func _set_collection_mode(kind: String) -> void:
+	if not kind in ["", "physical", "digital"]:
+		return
+	collection_kind = kind
+	collection_mode.select(["", "physical", "digital"].find(kind))
+	collection_controls.visible = not kind.is_empty()
+	collection_notice.text = ""
+	var heading = "Card Workshop"
+	if kind == "physical":
+		heading = "Physical Collection"
+	elif kind == "digital":
+		heading = "In-game Collection"
+	$Margin/Layout/Title.text = "Dance Off / " + heading
+	search.placeholder_text = "Card number (e.g. 55), name, club or effect..." if not kind.is_empty() else "Search number, name, club or effect..."
 	type_filter.select(0)
 	ownership_filter.select(0)
+	collection_minus.visible = kind == "physical"
+	collection_plus.visible = kind == "physical"
+	collection_apply.visible = kind == "physical"
+	grant_button.visible = kind == "digital" and developer_grants
+	revoke_button.visible = kind == "digital" and developer_grants
+	_update_collection_summary()
 	refresh_list()
 
-func _update_physical_summary() -> void:
+func _summary_for(kind: String) -> String:
 	var known = 0
 	var copies = 0
 	var outside = 0
-	var counts: Dictionary = profile_store.collection("physical")
+	var counts: Dictionary = profile_store.collection(kind)
 	for key in counts:
 		var card_id = str(key).trim_prefix("tabletop:")
 		if str(key).begins_with("tabletop:") and game.catalogue.records.has(card_id):
@@ -934,70 +967,92 @@ func _update_physical_summary() -> void:
 			copies += int(counts[key])
 		else:
 			outside += 1
-	physical_summary.text = "Physical: %d / %d slots • %d copies • %d duplicates" % [known, game.catalogue.records.size(), copies, copies - known]
+	var summary = "%s: %d / %d slots • %d copies • %d duplicates" % ["Physical" if kind == "physical" else "In-game", known, game.catalogue.records.size(), copies, copies - known]
 	if outside > 0:
-		physical_summary.text += " • %d other keys preserved" % outside
+		summary += " • %d other keys preserved" % outside
+	return summary
 
-func _update_physical_selection() -> void:
+func _update_collection_summary() -> void:
+	collection_summary.text = _summary_for(collection_kind if not collection_kind.is_empty() else "physical")
+	if collection_kind == "digital" and developer_grants:
+		collection_summary.text += " • DEVELOPMENT GRANTS ENABLED"
+
+func _update_collection_selection() -> void:
 	var valid = not selected_id.is_empty() and game.catalogue.records.has(selected_id)
-	var quantity = profile_store.count("physical", profile_store.card_key("tabletop", selected_id)) if valid else 0
-	physical_selected.text = selected_id if valid else "No card"
-	physical_quantity.text = str(quantity) if valid else ""
-	physical_quantity.editable = valid
-	physical_minus.disabled = not valid or quantity == 0
-	physical_plus.disabled = not valid or quantity >= ProfileStore.MAX_COUNT
-	physical_apply.disabled = not valid
+	var quantity = profile_store.count(collection_kind, profile_store.card_key("tabletop", selected_id)) if valid else 0
+	collection_selected.text = selected_id if valid else "No card"
+	collection_quantity.text = str(quantity) if valid else ""
+	collection_quantity.editable = valid and collection_kind == "physical"
+	collection_minus.disabled = not valid or quantity == 0
+	collection_plus.disabled = not valid or quantity >= ProfileStore.MAX_COUNT
+	collection_apply.disabled = not valid
+	grant_button.disabled = not valid or not game.card_database.has(selected_id) or quantity >= ProfileStore.MAX_COUNT
+	revoke_button.disabled = not valid or quantity == 0
 	var selected = cards.get_selected_items()
-	physical_next.disabled = not valid or selected.is_empty() or selected[0] + 1 >= cards.item_count
+	collection_next.disabled = not valid or selected.is_empty() or selected[0] + 1 >= cards.item_count
+
+func _developer_adjust(delta: int) -> void:
+	if collection_kind != "digital" or not developer_grants or not game.catalogue.records.has(selected_id):
+		return
+	var id = selected_id
+	var key: String = profile_store.card_key("tabletop", id)
+	var problem: String
+	if delta == 1 and game.card_database.has(id):
+		problem = profile_store.acquire_cards({key: 1}, profile_store.active_id)
+	elif delta == -1:
+		problem = profile_store.remove("digital", key)
+	else:
+		return
+	_finish_collection_write(id, problem)
 
 func _adjust_physical(delta: int) -> void:
-	if not physical_mode or not game.catalogue.records.has(selected_id):
+	if collection_kind != "physical" or not game.catalogue.records.has(selected_id):
 		return
 	var id = selected_id
 	var problem: String = profile_store.adjust("physical", profile_store.card_key("tabletop", id), delta)
-	_finish_physical_write(id, problem)
+	_finish_collection_write(id, problem)
 
 func _apply_physical_quantity() -> void:
-	if not physical_mode or not game.catalogue.records.has(selected_id):
+	if collection_kind != "physical" or not game.catalogue.records.has(selected_id):
 		return
-	var value = physical_quantity.text.strip_edges()
+	var value = collection_quantity.text.strip_edges()
 	if not value.is_valid_int() or int(value) < 0 or int(value) > ProfileStore.MAX_COUNT:
-		physical_notice.text = "Enter a whole number from 0 to " + str(ProfileStore.MAX_COUNT) + "."
+		collection_notice.text = "Enter a whole number from 0 to " + str(ProfileStore.MAX_COUNT) + "."
 		return
 	var id = selected_id
 	var key: String = profile_store.card_key("tabletop", id)
 	var delta: int = int(value) - profile_store.count("physical", key)
 	var problem: String = profile_store.adjust("physical", key, delta)
-	_finish_physical_write(id, problem)
+	_finish_collection_write(id, problem)
 
-func _finish_physical_write(id: String, problem: String) -> void:
+func _finish_collection_write(id: String, problem: String) -> void:
 	if not problem.is_empty():
-		physical_notice.text = problem
-		_update_physical_selection()
+		collection_notice.text = problem
+		_update_collection_selection()
 		return
-	var quantity: int = profile_store.count("physical", profile_store.card_key("tabletop", id))
+	var quantity: int = profile_store.count(collection_kind, profile_store.card_key("tabletop", id))
 	refresh_list()
-	physical_notice.text = "%s: %d physical copies saved." % [id, quantity]
+	collection_notice.text = "%s: %d %s copies saved." % [id, quantity, "physical" if collection_kind == "physical" else "in-game"]
 	# Keep the selected row visible during long collection-entry sessions.
 	if cards.item_count > 0:
 		cards.ensure_current_is_visible()
 
-func _next_physical_card() -> void:
+func _next_collection_card() -> void:
 	var selected = cards.get_selected_items()
-	if not physical_mode or selected.is_empty() or selected[0] + 1 >= cards.item_count:
+	if collection_kind.is_empty() or selected.is_empty() or selected[0] + 1 >= cards.item_count:
 		return
 	var index = selected[0] + 1
 	cards.select(index)
 	_on_card_selected(index)
 	cards.ensure_current_is_visible()
-	physical_notice.text = ""
+	collection_notice.text = ""
 
 func run_physical_collection_test() -> int:
 	var failures: Array[String] = []
 	var store = ProfileStore.new()
 	store.root = "user://physical-test-" + Crypto.new().generate_random_bytes(12).hex_encode() + "/"
 	attach_profiles(store)
-	if store.active_id.is_empty() or not is_instance_valid(physical_toggle):
+	if store.active_id.is_empty() or not is_instance_valid(collection_mode):
 		push_error("Physical fixture initialization failed")
 		return 1
 	var id = "1-001"
@@ -1018,13 +1073,13 @@ func run_physical_collection_test() -> int:
 		failures.append("Short card number search")
 	_adjust_physical(1)
 	_adjust_physical(1)
-	if store.count("physical", key) != 2 or physical_quantity.text != "2":
+	if store.count("physical", key) != 2 or collection_quantity.text != "2":
 		failures.append("Quick add")
-	physical_quantity.text = "5"
+	collection_quantity.text = "5"
 	_apply_physical_quantity()
 	if store.count("physical", key) != 5:
 		failures.append("Set copies")
-	physical_quantity.text = "-1"
+	collection_quantity.text = "-1"
 	_apply_physical_quantity()
 	if store.count("physical", key) != 5:
 		failures.append("Negative entry accepted")
@@ -1041,7 +1096,7 @@ func run_physical_collection_test() -> int:
 	search.text = ""
 	ownership_filter.select(1)
 	refresh_list()
-	if cards.item_count != 2 or not physical_summary.text.contains("2 / ") or not physical_summary.text.contains("5 copies"):
+	if cards.item_count != 2 or not collection_summary.text.contains("2 / ") or not collection_summary.text.contains("5 copies"):
 		failures.append("Owned filter or summary")
 	ownership_filter.select(2)
 	refresh_list()
@@ -1050,7 +1105,7 @@ func run_physical_collection_test() -> int:
 	ownership_filter.select(0)
 	search.text = id
 	refresh_list()
-	physical_quantity.text = "0"
+	collection_quantity.text = "0"
 	_apply_physical_quantity()
 	if store.collection("physical").has(key) or store.count("digital", key) != 4:
 		failures.append("Zero removal or digital isolation")
@@ -1067,7 +1122,7 @@ func run_physical_collection_test() -> int:
 		if profile_selector.get_item_metadata(index) == "default":
 			_profile_selected(index)
 			break
-	if store.active_id != "default" or store.count("physical", incomplete_key) != 1 or physical_quantity.text != "1":
+	if store.active_id != "default" or store.count("physical", incomplete_key) != 1 or collection_quantity.text != "1":
 		failures.append("Profile switch refresh")
 	var reopened = ProfileStore.new()
 	reopened.root = store.root
@@ -1103,4 +1158,117 @@ func run_physical_collection_test() -> int:
 	for failure in failures:
 		push_error(failure)
 	print("LOL_PHYSICAL slots=%d failures=%d" % [game.catalogue.records.size(), failures.size()])
+	return 0 if failures.is_empty() else 1
+
+func run_digital_collection_test() -> int:
+	var failures: Array[String] = []
+	var store = ProfileStore.new()
+	store.root = "user://digital-test-" + Crypto.new().generate_random_bytes(12).hex_encode() + "/"
+	attach_profiles(store)
+	if store.active_id.is_empty() or not is_instance_valid(collection_mode):
+		push_error("Digital fixture initialization failed")
+		return 1
+	var id = "1-001"
+	var key = store.card_key("tabletop", id)
+	var other = store.card_key("tabletop", "1-002")
+	var original: Dictionary = game.catalogue.records[id].duplicate(true)
+	if not store.add("physical", key, 8).is_empty():
+		failures.append("Physical fixture")
+	_set_collection_mode("digital")
+	search.text = "1"
+	refresh_list()
+	if selected_id != id or collection_quantity.text != "0" or collection_quantity.editable or collection_plus.visible or grant_button.visible:
+		failures.append("Read-only in-game browser or physical isolation")
+	_developer_adjust(1)
+	_adjust_physical(1)
+	collection_quantity.text = "6"
+	_apply_physical_quantity()
+	if store.count("digital", key) != 0 or store.count("physical", key) != 8:
+		failures.append("Normal browser allowed edits")
+	var reward = {key: 2, other: 1}
+	if not store.acquire_cards(reward, store.active_id).is_empty():
+		failures.append("Batch acquisition")
+	if store.count("digital", key) != 2 or store.count("digital", other) != 1:
+		failures.append("Batch quantities")
+	var before: Dictionary = store.collection("digital")
+	for bad in [{key: 1, other: -1}, {key: 1, "bad": 2}, {key: 1, other: 2147483647}, {key: 1, other: 0}, {key: 1, other: 1.5}]:
+		if store.acquire_cards(bad, store.active_id).is_empty() or store.collection("digital") != before:
+			failures.append("Invalid batch accepted or partially applied")
+	if store.acquire_cards({key: 1}, "another-profile").is_empty():
+		failures.append("Wrong-profile reward accepted")
+	search.text = ""
+	ownership_filter.select(1)
+	refresh_list()
+	if cards.item_count != 2 or not collection_summary.text.contains("3 copies") or not collection_summary.text.contains("1 duplicates"):
+		failures.append("Owned filter or summary")
+	ownership_filter.select(2)
+	refresh_list()
+	if cards.item_count != game.catalogue.records.size() - 2:
+		failures.append("Missing filter")
+	developer_grants = true # fixture only; real attach_profiles checks editor flag
+	_set_collection_mode("digital")
+	search.text = id
+	refresh_list()
+	if not grant_button.visible or not revoke_button.visible:
+		failures.append("Development controls absent")
+	_developer_adjust(1)
+	_developer_adjust(-1)
+	if store.count("digital", key) != 2:
+		failures.append("Development grant/remove")
+	search.text = "1-055"
+	refresh_list()
+	if not grant_button.disabled:
+		failures.append("Untyped grant enabled")
+	_developer_adjust(1)
+	if store.count("digital", "tabletop:1-055") != 0:
+		failures.append("Untyped grant accepted")
+	profile_name.text = "Second player"
+	_create_profile()
+	var second_id: String = store.active_id
+	if second_id == "default" or store.count("digital", key) != 0:
+		failures.append("Profile isolation")
+	if not store.acquire_cards({key: 5}, second_id).is_empty():
+		failures.append("Second player reward")
+	for index in range(profile_selector.item_count):
+		if profile_selector.get_item_metadata(index) == "default":
+			_profile_selected(index)
+			break
+	search.text = id
+	refresh_list()
+	if store.active_id != "default" or collection_quantity.text != "2" or store.count("physical", key) != 8:
+		failures.append("Profile switch refresh")
+	_set_collection_mode("physical")
+	if collection_quantity.text != "8" or not collection_quantity.editable or grant_button.visible:
+		failures.append("Shared physical browser")
+	var reopened = ProfileStore.new()
+	reopened.root = store.root
+	if not reopened.initialize().is_empty() or reopened.collection("digital") != before or reopened.count("physical", key) != 8:
+		failures.append("Batch persistence or isolation")
+	if second_id != "default":
+		if not reopened.switch_profile(second_id).is_empty() or reopened.count("digital", key) != 5:
+			failures.append("Second player persistence")
+	if game.catalogue.records[id] != original:
+		failures.append("Canonical record changed")
+	_set_collection_mode("")
+	search.text = ""
+	refresh_list()
+	if cards.item_count != game.card_database.size():
+		failures.append("Normal browsing scope")
+	for entry in store.list_profiles():
+		var directory = store.root.path_join(entry.profile_id)
+		for filename in ["profile.json", "physical_collection.json", "digital_collection.json"]:
+			for suffix in ["", ".bak"]:
+				var path = directory.path_join(filename + suffix)
+				if FileAccess.file_exists(path):
+					DirAccess.remove_absolute(path)
+		DirAccess.remove_absolute(directory.path_join("decks"))
+		DirAccess.remove_absolute(directory)
+	for suffix in ["", ".bak"]:
+		var path = store.root.path_join("active_profile.json" + suffix)
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(path)
+	DirAccess.remove_absolute(store.root)
+	for failure in failures:
+		push_error(failure)
+	print("LOL_DIGITAL slots=%d failures=%d" % [game.catalogue.records.size(), failures.size()])
 	return 0 if failures.is_empty() else 1
