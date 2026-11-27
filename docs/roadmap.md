@@ -71,10 +71,11 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 - [ ] Physical collection import/export later, with explicit quantities and merge behavior.
 - [x] Automated zero, duplicates, missing IDs, persistence and isolation checks passed; owner inspected graphical collection mode and reported it works.
 
-### P3 — Digital collection (core implemented, pending local verification)
-- [ ] Separate digital inventory and acquisition operations; no automatic physical-to-digital conversion.
-- [ ] View owned/unowned, duplicate counts, completion, and acquisition history if useful.
-- [ ] Test additions/removals, persistence and physical/digital independence.
+### P3 — Digital collection (core verified)
+- [x] Separate digital inventory and batch acquisition operations; no automatic physical-to-digital conversion.
+- [x] View owned/unowned, duplicate counts and completion in shared browser.
+- [ ] Optional acquisition history, event deduplication and progression (deferred to reward/product work).
+- [x] Automated additions/removals, batch rejection, persistence and physical/digital independence passed; owner reports persistence in normal use. Manual editor-flag launch and individual graphical edge cases not separately confirmed.
 
 ## V — Card presentation vertical slice
 
@@ -123,7 +124,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 1. A1: schema + lossless migration (verified).
 2. A2: editable workshop + save/reload (core verified; manual edge checks remain).
 3. A3a: import reconciliation (core verified); A3b: provenance and verification (core verified).
-4. P1: profile foundation (core verified); P2: physical collection (core verified); P3: in-game collection (next).
-5. Choose the next slice together (presentation, deck building or test pack). Rules work remains independent and may be interleaved in small checkpoints.
+4. P1: profile foundation (core verified); P2: physical collection (core verified); P3: in-game collection (core verified).
+5. V1: artwork binding and fallback (proposed next), then V2: first polished B.B. presentation; review each slice together. Deck building and test packs remain available alternatives. Rules work remains independent and may be interleaved in small checkpoints.
 
 At the end of each checkpoint: update this file and the restoration journal; keep the next action small enough for a single shared review.
