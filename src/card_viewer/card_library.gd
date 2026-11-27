@@ -424,6 +424,8 @@ func run_editor_test() -> int:
 		failures.append("Incomplete search failed")
 		return 1
 	var original: Dictionary = game.catalogue.records[selected_id].duplicate(true)
+	var original_runtime = game.card_database.get(selected_id)
+	var test_name = ("Fixture" if original.name == null else str(original.name)) + " [test]"
 	var original_dir: String = game.catalogue.card_dir
 	var fixture = "user://catalogue-test-" + str(Time.get_ticks_usec()) + "/"
 	if DirAccess.make_dir_recursive_absolute(fixture) != OK:
@@ -435,9 +437,10 @@ func run_editor_test() -> int:
 		push_error("Cannot copy test fixture")
 		return 1
 	game.catalogue.card_dir = fixture
+	_set_draft_field(test_name, "name")
 	_set_draft_field("Items", "type")
 	_set_draft_field("2", "rank")
-	if not is_dirty() or preview == null or game.card_database.has(id):
+	if not is_dirty() or preview == null or preview.card_name != test_name.strip_edges() or game.card_database.get(id) != original_runtime:
 		failures.append("Draft preview or isolation failed")
 	_set_draft_field("bad", "rank")
 	if not save_button.disabled:
@@ -445,10 +448,11 @@ func run_editor_test() -> int:
 	revert_draft()
 	if is_dirty() or draft != original:
 		failures.append("Revert failed")
+	_set_draft_field(test_name, "name")
 	_set_draft_field("Items", "type")
 	_set_draft_field("2", "rank")
 	save_draft()
-	if is_dirty() or not game.card_database.has(id) or game.catalogue.read_json(path) != game.catalogue.records[id]:
+	if is_dirty() or not game.card_database.has(id) or game.card_database[id].name != test_name.strip_edges() or game.catalogue.read_json(path) != game.catalogue.records[id]:
 		failures.append("Save/reload or runtime projection failed")
 	# Restore the real catalogue path, then reload original records.
 	game.catalogue.card_dir = original_dir

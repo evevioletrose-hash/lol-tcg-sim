@@ -112,7 +112,7 @@ func save_record(id: String, record: Dictionary) -> String:
 	var file = FileAccess.open(temporary, FileAccess.WRITE)
 	if file == null:
 		return "Cannot write temporary card file."
-	file.store_string(JSON.stringify(record, "\t", false) + "\n")
+	file.store_string(JSON.stringify(record, "  ", false) + "\n")
 	file.flush()
 	var write_error = file.get_error()
 	file.close()

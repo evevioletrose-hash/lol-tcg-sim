@@ -141,10 +141,6 @@ func project_card_data(card_data, warn: bool = true) -> Dictionary:
 		if warn:
 			push_warning("Unknown card type for " + card_number)
 		return {}
-	if card_type == Card_Types.Surprise and card_data.size() < 9:
-		if warn:
-			push_warning("Missing Surprise phase: " + card_number)
-		return {}
 
 	var card_data_object = {
 		"number": card_number,
@@ -162,7 +158,7 @@ func project_card_data(card_data, warn: bool = true) -> Dictionary:
 		else:
 			card_data_object.club = Clubs.Unknown
 	elif card_type == Card_Types.Surprise:
-		card_data_object.phase = get_game_phase(card_data[8].strip_edges())
+		card_data_object.phase = get_game_phase(card_data[8].strip_edges() if card_data.size() >= 9 else "")
 
 	return card_data_object
 
