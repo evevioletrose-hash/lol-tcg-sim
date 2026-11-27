@@ -2,7 +2,7 @@
 
 Checkpoint 1: boot and catalogue, not gameplay.
 
-- Godot project was authored for 4.5 (Mobile). Preserve this configuration.
+- Godot project was originally authored for 4.5 (Mobile), now migrated to 4.8.beta5 (Mobile).
 - Run main.tscn; the original two-player board should appear with a catalogue count.
 - Expect 311 typed entries from 400 numbered rows: 161 B.B.s, 75 Surprises, 70 Items, 5 Places. The remaining 89 rows (87 unnamed, 2 named but untyped) remain in the original TSV.
 - The catalogue can hold Places, but there is no Place scene yet. Unknown stats stay as printed strings.
@@ -17,7 +17,7 @@ Checkpoint 1: boot and catalogue, not gameplay.
 & godot --headless --path . --quit-after 5
 ```
 
-Use the local Godot executable path if it is not on PATH. Inspect the first import for errors. The second command should print `LOL_RESTORATION catalogue=311`. Open the project normally to inspect the board. Local verification on Godot 4.8.beta5: editor import completed and runtime printed `LOL_RESTORATION catalogue=311`. Two expected untyped-card warnings remain (1-055 Kawaii Queen and 1-244 Matchmaker); do not infer their types or effects. The initial Blender import reported stale mesh UID `uid://d0ohijftnfhoy`; the import settings now point to the existing mesh path instead. A forced reimport is still needed to verify this change. Visual board inspection is pending.
+Use the local Godot executable path if it is not on PATH. Inspect the first import for errors. The second command should print `LOL_RESTORATION catalogue=311`. Open the project normally to inspect the board. Local verification on Godot 4.8.beta5: editor import completed and runtime printed `LOL_RESTORATION catalogue=311`. Two expected untyped-card warnings remain (1-055 Kawaii Queen and 1-244 Matchmaker); do not infer their types or effects. The initial Blender import reported stale mesh UID `uid://d0ohijftnfhoy`; the import settings now point to the existing mesh path instead. Reimport and the subsequent UID reconciliation passed; migration committed as 168d43d. Final visual comparison of the regenerated 3D mesh and old board remains optional follow-up.
 
 ## Next checkpoint
 
@@ -31,4 +31,8 @@ Restore card scene population and preview a few individual cards, then inspect z
 - The five Places are inspectable as text only. The 3D card remains untouched. No artwork has been added.
 - A preview is a disposable Card node with no zone or match. The existing factory accepts an optional parent so the board and workshop can share it.
 - Preserve the printed card ID including leading zeroes; correct Surprise label paths and remove its orphaned button signal.
-- Local smoke test: `godot --headless --path . -- --card-workshop-test` checks identity, text and B.B. stats across the current catalogue, and reports counts and failures. No runtime validation yet. Counts intentionally pin this restoration snapshot; update the test when the catalogue grows.
+- Local smoke test: `godot --headless --path . -- --card-workshop-test` checks identity, text and B.B. stats across the current catalogue, and reports counts and failures. Runtime validation passed on Godot 4.8.beta5. The initial Control inheritance error was repaired in 5ecffaf; layout and empty-search issues were repaired in 2fc5edb and 28c6c14. The owner reported a successful graphical launch and supplied a screenshot showing 311/311 entries and the Pop Heart preview; graphical test exit code 0 is visible. Headless definition test reported zero failures before the final layout revisions; full final headless log was not supplied. Counts intentionally pin this restoration snapshot; update the test when the catalogue grows.
+
+## Continuing work
+
+See [roadmap.md](roadmap.md) for the living checklist. Next: A1, lossless local catalogue migration. Do not start profile or gameplay work in the same checkpoint.
