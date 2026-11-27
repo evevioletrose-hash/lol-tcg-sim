@@ -14,6 +14,11 @@ var status: Label
 var save_button: Button
 var revert_button: Button
 var close_dialog: ConfirmationDialog
+var import_button: Button
+var export_button: Button
+var sheet_status: Label
+const Reconciliation = preload("res://src/cards/catalogue_reconciliation.gd")
+const ReconciliationWindow = preload("res://src/card_viewer/reconciliation_window.gd")
 const INCOMPLETE_FILTER = 100
 
 @onready var search: LineEdit = $Margin/Layout/Body/Catalogue/Search
@@ -251,6 +256,22 @@ func build_editor() -> void:
 	$Margin/Layout/Title.text = "Dance Off / Card Archivist"
 	$Margin/Layout/Body.split_offset = 270
 	details.hide()
+	var toolbar = HBoxContainer.new()
+	var layout = $Margin/Layout
+	layout.add_child(toolbar)
+	layout.move_child(toolbar, 1)
+	import_button = Button.new()
+	import_button.text = "Import spreadsheet..."
+	import_button.pressed.connect(open_sheet_dialog.bind(false))
+	toolbar.add_child(import_button)
+	export_button = Button.new()
+	export_button.text = "Export spreadsheet..."
+	export_button.pressed.connect(open_sheet_dialog.bind(true))
+	toolbar.add_child(export_button)
+	sheet_status = Label.new()
+	sheet_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sheet_status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	toolbar.add_child(sheet_status)
 	var scroll = ScrollContainer.new()
 	scroll.custom_minimum_size.x = 275
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -365,6 +386,8 @@ func update_draft() -> void:
 	revert_button.disabled = not dirty
 	search.editable = not dirty
 	type_filter.disabled = dirty
+	import_button.disabled = dirty
+	export_button.disabled = dirty
 	cards.mouse_filter = Control.MOUSE_FILTER_IGNORE if dirty else Control.MOUSE_FILTER_STOP
 	cards.focus_mode = Control.FOCUS_NONE if dirty else Control.FOCUS_ALL
 	field_rows["club"].visible = draft.type == "BB"
@@ -465,4 +488,117 @@ func run_editor_test() -> int:
 	for failure in failures:
 		push_error(failure)
 	print("LOL_ARCHIVIST slots=%d failures=%d" % [game.catalogue.records.size(), failures.size()])
+	return 0 if failures.is_empty() else 1
+
+func open_sheet_dialog(exporting: bool) -> void:
+	if is_dirty():
+		return
+	var dialog = FileDialog.new()
+	dialog.access = FileDialog.ACCESS_FILESYSTEM
+	dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE if exporting else FileDialog.FILE_MODE_OPEN_FILE
+	dialog.title = "Export catalogue" if exporting else "Import spreadsheet for review"
+	dialog.add_filter("*.csv", "CSV spreadsheet")
+	dialog.add_filter("*.tsv, *.txt", "Tab-separated text")
+	if exporting:
+		dialog.current_file = "catalogue.csv"
+	dialog.file_selected.connect(sheet_file_selected.bind(exporting))
+	dialog.file_selected.connect(func(_path): dialog.queue_free())
+	dialog.canceled.connect(dialog.queue_free)
+	add_child(dialog)
+	dialog.popup_centered_ratio(0.8)
+
+func sheet_file_selected(path: String, exporting: bool) -> void:
+	if is_dirty():
+		return
+	var plan = Reconciliation.new()
+	if exporting:
+		# Export must never overwrite canonical JSON or original source snapshot.
+		if not path.get_extension().to_lower() in ["csv", "tsv", "txt"] or path.simplify_path() == ProjectSettings.globalize_path("res://cardlist.txt").simplify_path():
+			sheet_status.text = "Choose a new CSV or TSV file, not the original source."
+			return
+		var problem = plan.export_sheet(game.catalogue, path)
+		sheet_status.text = "Export saved." if problem.is_empty() else problem
+		return
+	if plan.read_sheet(path):
+		plan.compare(game.catalogue)
+	var window = ReconciliationWindow.new()
+	add_child(window)
+	window.records_saved.connect(refresh_list)
+	window.setup(game, plan)
+
+func run_reconciliation_test() -> int:
+	var failures: Array[String] = []
+	var plan = Reconciliation.new()
+	var dir = "user://reconcile-test-" + str(Time.get_ticks_usec()) + "/"
+	if DirAccess.make_dir_recursive_absolute(dir) != OK:
+		push_error("Cannot create reconciliation fixture")
+		return 1
+	var csv = dir.path_join("roundtrip.csv")
+	var tsv = dir.path_join("roundtrip.tsv")
+	for path in [csv, tsv]:
+		if not plan.export_sheet(game.catalogue, path).is_empty() or not plan.read_sheet(path) or not plan.compare(game.catalogue) or not plan.changes.is_empty():
+			failures.append("Round trip failed: " + path)
+	var legacy = Reconciliation.new()
+	if not legacy.read_sheet("res://cardlist.txt"):
+		failures.append("Original TSV parsing failed")
+	else:
+		# Original may differ intentionally after transcription; compare raw source syntax.
+		if legacy.rows.size() != 400 or legacy.rows["1-003"].text != "\"Tag! Ur it!\"":
+			failures.append("Original TSV quote preservation failed")
+	var id = "1-055"
+	var original: Dictionary = game.catalogue.records[id].duplicate(true)
+	var fixture_path = dir.path_join(id + ".json")
+	var original_dir: String = game.catalogue.card_dir
+	if DirAccess.copy_absolute(original_dir.path_join(id + ".json"), fixture_path) != OK:
+		push_error("Cannot copy reconciliation fixture")
+		return 1
+	game.catalogue.card_dir = dir
+	var fixture_csv = dir.path_join("changes.csv")
+	var file = FileAccess.open(fixture_csv, FileAccess.WRITE)
+	file.store_csv_line(PackedStringArray(["id", "name", "type", "rank", "text", "Have"]))
+	file.store_csv_line(PackedStringArray([id, "Fixture name", "Items", "2", "Line 1, \"quote\"\nLine 2", "99"]))
+	file.close()
+	plan = Reconciliation.new()
+	if not plan.read_sheet(fixture_csv) or not plan.compare(game.catalogue) or plan.changes.size() != 1:
+		failures.append("Conflict preview failed")
+	else:
+		var chosen = plan.missing_choices()
+		if not plan.cell(original.name).is_empty() and chosen.get(id, {}).has("name"):
+			failures.append("Nonblank value selected by fill shortcut")
+		if not plan.apply_selected(game.catalogue, {}).saved.is_empty() or game.catalogue.records[id] != original:
+			failures.append("No-op changed record")
+		var selection = {id: {"text":true}}
+		var result = plan.apply_selected(game.catalogue, selection)
+		if not result.error.is_empty() or result.saved != [id] or game.catalogue.records[id].name != original.name or game.catalogue.records[id].text != "Line 1, \"quote\"\nLine 2":
+			failures.append("Selective save / quoted multiline failed")
+		if plan.apply_selected(game.catalogue, selection).error.is_empty():
+			failures.append("Stale baseline accepted")
+		plan.read_sheet(fixture_csv)
+		plan.compare(game.catalogue)
+		var bad = FileAccess.open(fixture_path, FileAccess.WRITE)
+		bad.store_string("{}")
+		bad.close()
+		if plan.apply_selected(game.catalogue, {id: {"name":true}}).error.is_empty():
+			failures.append("External change accepted")
+	file = FileAccess.open(fixture_csv, FileAccess.WRITE)
+	file.store_string("id,name\n" + id + ",one\n" + id + ",two\n")
+	file.close()
+	if plan.read_sheet(fixture_csv):
+		failures.append("Duplicate ID accepted")
+	file = FileAccess.open(fixture_csv, FileAccess.WRITE)
+	file.store_string("id,name\n9-999,unknown\n")
+	file.close()
+	if not plan.read_sheet(fixture_csv) or plan.compare(game.catalogue):
+		failures.append("Unknown ID accepted")
+	game.catalogue.card_dir = original_dir
+	game.load_cardlist()
+	refresh_list()
+	if game.catalogue.records[id] != original:
+		failures.append("Canonical record changed")
+	for path in [csv, tsv, fixture_csv, fixture_path]:
+		DirAccess.remove_absolute(path)
+	DirAccess.remove_absolute(dir)
+	for failure in failures:
+		push_error(failure)
+	print("LOL_RECONCILIATION failures=%d" % failures.size())
 	return 0 if failures.is_empty() else 1

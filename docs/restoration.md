@@ -71,3 +71,7 @@ LOL_MIGRATION slots=400 typed=311 incomplete=89 fields_verified=3600 failures=0
 ```
 
 All three checks exited 0. Working tree clean. Owner inspected editor and reported satisfaction with the graphical interface. Fixture save/replace exercised on Windows in user://; source data unchanged. No claim that every interaction or actual res:// save has been manually tested. Expected warnings for two untyped records. A2 core accepted; A3 next, with deferred manual checks and verification filtering recorded in roadmap. Catalogue UID was preserved in ea1b2e4.
+
+## A3a: Spreadsheet reconciliation (pending local verification)
+
+Developer archivist toolbar opens CSV/TSV import and export. Preview shows per-card local/incoming field differences; no fields selected by default. Blank-fill shortcut, explicit field acceptance, no-op and cancel, duplicate and unknown ID rejection, preflight validation and external-change checks. No canonical source or profile changes during tests. Test `-- --catalogue-reconciliation-test` exercises both export round trips, original TSV literal quotes, multiline quoted text, selective save, no-op, stale baseline, external change, duplicate and unknown IDs. Actual graphical interaction pending. Source references and verification filtering deferred to A3b.

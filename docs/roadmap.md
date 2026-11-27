@@ -44,6 +44,8 @@ Evidence: 168d43d (migration), 5ecffaf (definition test: 311, zero failures), 28
 - [ ] Manual edge checks: dirty selection/close confirmation, external-file conflict, real developer-file save and diff review when first transcribing. Do not change actual data merely to test.
 
 ### A3 — Reconcile external data
+
+A3a: import/export and field reconciliation implemented, pending local verification. A3b: source references and verification filters after acceptance.
 - [ ] Import TSV/CSV exports of the original spreadsheet (no online dependency).
 - [ ] Match by stable card ID, preview field-by-field changes, preserve existing values unless explicitly replaced, and allow skip/accept choices.
 - [ ] Flag duplicate IDs, conflicts and incomplete records. No silent destructive bulk import.
