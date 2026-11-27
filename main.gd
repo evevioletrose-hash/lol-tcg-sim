@@ -43,5 +43,8 @@ func _ready() -> void:
 			push_error("LOL_WORKSHOP initialization failed")
 			get_tree().quit(1)
 			return
+		# Containers lay out their children on deferred notifications.
+		await get_tree().process_frame
+		await get_tree().process_frame
 		get_tree().quit(library.run_smoke_test())
 	# game.initialize_game(item_deck, sample_deck)

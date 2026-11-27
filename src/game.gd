@@ -232,6 +232,11 @@ func open_library():
 		library.free()
 		push_error("Could not initialize card library script")
 		return null
-	add_child(library)
+	# Screen UI must not inherit the dance floor's canvas transforms or layout.
+	var ui_layer = CanvasLayer.new()
+	ui_layer.name = "WorkshopUI"
+	ui_layer.layer = 10
+	add_child(ui_layer)
+	ui_layer.add_child(library)
 	library.setup(self)
 	return library

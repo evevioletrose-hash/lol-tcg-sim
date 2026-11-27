@@ -14,6 +14,8 @@ var selected_id: String = ""
 
 func setup(source: Game) -> void:
 	game = source
+	get_viewport().size_changed.connect(_sync_viewport_layout)
+	_sync_viewport_layout()
 	type_filter.add_item("All types")
 	type_filter.add_item("B.B.", Game.Card_Types.BB + 1)
 	type_filter.add_item("Item", Game.Card_Types.Item + 1)
@@ -23,6 +25,12 @@ func setup(source: Game) -> void:
 	type_filter.item_selected.connect(_on_filter_changed)
 	cards.item_selected.connect(_on_card_selected)
 	refresh_list()
+
+func _sync_viewport_layout() -> void:
+	# Explicitly size the root against the viewport, not the Node2D board.
+	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	position = Vector2.ZERO
+	size = get_viewport_rect().size
 
 func _on_search_changed(_value: String) -> void:
 	refresh_list()
@@ -121,6 +129,20 @@ func show_card(id: String) -> void:
 func run_smoke_test() -> int:
 	var counts: Dictionary = {}
 	var failures: Array[String] = []
+	var title: Label = $Margin/Layout/Title
+	var viewport_rect = get_viewport_rect()
+	print("LOL_WORKSHOP_LAYOUT viewport=%s root=%s title=%s list=%s visible=%s" % [
+		viewport_rect, get_global_rect(), title.get_global_rect(),
+		cards.get_global_rect(), is_visible_in_tree()
+	])
+	if not is_visible_in_tree() or size.x <= 0 or size.y <= 0:
+		failures.append("Workshop root is hidden or has no size")
+	if not title.is_visible_in_tree() or not viewport_rect.intersects(title.get_global_rect()):
+		failures.append("Workshop title is outside viewport")
+	if cards.size.x <= 0 or cards.size.y <= 0:
+		failures.append("Catalogue has no layout area")
+	if cards.item_count != game.card_database.size():
+		failures.append("Initial catalogue list is incomplete")
 	for id in game.card_database:
 		var data: Dictionary = game.card_database[id]
 		show_card(id)
