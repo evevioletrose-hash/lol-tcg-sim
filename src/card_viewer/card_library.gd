@@ -760,13 +760,15 @@ func attach_profiles(store) -> void:
 	var create = Button.new()
 	create.text = "Create profile"
 	create.pressed.connect(_create_profile)
+	profile_name.text_submitted.connect(func(_value: String): _create_profile())
 	toolbar.add_child(create)
 	profile_status = Label.new()
-	profile_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	profile_status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	toolbar.add_child(profile_status)
+	profile_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	layout.add_child(profile_status)
+	layout.move_child(profile_status, 2)
 	var problem: String = profile_store.initialize()
 	if not problem.is_empty():
+		push_warning("LOL_PROFILE_INIT: " + problem)
 		profile_status.text = problem
 		profile_status.tooltip_text = problem
 		profile_selector.disabled = true

@@ -54,7 +54,14 @@ func _read(path: String, kind: String, id: String = "") -> Dictionary:
 	var parser = JSON.new()
 	if parser.parse(file.get_as_text()) != OK or not _valid_data(parser.data, kind, id):
 		return {}
-	return parser.data
+	# Godot JSON decodes numbers as floats. Restore integer types before
+	# comparing snapshots or verifying a write (including nested counts).
+	var value: Dictionary = parser.data
+	value["schema_version"] = int(value["schema_version"])
+	if kind in KINDS:
+		for key in value.counts:
+			value.counts[key] = int(value.counts[key])
+	return value
 
 func _exists(path: String) -> bool:
 	return FileAccess.file_exists(path) or FileAccess.file_exists(path + ".bak")
@@ -79,9 +86,13 @@ func _replace(path: String, value: Dictionary, kind: String, id: String) -> Stri
 	file.flush()
 	var write_error = file.get_error()
 	file.close()
-	if write_error != OK or _read(temporary, kind, id) != value:
+	if write_error != OK:
 		DirAccess.remove_absolute(temporary)
-		return "Could not verify temporary save: " + path
+		return "Temporary save write failed: " + path + ": " + error_string(write_error)
+	var reread = _read(temporary, kind, id)
+	if reread != value:
+		DirAccess.remove_absolute(temporary)
+		return "Temporary save " + ("failed schema validation" if reread.is_empty() else "round-trip mismatch") + ": " + path
 	var result = DirAccess.rename_absolute(temporary, path)
 	if result != OK:
 		DirAccess.remove_absolute(temporary)
@@ -139,7 +150,40 @@ func initialize() -> String:
 		var problem = _create(id, "Default")
 		if not problem.is_empty():
 			return problem
+	elif not _exists(_profile_path(id)):
+		var problem = _resume_default_creation()
+		if not problem.is_empty():
+			return problem
 	return switch_profile(id)
+
+# A first-run crash may leave an empty folder or an empty inventory before
+# identity is saved. Only resume when there is no active pointer or identity
+# and all existing inventory snapshots are valid and empty.
+func _resume_default_creation() -> String:
+	var id = "default"
+	for kind in KINDS:
+		var path = _inventory_path(id, kind)
+		for candidate in [path, path + ".bak"]:
+			if FileAccess.file_exists(candidate):
+				var existing = _read(candidate, kind, id)
+				if existing.is_empty() or not existing.counts.is_empty():
+					return "Incomplete default profile contains existing or unreadable collection data. No data overwritten: " + candidate
+	if not DirAccess.dir_exists_absolute(root.path_join(id).path_join("decks")):
+		if DirAccess.make_dir_recursive_absolute(root.path_join(id).path_join("decks")) != OK:
+			return "Cannot resume default profile folder."
+	var decks = DirAccess.open(root.path_join(id).path_join("decks"))
+	if decks == null or not decks.get_files().is_empty() or not decks.get_directories().is_empty():
+		return "Incomplete default profile has existing deck data. No data overwritten."
+	for kind in KINDS:
+		var path = _inventory_path(id, kind)
+		if not _exists(path):
+			var problem = _save(path, {"schema_version": 1, "profile_id": id, "kind": kind, "counts": {}}, kind, id)
+			if not problem.is_empty():
+				return problem
+	var problem = _save(_profile_path(id), {"schema_version": 1, "profile_id": id, "name": "Default"}, "profile", id)
+	if problem.is_empty():
+		warnings.append("Resumed interrupted empty default profile creation.")
+	return problem
 
 func list_profiles() -> Array:
 	var result: Array = []

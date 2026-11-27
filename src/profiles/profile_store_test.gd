@@ -6,10 +6,23 @@ func run() -> int:
 	var failures: Array[String] = []
 	var first = Store.new()
 	first.root = "user://profile-test-" + str(Time.get_ticks_usec()) + "/"
+	# Reproduce the interrupted first launch, including one valid empty file.
+	if DirAccess.make_dir_recursive_absolute(first.root.path_join("default").path_join("decks")) != OK:
+		push_error("Cannot create interrupted profile fixture")
+		return 1
+	var partial_path = first._inventory_path("default", "physical")
+	var partial = FileAccess.open(partial_path, FileAccess.WRITE)
+	if partial == null:
+		push_error("Cannot write interrupted profile fixture")
+		return 1
+	partial.store_string(JSON.stringify({"schema_version": 1, "profile_id": "default", "kind": "physical", "counts": {}}))
+	partial.close()
 	var problem = first.initialize()
 	if not problem.is_empty():
 		push_error(problem)
 		return 1
+	if first.warnings.is_empty():
+		failures.append("Interrupted first-run recovery not reported")
 	var key = first.card_key("tabletop", "1-001")
 	var other_edition = first.card_key("digital", "1-001")
 	var unknown = first.card_key("tabletop", "9-999")
