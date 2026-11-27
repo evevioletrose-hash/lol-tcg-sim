@@ -92,7 +92,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 
 - [x] D1: Profile-local named deck index, immediate save/edit, composition summary and unrestricted Workshop deck mode verified at 5a93af3; owner created a deck and approved core workflow.
 - [x] D2: Three non-destructive collection-aware building policies verified at fc00dda; owner confirmed policies work in GUI.
-- [ ] D3: Championship validation per rulebook p.10: 24–30 cards, one of each unique B.B./Surprise/Place, at most three of the same Item; opponent total Rank difference at most two. Approx. half B.B.s is advice, not mandatory. Flag unknown definitions or ranks; resolve unique-character/variant semantics before enforcement.
+- [ ] D3: Printed Championship validator and compact Workshop report implemented, pending local verification. Exact ID copy limits; same-name distinct variants require review, not enforced as shared identity. Pairwise Rank helper ready for D4. See [championship-validation.md](championship-validation.md).
 - [ ] D4: Build two decks, compare rank and legality, test boundary values and inventory caps. Do not assume both decks must have the same size.
 
 ## B — Booster and product experiments

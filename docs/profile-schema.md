@@ -46,3 +46,7 @@ Deck storage unchanged. DeckOwnership is a pure read-only policy: shortage count
 ### D2 acceptance
 
 At fc00dda all five targeted profile/collection/deck checks exited 0, including LOL_DECK_OWNERSHIP modes=3 failures=0. Owner confirmed graphical policy switching works. Clean working tree. Full suite not rerun at this checkpoint; simultaneous deck ownership requirements and championship legality remain separate future checks.
+
+## D3 validation
+
+Read-only printed Championship validation shown in deck builder. See [championship-validation.md](championship-validation.md). Decks remain drafts and save regardless of rules; ownership, individual legality and pairwise Rank compatibility are distinct. No schema changes.

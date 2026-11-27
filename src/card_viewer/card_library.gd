@@ -46,6 +46,10 @@ var deck_create: Button
 var deck_snapshot: Dictionary = {}
 var active_deck: String = ""
 const DeckComposition = preload("res://src/profiles/deck_composition.gd")
+const ChampionshipDeck = preload("res://src/rules/championship_deck.gd")
+var deck_rules_button: Button
+var deck_rules_dialog: AcceptDialog
+var deck_rules_report: Dictionary = {}
 var collection_mode: OptionButton
 var developer_grants: bool = false
 var grant_button: Button
@@ -1650,6 +1654,19 @@ func _build_deck_controls() -> void:
 	deck_summary = Label.new()
 	deck_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	deck_panel.add_child(deck_summary)
+	deck_rules_button = Button.new()
+	deck_rules_button.text = "Championship details"
+	deck_rules_button.pressed.connect(_show_deck_rules)
+	deck_panel.add_child(deck_rules_button)
+	deck_rules_dialog = AcceptDialog.new()
+	deck_rules_dialog.title = "Championship deck validation"
+	deck_rules_dialog.min_size = Vector2i(480, 260)
+	var rules_text = RichTextLabel.new()
+	rules_text.name = "Report"
+	rules_text.bbcode_enabled = false
+	rules_text.custom_minimum_size = Vector2(460, 200)
+	deck_rules_dialog.add_child(rules_text)
+	add_child(deck_rules_dialog)
 	deck_rows = ItemList.new()
 	deck_rows.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	deck_rows.custom_minimum_size.y = 90
@@ -1845,10 +1862,21 @@ func _refresh_deck_rows() -> void:
 		for quantity in shortages.values():
 			missing += int(quantity)
 		deck_summary.text += "\nOwnership: %d copies short (%d entries)" % [missing, shortages.size()] if missing > 0 else "\nOwnership: covered"
+	deck_rules_report = ChampionshipDeck.validate(counts, game.catalogue.records)
+	if not active_deck.is_empty():
+		var rule_status = "meets checked rules" if deck_rules_report.status == "passes" else ("needs review" if deck_rules_report.status == "review" else "not ready")
+		deck_summary.text += "\nChampionship: " + rule_status
 	deck_summary.tooltip_text = deck_summary.text
 	_update_deck_buttons()
 
+func _show_deck_rules() -> void:
+	if active_deck.is_empty():
+		return
+	deck_rules_dialog.get_node("Report").text = ChampionshipDeck.describe(deck_rules_report)
+	deck_rules_dialog.popup_centered(Vector2i(560, 380))
+
 func _update_deck_buttons() -> void:
+	deck_rules_button.disabled = active_deck.is_empty()
 	deck_create.disabled = deck_snapshot.is_empty()
 	deck_rename.disabled = active_deck.is_empty()
 	var key = "tabletop:" + selected_id
@@ -1890,6 +1918,8 @@ func run_deck_test() -> int:
 	var summary = DeckComposition.summarize(_deck_counts(), game)
 	if summary.copies != 2 or summary.known_rank != 2 or summary.unknown_rank != 0:
 		failures.append("Composition calculation")
+	if deck_rules_report.status != "fails" or not deck_summary.text.contains("Championship: not ready") or deck_rules_button.disabled:
+		failures.append("Live Championship draft validation")
 	var unknown = DeckComposition.summarize({"digital:1-001": 3, "tabletop:1-055": 2}, game)
 	if unknown.unknown_rank != 5 or unknown.unknown_definition != 5:
 		failures.append("Unknown definition/rank accounting")

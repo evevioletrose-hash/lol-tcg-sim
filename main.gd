@@ -39,6 +39,9 @@ func _ready() -> void:
 		get_tree().quit(1)
 		return
 	print("LOL_RESTORATION catalogue=%d" % game.card_database.size())
+	if "--championship-test" in OS.get_cmdline_user_args():
+		get_tree().quit(preload("res://src/rules/championship_deck_test.gd").new().run(game))
+		return
 	if "--board" in OS.get_cmdline_user_args():
 		game.get_node("phasetext").text = "Restoration"
 		game.set_info("Catalogue: %d cards loaded" % game.card_database.size())

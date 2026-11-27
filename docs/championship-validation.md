@@ -1,0 +1,15 @@
+# D3: Printed Championship deck validation
+
+Primary evidence: [rule-book.pdf](rule-book.pdf), PDF p.10, Deck Construction and illustrated duplicate examples, inspected text and page image. Printed limits: 24–30 cards inclusive; one of each unique B.B., Surprise or Place; three of same Item; total Rank difference between opponents at most 2, including example 30 vs 28. Deck sizes can differ. Half B.B.s is recommended, not mandatory. No minimum B.B. count is added as a printed hard rule.
+
+Read-only supplemental research: research-clean @ 9bcd6c3a37dd80dcd5c6dbeee21e8df55cbf09fc, docs/research/tabletop.md, digital-game.md, extended-collection.md and evidence/rules-fixtures.json. Historical digital rules (10–30, at least one B.B. in UI strings, no verified relative Rank requirement) are not the printed rules. FIFA 2022 mixing rules unknown. No branch merge, no archived assets imported.
+
+## Deliberate interim identity policy
+
+Exact edition-qualified ID duplicate limits are enforced in the validator. Same-name, same-type distinct IDs whose combined count exceeds that type's cap are a review issue, not automatically illegal or legal. The illustrated rulebook duplicate shows identical Kitty Queen cards, not different variants. Research inspected does not resolve cross-variant limits. Current tabletop 1-001 and 1-400 both say Pop Heart, both transcribed rank 1, with different Style/Groove; no rank correction inferred from rarity or ID. Exact normalized names (trim/case only) are leads, not canonical character identity; aliases/spelling variations need more evidence. Later explicit identity groups can supersede heuristic without modifying ownership or card IDs.
+
+## Engine contract
+
+src/rules/championship_deck.gd accepts a count map and raw tabletop records, independent of Game, UI, profile or ownership. Returns errors, review, advice with codes/messages and affected keys; status fails if any definite violation, review if unresolved evidence and no definite violation, otherwise passes checked individual rules. Unrecognized editions/definitions, unknown Rank and conflicting provenance require review. Unverified but populated records used provisionally; pass is not proof of authentic transcriptions or implemented gameplay powers. Rank only from printed 1/2/3 values. compare_rank compares two reports only on Rank, returns review when either has unresolved Rank, passes at difference <=2. Does not assert overall match readiness; D4 will connect the pair comparison to the UI.
+
+Workshop shows compact validation summary plus Championship details dialog. Never changes counts, prevents editing or conflates validation with ownership. No schema change. --championship-test pure fixtures plus real Pop Heart variant, size 23/24/30/31, all copy caps, unknown/conflicting records, edition isolation, nonbinding recommendation and rank difference 2/3; --deck-test checks draft UI status. Local graphical/automated acceptance pending.
