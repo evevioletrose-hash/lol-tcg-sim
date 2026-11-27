@@ -1,0 +1,132 @@
+[
+  {
+    "id": "digital-defender-win-01",
+    "edition": "historical-digital-video",
+    "source": "tFEm8XawekI",
+    "time": [
+      "06:16.6",
+      "06:17"
+    ],
+    "attacker": {
+      "id": "1-127",
+      "groove": 0
+    },
+    "defender": {
+      "id": "1-142",
+      "style": 9
+    },
+    "audience": 5,
+    "expected": {
+      "total_groove": 5,
+      "winner": "defender",
+      "trophy_delta": {
+        "attacker": 0,
+        "defender": 1
+      }
+    },
+    "evidence": "observed"
+  },
+  {
+    "id": "digital-challenger-win-02",
+    "edition": "historical-digital-video",
+    "source": "tFEm8XawekI",
+    "time": [
+      "06:25",
+      "06:26",
+      "06:34"
+    ],
+    "attacker": {
+      "id": "1-109",
+      "groove": 3
+    },
+    "defender": {
+      "id": "1-142",
+      "style": 9
+    },
+    "audience": 7,
+    "expected": {
+      "total_groove": 10,
+      "winner": "attacker",
+      "trophy_delta": {
+        "attacker": 1,
+        "defender": 0
+      },
+      "final_score": [
+        3,
+        2
+      ]
+    },
+    "evidence": "observed; edited footage"
+  },
+  {
+    "id": "tabletop-hoops-mvp-worked-example",
+    "edition": "tabletop",
+    "source": "578215 manual PDF p.9 sections 9–10",
+    "attacker": {
+      "name": "Hoops MVP",
+      "starting_groove": 0,
+      "bonuses": [
+        2,
+        1,
+        2
+      ]
+    },
+    "defender": {
+      "name": "Bling Queen",
+      "starting_style": 9,
+      "bonuses": [
+        2
+      ]
+    },
+    "audience": 7,
+    "expected": {
+      "bonus_groove": 5,
+      "total_groove": 12,
+      "total_style": 11,
+      "winner": "attacker",
+      "trophy_delta": {
+        "attacker": 1,
+        "defender": 0
+      }
+    },
+    "evidence": "printed worked example"
+  },
+  {
+    "id": "tabletop-tie-policy",
+    "edition": "tabletop",
+    "source": "578215 manual PDF p.9 section 10",
+    "input": {
+      "total_groove": 9,
+      "total_style": 9
+    },
+    "expected": {
+      "winner": null,
+      "discard_both": true,
+      "discard_attached_items": true,
+      "trophy_delta": {
+        "attacker": 0,
+        "defender": 0
+      }
+    },
+    "evidence": "constructed from printed rule"
+  },
+  {
+    "id": "tabletop-defender-win-policy",
+    "edition": "tabletop",
+    "source": "578215 manual PDF p.9 section 10",
+    "input": {
+      "total_groove": 5,
+      "total_style": 9
+    },
+    "expected": {
+      "winner": "defender",
+      "discard_attacker_and_items": true,
+      "rest_defender_next_round": true,
+      "trophy_delta": {
+        "attacker": 0,
+        "defender": 0
+      }
+    },
+    "evidence": "constructed from printed rule; trophy policy inferred from challenger-only award language"
+  }
+]
