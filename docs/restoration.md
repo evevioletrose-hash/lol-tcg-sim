@@ -157,3 +157,7 @@ Owner-supplied Godot 4.8.beta5 log at 429e65c: structural validation and ten God
 ## V4: Portable 3D presentation (pending local acceptance)
 
 Owner notes technology may transfer to Lanae/Lacunae FPS card game, but 3D is not a high priority. Inspected historical 3dCard scene, original mesh AABB/material surface metadata and rotator. Kept legacy prototype unchanged. Implemented host-independent texture-fed CardObject3D with authored mesh or generic body fallback, and thin Workshop adapter using existing front/back scenes as one-shot texture sources. Optional inspection only, no profile/canonical changes and no FPS repo edits. --card-3d-test covers four type adapters, identity/printed stats, face state, physical orientation, original body availability, generic fallback and disposal. Actual rendered textures and drag need local testing; no character staging or effects implemented. See card-presentation.md for portability boundary and limitations.
+
+### V4a local acceptance / V4b experiment
+
+Owner log at 23ae46c reports card-family-test and card-3d-test exit 0, LOL_3D_PREVIEW types=4 failures=0, clean working tree. Owner saw flat artwork on the rotating physical card as expected and requested a live Pop Heart experiment. Added generic model viewport producer, explicit tabletop:1-001 binding with imported/embedded model source fallback, continuous front rendering and cleanup checks. Actual character appearance and nested viewport rendering pending local graphical review. No changes to original assets, catalogue, profiles or Lacunae repository.

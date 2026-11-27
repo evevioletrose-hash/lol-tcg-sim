@@ -78,6 +78,17 @@ func bind_artwork(edition: String = "tabletop") -> void:
 	artwork_placeholder.text = "Artwork unavailable" if artwork_status == "missing_resource" else "Artwork not yet catalogued"
 	artwork_panel.visible = face_up
 
+# A host may supply a rendered illustration without changing catalogue data.
+# Its lifetime is owned by the host; the ordinary binding stays unchanged.
+func override_artwork_texture(texture: Texture2D, status: String = "live_3d") -> bool:
+	if texture == null or not is_instance_valid(artwork_texture):
+		return false
+	artwork_texture.texture = texture
+	artwork_texture.show()
+	artwork_placeholder.hide()
+	artwork_status = status
+	return true
+
 func presentation_size() -> Vector2:
 	return Vector2(442, 333) if type == Game.Card_Types.Place else Vector2(333, 442)
 

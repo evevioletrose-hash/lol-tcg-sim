@@ -1544,9 +1544,26 @@ func run_3d_preview_test() -> int:
 	standalone.free()
 	show_card("1-001")
 	_toggle_3d()
+	if not is_instance_valid(inspect_3d) or not is_instance_valid(inspect_3d.live_art_source):
+		failures.append("Pop Heart live model not available")
+	else:
+		if inspect_3d.live_art_source.mesh_count <= 0 or inspect_3d.front_source.artwork_status != "live_3d" or inspect_3d.front_source.artwork_texture.texture != inspect_3d.live_art_source.get_texture():
+			failures.append("Pop Heart live texture binding")
+		if inspect_3d.front_view.render_target_update_mode != SubViewport.UPDATE_ALWAYS or preview.artwork_status == "live_3d":
+			failures.append("Live update or 2D isolation")
+		if inspect_3d.back_view.render_target_update_mode == SubViewport.UPDATE_ALWAYS:
+			failures.append("Static back unexpectedly live")
+	var previous_art = weakref(inspect_3d.live_art_source) if is_instance_valid(inspect_3d) and is_instance_valid(inspect_3d.live_art_source) else null
 	show_card("1-400")
+	if previous_art != null and previous_art.get_ref() != null:
+		failures.append("Live art viewport leaked")
 	if is_instance_valid(inspect_3d) or not preview.visible:
 		failures.append("Selection did not dispose 3D inspector")
+	_toggle_3d()
+	if not is_instance_valid(inspect_3d) or is_instance_valid(inspect_3d.live_art_source):
+		failures.append("Rare Pop Heart inherited live art")
+	if not Inspector3D.live_model_path({"edition": "digital", "number": "1-001"}).is_empty():
+		failures.append("Historical digital ID inherited live art")
 	refresh_list()
 	for failure in failures:
 		push_error(failure)
