@@ -68,7 +68,7 @@ _subresources={
 "lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
 "save_to_file/fallback_path": "res://assets/3d/card_mesh.tres",
-"save_to_file/path": "uid://d0ohijftnfhoy"
+"save_to_file/path": "res://assets/3d/card_mesh.tres"
 }
 }
 }
