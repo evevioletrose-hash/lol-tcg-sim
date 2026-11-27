@@ -145,3 +145,7 @@ Shared card frame, explicit rank footer and simulator back, B.B. header/stat bad
 ### V2 local acceptance evidence
 
 Owner-supplied Godot 4.8.beta5 log at 3dcb612: structural validation and all nine Godot tests exited 0. LOL_BB_PRESENTATION cards=161 failures=0; LOL_ARTWORK available=1 placeholders=305 unsupported=5 failures=0. Only expected unknown-card-type warnings; clean working tree. Owner supplied actual front/back Pop Heart screenshots and approved the design. Plum frame, labeled stats, cream power panel, footer and simulator back visibly render. Temporary full-card reference photograph still present by design. Resizing, long-text readability in actual GUI, and gameplay interactions not independently inspected. V2 accepted; V3 next. No artwork sourcing or research merge.
+
+## V3: Card family (pending local acceptance)
+
+Mint Item and amber Surprise accents, reusable cream power panel extracted from approved B.B. scene, landscape Place scene using shared base/frame/back and name/effect binding. Normal and draft preview support all four types; landscape fits existing preview width. Surprise presentation preserves printed phase rather than substituting Any for missing text. Existing gameplay projection unchanged apart from retaining raw phase and explicit refusal of legacy board Place spawn. Added --card-family-test, updated smoke/artwork expectations. No artwork, catalogue or profile edits. Full local regression and visual review pending.

@@ -158,7 +158,8 @@ func project_card_data(card_data, warn: bool = true) -> Dictionary:
 		else:
 			card_data_object.club = Clubs.Unknown
 	elif card_type == Card_Types.Surprise:
-		card_data_object.phase = get_game_phase(card_data[8].strip_edges() if card_data.size() >= 9 else "")
+		card_data_object.printed_phase = card_data[8] if card_data.size() >= 9 else ""
+		card_data_object.phase = get_game_phase(card_data_object.printed_phase.strip_edges())
 
 	return card_data_object
 
@@ -230,6 +231,11 @@ func spawn_card_definition(card_data: Dictionary, presentation_parent: Node = nu
 			card_object = load("res://src/cards/Surprise.tscn").instantiate()
 		Card_Types.Item:
 			card_object = load("res://src/cards/Item.tscn").instantiate()
+		Card_Types.Place:
+			if presentation_parent == null:
+				push_warning("Place gameplay not implemented: " + str(card_data.number))
+				return null
+			card_object = load("res://src/cards/Place.tscn").instantiate()
 		_:
 			push_warning("No card scene for " + str(card_data.number))
 			return null

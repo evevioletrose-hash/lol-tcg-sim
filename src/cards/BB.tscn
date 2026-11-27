@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://r7sliix3to84" path="res://src/cards/bb.gd" id="1_2mksr"]
 [ext_resource type="PackedScene" uid="uid://co1me3ivm6hp3" path="res://src/cards/card.tscn" id="2_l677j"]
 
+[ext_resource type="PackedScene" path="res://src/cards/power_panel.tscn" id="3_power"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l677j"]
 bg_color = Color(0, 0, 0, 0)
 
@@ -15,13 +17,6 @@ corner_radius_bottom_right = 9
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_groove"]
 bg_color = Color(0.73, 0.81, 0.98, 1)
-corner_radius_top_left = 9
-corner_radius_top_right = 9
-corner_radius_bottom_left = 9
-corner_radius_bottom_right = 9
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_power"]
-bg_color = Color(0.98, 0.94, 0.91, 1)
 corner_radius_top_left = 9
 corner_radius_top_right = 9
 corner_radius_bottom_left = 9
@@ -140,38 +135,12 @@ text_overrun_behavior = 3
 vertical_alignment = 1
 mouse_filter = 2
 
-[node name="Text" type="Panel" parent="Card"]
+[node name="Text" parent="Card" instance=ExtResource("3_power")]
 layout_mode = 0
 offset_left = 12.0
 offset_top = 276.0
 offset_right = 319.0
 offset_bottom = 402.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_power")
-mouse_filter = 2
-
-[node name="PowerCaption" type="Label" parent="Card/Text"]
-layout_mode = 0
-offset_left = 10.0
-offset_top = 5.0
-offset_right = 297.0
-offset_bottom = 26.0
-theme_override_colors/font_color = Color(0.44, 0.23, 0.40, 1)
-theme_override_font_sizes/font_size = 13
-text = "POWER"
-vertical_alignment = 1
-mouse_filter = 2
-
-[node name="card_text" type="RichTextLabel" parent="Card/Text"]
-layout_mode = 0
-offset_left = 10.0
-offset_top = 29.0
-offset_right = 297.0
-offset_bottom = 119.0
-theme_override_colors/default_color = Color(0.19, 0.13, 0.21, 1)
-theme_override_font_sizes/normal_font_size = 16
-bbcode_enabled = false
-text = "Printed effect text"
-mouse_filter = 2
 
 [node name="Button" type="Button" parent="."]
 modulate = Color(1, 1, 1, 0)

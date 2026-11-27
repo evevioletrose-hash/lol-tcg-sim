@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/cards/item.gd" id="1_place"]
+[ext_resource type="PackedScene" path="res://src/cards/card.tscn" id="2_frame"]
+[ext_resource type="PackedScene" path="res://src/cards/power_panel.tscn" id="3_power"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+bg_color = Color(0.70, 0.86, 0.94, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_left = 9
+corner_radius_bottom_right = 9
+
+[node name="Place" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 442.0
+offset_bottom = 333.0
+script = ExtResource("1_place")
+
+[node name="Card" parent="." instance=ExtResource("2_frame")]
+layout_mode = 0
+
+[node name="Name" type="Label" parent="Card"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 8.0
+offset_right = 311.0
+offset_bottom = 54.0
+theme_override_colors/font_color = Color(1, 0.94, 0.98, 1)
+theme_override_font_sizes/font_size = 20
+text = "Place Name"
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+max_lines_visible = 2
+text_overrun_behavior = 3
+
+[node name="TypeBadge" type="Panel" parent="Card"]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 14.0
+offset_right = 424.0
+offset_bottom = 44.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="PlaceCaption" type="Label" parent="Card"]
+layout_mode = 0
+offset_left = 325.0
+offset_top = 14.0
+offset_right = 419.0
+offset_bottom = 44.0
+theme_override_colors/font_color = Color(0.15, 0.27, 0.35, 1)
+theme_override_font_sizes/font_size = 13
+text = "⌂ PLACE"
+vertical_alignment = 1
+mouse_filter = 2
+horizontal_alignment = 1
+
+[node name="Text" parent="Card" instance=ExtResource("3_power")]
+layout_mode = 0
+offset_left = 221.0
+offset_top = 62.0
+offset_right = 424.0
+offset_bottom = 297.0
+
+[node name="Button" type="Button" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_right = 442.0
+offset_bottom = 333.0

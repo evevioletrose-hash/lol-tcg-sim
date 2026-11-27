@@ -57,6 +57,7 @@ func setup(source: Game, edit_mode: bool = false) -> void:
 	game = source
 	archivist = edit_mode
 	get_viewport().size_changed.connect(_sync_viewport_layout)
+	preview_holder.resized.connect(_fit_preview)
 	_sync_viewport_layout()
 	type_filter.add_item("All types", 0)
 	type_filter.add_item("B.B.", Game.Card_Types.BB + 1)
@@ -131,6 +132,8 @@ func club_name(data: Dictionary) -> String:
 	return str(Game.Clubs.keys()[data.club]).replace("_", " ")
 
 func phase_name(data: Dictionary) -> String:
+	if data.has("printed_phase"):
+		return str(data.printed_phase) if not str(data.printed_phase).strip_edges().is_empty() else "Not catalogued"
 	if not data.has("phase"):
 		return ""
 	match data.phase:
@@ -252,22 +255,30 @@ func show_card(id: String) -> void:
 		lines.append("Phase: " + phase_name(data))
 	lines.append("")
 	lines.append(data.text)
-	if data.type == Game.Card_Types.Place:
+	preview = game.spawn_card(id, preview_holder)
+	if is_instance_valid(preview):
+		_configure_preview()
 		lines.append("")
-		lines.append("Place preview not implemented yet.")
-	else:
-		preview = game.spawn_card(id, preview_holder)
-		if is_instance_valid(preview):
-			preview.set_anchors_preset(Control.PRESET_TOP_LEFT)
-			preview.position = Vector2.ZERO
-			preview.size = Vector2(333, 442)
-			preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
-			lines.append("")
-			lines.append("Artwork: " + ("available" if preview.artwork_status == "available" else "not available"))
+		lines.append("Artwork: " + ("available" if preview.artwork_status == "available" else "not available"))
 	details.text = "\n".join(lines)
 	_sync_flip_button()
 	if not collection_kind.is_empty():
 		_update_collection_selection()
+
+func _configure_preview() -> void:
+	preview.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	preview.position = Vector2.ZERO
+	preview.size = preview.presentation_size()
+	preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fit_preview()
+
+func _fit_preview() -> void:
+	if not is_instance_valid(preview):
+		return
+	# Preserve the approved portrait rendering; landscape fits available width.
+	var extent: Vector2 = preview.presentation_size()
+	var fit: float = minf(1.0, preview_holder.size.x / extent.x)
+	preview.scale = Vector2.ONE * maxf(0.01, fit)
 
 func run_smoke_test() -> int:
 	var counts: Dictionary = {}
@@ -313,10 +324,7 @@ func run_smoke_test() -> int:
 		show_card(id)
 		var kind = type_name(data.type)
 		counts[kind] = counts.get(kind, 0) + 1
-		if data.type == Game.Card_Types.Place:
-			if preview != null:
-				failures.append(id + ": unexpected Place scene")
-		elif preview == null:
+		if preview == null:
 			failures.append(id + ": missing preview")
 		else:
 			if preview.card_name != data.name or preview.catalogue_id != id:
@@ -534,15 +542,10 @@ func update_draft() -> void:
 	var projected = game.project_card_data(game.catalogue.legacy_row(draft), false)
 	if projected.is_empty():
 		status.text += "\nIncomplete definition: name and type needed for preview."
-	elif projected.type == Game.Card_Types.Place:
-		status.text += "\nPlace preview not implemented yet."
 	else:
 		preview = game.spawn_card_definition(projected, preview_holder)
 		if is_instance_valid(preview):
-			preview.set_anchors_preset(Control.PRESET_TOP_LEFT)
-			preview.position = Vector2.ZERO
-			preview.size = Vector2(333, 442)
-			preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_configure_preview()
 			preview.rank_ui.text = "?" if draft.rank == null or draft.rank == "" else str(draft.rank)
 			status.text += "\nArtwork: " + preview.artwork_status
 	_sync_flip_button()
@@ -1313,12 +1316,8 @@ func run_artwork_test() -> int:
 	var unsupported = 0
 	for id in game.card_database:
 		show_card(id)
-		if game.card_database[id].type == Game.Card_Types.Place:
-			unsupported += 1
-			if preview != null:
-				failures.append(id + ": unexpected Place preview")
-			continue
 		if preview == null:
+			unsupported += 1
 			failures.append(id + ": missing card scene")
 			continue
 		var expected: Dictionary = resolver.resolve("tabletop", id)
@@ -1412,4 +1411,50 @@ func run_bb_presentation_test() -> int:
 	for failure in failures:
 		push_error(failure)
 	print("LOL_BB_PRESENTATION cards=%d failures=%d" % [tested, failures.size()])
+	return 0 if failures.is_empty() else 1
+
+func run_card_family_test() -> int:
+	var failures: Array[String] = []
+	var counts: Dictionary = {}
+	for id in game.card_database:
+		var data: Dictionary = game.card_database[id]
+		show_card(id)
+		if preview == null:
+			failures.append(id + ": missing preview")
+			continue
+		var kind = type_name(data.type)
+		counts[kind] = counts.get(kind, 0) + 1
+		var face: Control = preview.get_node("Card")
+		var frame: Control = face.get_node("img")
+		var landscape = data.type == Game.Card_Types.Place
+		var wanted_size = Vector2(436, 331) if landscape else Vector2(331, 436)
+		if frame.size != wanted_size or preview.presentation_size() != (Vector2(442, 333) if landscape else Vector2(333, 442)):
+			failures.append(id + ": native orientation mismatch")
+		var power: RichTextLabel = face.get_node("Text/card_text")
+		var name_label: Label = face.get_node("Name")
+		if power.text != data.text or name_label.text != data.name or preview.cardnum_ui.text != id or preview.rank_ui.text != str(data.rank):
+			failures.append(id + ": printed field mismatch")
+		if data.type == Game.Card_Types.Surprise:
+			var expected = str(data.printed_phase).to_upper() if not str(data.printed_phase).strip_edges().is_empty() else "PHASE NOT CATALOGUED"
+			if face.get_node("Phase").text != expected:
+				failures.append(id + ": printed timing mismatch")
+		var power_panel: Control = face.get_node("Text")
+		if not Rect2(Vector2.ZERO, wanted_size).encloses(power_panel.get_rect()) or not Rect2(Vector2.ZERO, wanted_size).encloses(preview.artwork_panel.get_rect()):
+			failures.append(id + ": panel outside frame")
+		if power_panel.get_rect().intersects(preview.artwork_panel.get_rect()):
+			failures.append(id + ": artwork/power overlap")
+		if preview.scale.x != preview.scale.y or preview.presentation_size().x * preview.scale.x > preview_holder.size.x + 0.1:
+			failures.append(id + ": preview width/scale mismatch")
+		_flip_preview()
+		if preview.face_up or not preview.cardback_ui.visible or name_label.visible or power.is_visible_in_tree() or preview.artwork_panel.visible or preview.rank_ui.visible:
+			failures.append(id + ": front content visible on back")
+		if landscape and (not is_equal_approx(preview.cardback_ui.rotation_degrees, 90.0) or preview.cardback_ui.position != Vector2(436, 0)):
+			failures.append(id + ": landscape back orientation")
+		_flip_preview()
+		if not preview.face_up or preview.cardback_ui.visible or not name_label.visible or not power.is_visible_in_tree():
+			failures.append(id + ": front not restored")
+	refresh_list()
+	for failure in failures:
+		push_error(failure)
+	print("LOL_CARD_FAMILY counts=%s failures=%d" % [str(counts), failures.size()])
 	return 0 if failures.is_empty() else 1

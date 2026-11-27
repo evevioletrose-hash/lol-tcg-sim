@@ -5,6 +5,7 @@ var phase_ui
 var cardtext_ui
 
 var phase : Game.Game_Phases
+var printed_phase: String = ""
 
 func populate(data):
 	super.populate(data)
@@ -14,20 +15,14 @@ func populate(data):
 	cardtext_ui = get_node("Card/Text/card_text")
 
 	phase = data.phase
+	printed_phase = str(data.get("printed_phase", ""))
 	update_cardtext()
 	
 func update_cardtext():
 	super.update_cardtext()
 	name_ui.text = card_name
 	
-	match phase:
-		Game.Game_Phases.Any_Phase:
-			phase_ui.text = "ANY PHASE"
-		Game.Game_Phases.Call_BB:
-			phase_ui.text = "CALL YOUR B.B.'S"
-		Game.Game_Phases.Dress_Up:
-			phase_ui.text = "DRESS UP"
-		Game.Game_Phases.Dance_Off:
-			phase_ui.text = "DANCE OFF"
-	
+	# Display evidence, not the legacy runtime fallback for an unknown phase.
+	phase_ui.text = printed_phase.to_upper() if not printed_phase.strip_edges().is_empty() else "PHASE NOT CATALOGUED"
+
 	cardtext_ui.text = text

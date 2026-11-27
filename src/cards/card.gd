@@ -48,7 +48,7 @@ func populate(data):
 	if data.get("club") != null:
 		club = data.club
 	
-# Shared artwork aperture for the existing card faces. Layout refinements are V2/V3.
+# Shared artwork aperture, with the landscape Place using the same components.
 func bind_artwork(edition: String = "tabletop") -> void:
 	artwork_panel = get_node("Card/img/Artwork")
 	artwork_texture = artwork_panel.get_node("Texture")
@@ -59,8 +59,16 @@ func bind_artwork(edition: String = "tabletop") -> void:
 		Game.Card_Types.BB:
 			artwork_panel.position = Vector2(12, 88)
 			artwork_panel.size = Vector2(307, 182)
+		Game.Card_Types.Item:
+			artwork_panel.position = Vector2(12, 88)
+			artwork_panel.size = Vector2(307, 182)
 		Game.Card_Types.Surprise:
-			artwork_panel.size.y = 245
+			artwork_panel.position = Vector2(12, 99)
+			artwork_panel.size = Vector2(307, 171)
+		Game.Card_Types.Place:
+			_layout_landscape()
+			artwork_panel.position = Vector2(12, 62)
+			artwork_panel.size = Vector2(203, 235)
 	var resolved = ArtworkResolver.resolve(edition, catalogue_id)
 	artwork = resolved.path
 	artwork_status = resolved.status
@@ -69,6 +77,21 @@ func bind_artwork(edition: String = "tabletop") -> void:
 	artwork_placeholder.visible = resolved.texture == null
 	artwork_placeholder.text = "Artwork unavailable" if artwork_status == "missing_resource" else "Artwork not yet catalogued"
 	artwork_panel.visible = face_up
+
+func presentation_size() -> Vector2:
+	return Vector2(442, 333) if type == Game.Card_Types.Place else Vector2(333, 442)
+
+func _layout_landscape() -> void:
+	card_ui.size = Vector2(436, 331)
+	var frame: Control = card_ui.get_node("img")
+	frame.size = Vector2(436, 331)
+	cardnum_ui.position = Vector2(15, 303)
+	rank_ui.position = Vector2(387, 303)
+	card_ui.get_node("img/RankCaption").position = Vector2(326, 303)
+	can_play.size = Vector2(438, 329)
+	# A physically rotated card shows the same portrait back, rotated with it.
+	cardback_ui.position = Vector2(436, 0)
+	cardback_ui.rotation_degrees = 90.0
 
 func update_cardtext():
 	rank_ui.text = str(rank)
