@@ -91,7 +91,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 ## D — Deck builder
 
 - [x] D1: Profile-local named deck index, immediate save/edit, composition summary and unrestricted Workshop deck mode verified at 5a93af3; owner created a deck and approved core workflow.
-- [ ] D2: Three modes: physical ownership, digital ownership, unrestricted sandbox.
+- [ ] D2: Three non-destructive collection-aware building policies implemented; pending local verification.
 - [ ] D3: Championship validation per rulebook p.10: 24–30 cards, one of each unique B.B./Surprise/Place, at most three of the same Item; opponent total Rank difference at most two. Approx. half B.B.s is advice, not mandatory. Flag unknown definitions or ranks; resolve unique-character/variant semantics before enforcement.
 - [ ] D4: Build two decks, compare rank and legality, test boundary values and inventory caps. Do not assume both decks must have the same size.
 

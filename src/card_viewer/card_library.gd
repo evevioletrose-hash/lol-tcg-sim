@@ -30,6 +30,9 @@ var profile_name: LineEdit
 var profile_status: Label
 var collection_kind: String = ""
 var deck_mode: bool = false
+var deck_policy: String = "unrestricted"
+var deck_policy_selector: OptionButton
+const DeckOwnership = preload("res://src/profiles/deck_ownership.gd")
 var deck_panel: VBoxContainer
 var deck_selector: OptionButton
 var deck_name: LineEdit
@@ -175,7 +178,7 @@ func refresh_list() -> void:
 	var query = search.text.strip_edges().to_lower()
 	var exact_number = ""
 	# In collection mode a short numeric query is an exact set-one card number.
-	if not collection_kind.is_empty() and query.is_valid_int() and query.length() <= 3 and int(query) > 0:
+	if (not collection_kind.is_empty() or deck_mode) and query.is_valid_int() and query.length() <= 3 and int(query) > 0:
 		exact_number = "1-%03d" % int(query)
 	var filter_id = type_filter.get_selected_id()
 	var selection_index = -1
@@ -203,6 +206,10 @@ func refresh_list() -> void:
 				continue
 			if ownership_filter.selected == 2 and quantity > 0:
 				continue
+		if deck_mode and deck_policy != "unrestricted":
+			var key = "tabletop:" + id
+			if profile_store.count(deck_policy, key) == 0 and int(_deck_counts().get(key, 0)) == 0:
+				continue
 		var searchable = "%s %s %s %s %s %s" % [id, raw.name, raw.club, raw.text, raw.phase, game.catalogue.source_reference(raw)]
 		if exact_number.is_empty() and not query.is_empty() and not searchable.to_lower().contains(query):
 			continue
@@ -217,7 +224,14 @@ func refresh_list() -> void:
 		if not collection_kind.is_empty():
 			display += "  ×" + str(quantity)
 		elif deck_mode:
-			display += "  ×" + str(_deck_counts().get("tabletop:" + id, 0))
+			var key = "tabletop:" + id
+			var used = int(_deck_counts().get(key, 0))
+			display += "  ×" + str(used)
+			if deck_policy != "unrestricted":
+				var owned: int = profile_store.count(deck_policy, key)
+				display += " / " + str(owned)
+				if used > owned:
+					display += " [short]"
 		var index = cards.add_item(display)
 		cards.set_item_metadata(index, id)
 		if id == previous_id:
@@ -932,6 +946,7 @@ func _refresh_profiles(message: String = "") -> void:
 		_update_collection_summary()
 	if deck_mode:
 		_reload_decks()
+		_update_deck_policy_heading()
 		refresh_list()
 	elif not collection_kind.is_empty():
 		collection_notice.text = ""
@@ -1608,8 +1623,13 @@ func _build_deck_controls() -> void:
 	deck_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	details.get_parent().add_child(deck_panel)
 	var heading = Label.new()
-	heading.text = "Saved decks / unrestricted"
+	heading.text = "Saved decks"
 	deck_panel.add_child(heading)
+	deck_policy_selector = OptionButton.new()
+	for label in ["Unrestricted sandbox", "Physical collection", "In-game collection"]:
+		deck_policy_selector.add_item(label)
+	deck_policy_selector.item_selected.connect(_deck_policy_selected)
+	deck_panel.add_child(deck_policy_selector)
 	deck_selector = OptionButton.new()
 	deck_selector.item_selected.connect(_deck_selected)
 	deck_panel.add_child(deck_selector)
@@ -1653,12 +1673,33 @@ func _set_deck_mode() -> void:
 	_set_collection_mode("")
 	deck_mode = true
 	collection_mode.select(3)
-	collection_summary.text = "Unrestricted drafts • changes save immediately"
+	_update_deck_policy_heading()
 	$Margin/Layout/Title.text = "Dance Off / Deck Builder"
 	details.hide()
 	deck_panel.show()
 	_reload_decks()
 	refresh_list()
+
+func _deck_policy_selected(index: int) -> void:
+	if index >= 0 and index < DeckOwnership.MODES.size():
+		_set_deck_policy(DeckOwnership.MODES[index])
+
+func _set_deck_policy(policy: String) -> void:
+	if not deck_mode or not policy in DeckOwnership.MODES:
+		return
+	deck_policy = policy
+	deck_policy_selector.select(DeckOwnership.MODES.find(policy))
+	_update_deck_policy_heading()
+	_refresh_deck_rows()
+	refresh_list()
+
+func _update_deck_policy_heading() -> void:
+	var label = "Unrestricted drafts" if deck_policy == "unrestricted" else ("Physical collection" if deck_policy == "physical" else "In-game collection")
+	collection_summary.text = label + " • changes save immediately"
+	deck_policy_selector.select(DeckOwnership.MODES.find(deck_policy))
+
+func _deck_owned() -> Dictionary:
+	return {} if deck_policy == "unrestricted" else profile_store.collection(deck_policy)
 
 func _reload_decks() -> void:
 	var result: Dictionary = profile_store.load_decks()
@@ -1737,11 +1778,25 @@ func _remove_deck_card() -> void:
 		_change_deck_count(str(deck_rows.get_item_metadata(selected[0])), -1)
 
 func _change_deck_count(key: String, delta: int) -> void:
+	if not deck_mode or active_deck.is_empty():
+		return
 	var counts = _deck_counts()
 	var quantity: int = int(counts.get(key, 0)) + delta
 	if quantity < 0 or quantity > ProfileStore.MAX_COUNT:
 		deck_notice.text = "Quantity out of range."
 		return
+	if delta > 0:
+		if not key.begins_with("tabletop:") or not game.card_database.has(key.trim_prefix("tabletop:")):
+			deck_notice.text = "Only typed tabletop cards can be added."
+			return
+		if deck_policy != "unrestricted":
+			var problem: String = profile_store.check_deck_inventory(deck_policy)
+			if not problem.is_empty():
+				deck_notice.text = problem
+				return
+		if not DeckOwnership.permits_addition(deck_policy, key, quantity, _deck_owned()):
+			deck_notice.text = "No additional owned copies available for " + key
+			return
 	var next = deck_snapshot.duplicate(true)
 	if quantity == 0:
 		next.decks[active_deck].counts.erase(key)
@@ -1754,6 +1809,8 @@ func _refresh_deck_rows() -> void:
 	var previous = str(deck_rows.get_item_metadata(selected[0])) if not selected.is_empty() else ""
 	deck_rows.clear()
 	var counts = _deck_counts()
+	var owned = _deck_owned()
+	var shortages = {} if deck_policy == "unrestricted" else DeckOwnership.shortages(counts, owned)
 	var keys = counts.keys()
 	keys.sort()
 	for key in keys:
@@ -1761,7 +1818,12 @@ func _refresh_deck_rows() -> void:
 		var title = str(key)
 		if str(key).begins_with("tabletop:") and game.card_database.has(id):
 			title = id + " " + str(game.card_database[id].name)
-		var index = deck_rows.add_item("%d × %s" % [counts[key], title])
+		var row_text = "%d × %s" % [counts[key], title]
+		if shortages.has(key):
+			row_text += " [short %d]" % shortages[key]
+		var index = deck_rows.add_item(row_text)
+		if shortages.has(key):
+			deck_rows.set_item_custom_fg_color(index, Color(1.0, 0.65, 0.48))
 		deck_rows.set_item_metadata(index, key)
 		if key == previous:
 			deck_rows.select(index)
@@ -1778,13 +1840,21 @@ func _refresh_deck_rows() -> void:
 	deck_summary.text = "%d cards • Rank %s\n%s\n%s" % [composition.copies, rank_text, " / ".join(types), " / ".join(clubs)]
 	if composition.unknown_definition > 0:
 		deck_summary.text += "\n%d unknown definition copies" % composition.unknown_definition
+	if deck_policy != "unrestricted":
+		var missing = 0
+		for quantity in shortages.values():
+			missing += int(quantity)
+		deck_summary.text += "\nOwnership: %d copies short (%d entries)" % [missing, shortages.size()] if missing > 0 else "\nOwnership: covered"
 	deck_summary.tooltip_text = deck_summary.text
 	_update_deck_buttons()
 
 func _update_deck_buttons() -> void:
 	deck_create.disabled = deck_snapshot.is_empty()
 	deck_rename.disabled = active_deck.is_empty()
-	deck_add.disabled = active_deck.is_empty() or not game.card_database.has(selected_id)
+	var key = "tabletop:" + selected_id
+	var next_quantity = int(_deck_counts().get(key, 0)) + 1
+	deck_add.disabled = active_deck.is_empty() or not game.card_database.has(selected_id) or next_quantity > ProfileStore.MAX_COUNT or not DeckOwnership.permits_addition(deck_policy, key, next_quantity, _deck_owned())
+	deck_add.tooltip_text = "Ownership limit reached" if deck_policy != "unrestricted" and not DeckOwnership.permits_addition(deck_policy, key, next_quantity, _deck_owned()) else ""
 	deck_remove.disabled = active_deck.is_empty() or deck_rows.get_selected_items().is_empty()
 
 func _inspect_deck_row(index: int) -> void:
@@ -1878,4 +1948,109 @@ func run_deck_test() -> int:
 	for failure in failures:
 		push_error(failure)
 	print("LOL_DECKS profiles=2 failures=%d" % failures.size())
+	return 0 if failures.is_empty() else 1
+
+func run_deck_ownership_test() -> int:
+	var failures: Array[String] = []
+	var store = ProfileStore.new()
+	store.root = "user://deck-ownership-test-" + Crypto.new().generate_random_bytes(12).hex_encode() + "/"
+	attach_profiles(store)
+	if store.active_id.is_empty():
+		push_error("Deck ownership fixture initialization failed")
+		return 1
+	var key = "tabletop:1-001"
+	if not store.add("physical", key, 2).is_empty() or not store.add("digital", key, 1).is_empty() or not store.add("digital", "digital:1-400", 9).is_empty():
+		failures.append("Fixture inventory")
+	_set_deck_mode()
+	deck_name.text = "Ownership draft"
+	_create_deck()
+	var first = active_deck
+	if first.is_empty():
+		push_error("Deck fixture creation failed")
+		return 1
+	search.text = "1"
+	refresh_list()
+	if selected_id != "1-001" or cards.item_count != 1:
+		failures.append("Exact card search")
+	_add_deck_card()
+	_add_deck_card()
+	_add_deck_card()
+	var original = deck_snapshot.duplicate(true)
+	_set_deck_policy("physical")
+	if deck_snapshot != original or store.load_decks().snapshot != original or not deck_add.disabled or not deck_summary.text.contains("1 copies short"):
+		failures.append("Physical shortage or non-destructive switch")
+	_add_deck_card()
+	if deck_snapshot != original:
+		failures.append("Over-cap addition accepted")
+	_set_deck_policy("digital")
+	if not deck_summary.text.contains("2 copies short") or deck_snapshot != original:
+		failures.append("Digital shortage")
+	search.text = "1-400"
+	refresh_list()
+	if cards.item_count != 0 or not deck_add.disabled:
+		failures.append("Other edition or unowned card leaked into catalogue")
+	deck_rows.select(0)
+	_remove_deck_card()
+	_remove_deck_card()
+	if _deck_counts().get(key, 0) != 1 or not deck_summary.text.contains("Ownership: covered"):
+		failures.append("Removal while over limit")
+	_set_deck_policy("physical")
+	search.text = "1-001"
+	refresh_list()
+	if deck_add.disabled:
+		failures.append("Physical headroom not offered")
+	_add_deck_card()
+	_add_deck_card()
+	if _deck_counts().get(key, 0) != 2:
+		failures.append("Physical cap")
+	_set_deck_policy("unrestricted")
+	_add_deck_card()
+	if _deck_counts().get(key, 0) != 3:
+		failures.append("Unrestricted mode")
+	if store.count("physical", key) != 2 or store.count("digital", key) != 1:
+		failures.append("Deck consumed inventory")
+	var before_switch = deck_snapshot.duplicate(true)
+	_set_deck_policy("physical")
+	profile_name.text = "Second collector"
+	_create_profile()
+	if store.active_id == "default" or not deck_snapshot.get("decks", {}).is_empty() or cards.item_count != 0:
+		failures.append("Profile isolation")
+	for index in range(profile_selector.item_count):
+		if profile_selector.get_item_metadata(index) == "default":
+			_profile_selected(index)
+			break
+	if deck_snapshot != before_switch or deck_policy != "physical" or not deck_summary.text.contains("1 copies short"):
+		failures.append("Profile restoration")
+	# External inventory mutations must not authorize a stale addition.
+	_set_deck_policy("unrestricted")
+	deck_rows.select(0)
+	_remove_deck_card()
+	_remove_deck_card()
+	_set_deck_policy("physical")
+	var other = ProfileStore.new()
+	other.root = store.root
+	if not other.initialize().is_empty() or not other.remove("physical", key, 1).is_empty():
+		failures.append("External mutation fixture")
+	var before_stale = deck_snapshot.duplicate(true)
+	_add_deck_card()
+	if deck_snapshot != before_stale or not deck_notice.text.contains("outside this session"):
+		failures.append("Stale collection addition")
+	_set_collection_mode("")
+	for entry in store.list_profiles():
+		var directory = store.root.path_join(entry.profile_id)
+		for filename in ["profile.json", "physical_collection.json", "digital_collection.json", "decks/index.json"]:
+			for suffix in ["", ".bak"]:
+				var path = directory.path_join(filename + suffix)
+				if FileAccess.file_exists(path):
+					DirAccess.remove_absolute(path)
+		DirAccess.remove_absolute(directory.path_join("decks"))
+		DirAccess.remove_absolute(directory)
+	for suffix in ["", ".bak"]:
+		var path = store.root.path_join("active_profile.json" + suffix)
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(path)
+	DirAccess.remove_absolute(store.root)
+	for failure in failures:
+		push_error(failure)
+	print("LOL_DECK_OWNERSHIP modes=3 failures=%d" % failures.size())
 	return 0 if failures.is_empty() else 1

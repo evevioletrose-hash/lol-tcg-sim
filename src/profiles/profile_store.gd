@@ -353,3 +353,14 @@ func save_decks(expected: Dictionary, next: Dictionary) -> String:
 	if DirAccess.make_dir_recursive_absolute(root.path_join(active_id).path_join("decks")) != OK:
 		return "Cannot create deck storage."
 	return _save(_deck_path(active_id), next, "decks", active_id)
+
+# Read-only guard for collection-aware deck additions. Do not use a stale
+# in-memory inventory to authorize a new copy after an external edit.
+func check_deck_inventory(kind: String) -> String:
+	if not kind in KINDS or active_id.is_empty() or not inventories.has(kind):
+		return "Invalid deck ownership source."
+	if _load(_active_path(), "active").get("active_id") != active_id:
+		return "Active profile changed outside this session."
+	if _load(_inventory_path(active_id, kind), kind, active_id) != inventories[kind]:
+		return "Collection changed outside this session. Restart before adding cards."
+	return ""

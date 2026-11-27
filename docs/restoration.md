@@ -173,3 +173,7 @@ ProfileStore optional decks/index.json, same verified replacement/backup and sta
 ### D1 acceptance
 
 Owner log at 5a93af3: structural validator and all twelve Godot regression commands exit 0, LOL_DECKS profiles=2 failures=0, LOL_3D_PREVIEW types=4 failures=0, live model five meshes, clean working tree. Only expected unknown-type warnings. Owner created a deck in the GUI and approved core workflow; actual process restart not explicitly confirmed, deck-specific corrupt-index fault injection and small-window sizing outstanding. Owner observes UI becoming heavy and explicitly defers redesign because the workbench currently combines numerous subsystems. Preserve functional workbench; later split screens and extract reusable widgets, not state. D2 ownership modes next. No runtime changes in acceptance commit.
+
+## D2: Collection-aware building (pending acceptance)
+
+Added pure DeckOwnership policy, session-local selector in Deck Builder, restricted typed catalogue scope (owned plus existing deck entries), per-row and aggregate shortages, caps for positive additions with stale collection guard. All decks retain their original counts across policy changes; removal unaffected. No deck schema changes, inventory writes, legality or redesign. Added --deck-ownership-test for three modes, profile/edition isolation and stale inventory. Local regression and graphical review pending.
