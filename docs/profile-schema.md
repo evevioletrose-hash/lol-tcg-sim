@@ -5,7 +5,7 @@ Local-only, versioned JSON under user://profiles/. No accounts, login, sync, or 
 - active_profile.json: schema_version, active_id.
 - <profile ID>/profile.json: schema_version, profile_id, name.
 - <profile ID>/physical_collection.json and digital_collection.json: schema_version, profile_id, kind, counts.
-- <profile ID>/decks/: reserved for later deck work.
+- <profile ID>/decks/index.json: optional D1 deck index; created on first deck save.
 
 Default profile ID is default; additional IDs are random 24-character hex strings. Display names may duplicate and are not paths. Names must be nonblank and at most 64 characters. Profiles are created empty; no deletion or rename in P1.
 
@@ -30,3 +30,7 @@ The shared Workshop selector replaces the physical toggle: Card Workshop / Physi
 ProfileStore.acquire_cards(rewards, expected_profile) accepts a nonempty map of edition-qualified keys to positive integer quantities. It preflights every change and writes the entire digital inventory in one existing safe-save operation, rejecting overflow, invalid keys, stale saves and wrong active profiles. adjust_many is the shared signed-delta primitive, and existing single-card adjust/add/remove use it. Reward pool eligibility is a caller responsibility; storage remains edition-agnostic and retains unknown keys. Acquisition history, reward event deduplication, economy, starter grants and booster generation are deferred. No automatic conversion from physical ownership. Historical digital edition remains a separate namespace; P3 browses simulator ownership of tabletop cards.
 
 -- --digital-collection-test uses disposable profiles, tests normal read-only controls, batch rejection without partial changes, explicit development grant/removal, filters, summaries, profile switch, reload and physical independence. Actual GUI and editor-flag launch need local review.
+
+## Deck builder (D1)
+
+Optional decks/index.json: {"schema_version":1,"profile_id":"default","decks":{"<24 hex ID>":{"name":"Draft","counts":{"tabletop:1-001":2}}}}. Stable IDs, duplicate display names allowed, positive integer counts; empty decks allowed. Same verified temporary save, backup and stale snapshot checks as inventory. Missing index is empty; corrupt primary and backup fail closed. Single writer, no locks. Profiles do not need migration. Unknown edition-qualified keys preserved and removable; typed tabletop catalogue entries can be added via Workshop. No ownership reservation or changes, no legality checks, no delete or explicit ordering yet. Deck Builder mode replaces details with named deck selector, new/rename, composition and deck list; immediate save on successful mutation. Double click a known deck row to inspect; add catalogue selection, remove deck selection. Unrestricted only in D1. Rank sums raw known 1–3 values; missing/unknown definitions/ranks counted separately. Type and B.B. club composition weighted by copies. -- --deck-test tests disposable profile storage, UI handlers, independent decks, rename, add/remove, unknown keys, stale writes, invalid count, reload and profile isolation. Graphical layout and backup fault injection still pending.

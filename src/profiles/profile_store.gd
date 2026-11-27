@@ -35,6 +35,18 @@ func _valid_data(data, kind: String, id: String = "") -> bool:
 		return false
 	if kind == "profile":
 		return data.get("name") is String and _name_valid(data.name)
+	if kind == "decks":
+		if not data.get("decks") is Dictionary:
+			return false
+		for deck_id in data.decks:
+			if not deck_id is String or deck_id == "default" or not _valid_id(deck_id):
+				return false
+			var deck = data.decks[deck_id]
+			if not deck is Dictionary or not deck.get("name") is String or not _name_valid(deck.name) or not deck.get("counts") is Dictionary:
+				return false
+			if not _valid_deck_counts(deck.counts):
+				return false
+		return true
 	if not kind in KINDS or data.get("kind") != kind or not data.get("counts") is Dictionary:
 		return false
 	for key in data.counts:
@@ -61,6 +73,10 @@ func _read(path: String, kind: String, id: String = "") -> Dictionary:
 	if kind in KINDS:
 		for key in value.counts:
 			value.counts[key] = int(value.counts[key])
+	if kind == "decks":
+		for deck in value.decks.values():
+			for key in deck.counts:
+				deck.counts[key] = int(deck.counts[key])
 	return value
 
 func _exists(path: String) -> bool:
@@ -292,3 +308,48 @@ func remove(kind: String, key: String, quantity: int = 1) -> String:
 	if quantity <= 0:
 		return "Remove quantity must be positive."
 	return adjust(kind, key, -quantity)
+
+# D1: a single profile-local index, created only on the first deck save.
+# Unknown edition-qualified IDs are retained; no gameplay/ownership enforcement.
+func _valid_deck_counts(counts: Dictionary) -> bool:
+	for key in counts:
+		if not key is String or not _valid_key(key):
+			return false
+		var quantity = counts[key]
+		if not (quantity is int or quantity is float):
+			return false
+		if quantity <= 0 or quantity > MAX_COUNT or quantity != floor(quantity):
+			return false
+	return true
+
+func _deck_path(id: String) -> String:
+	return root.path_join(id).path_join("decks").path_join("index.json")
+
+func load_decks() -> Dictionary:
+	if active_id.is_empty():
+		return {"snapshot": {}, "error": "No active profile."}
+	var path = _deck_path(active_id)
+	var value = _load(path, "decks", active_id)
+	if not value.is_empty():
+		return {"snapshot": value, "error": ""}
+	if _exists(path):
+		return {"snapshot": {}, "error": "Deck index is unreadable. No deck data overwritten."}
+	return {"snapshot": {"schema_version": 1, "profile_id": active_id, "decks": {}}, "error": ""}
+
+func save_decks(expected: Dictionary, next: Dictionary) -> String:
+	if active_id.is_empty() or expected.get("profile_id") != active_id or next.get("profile_id") != active_id:
+		return "Active profile changed."
+	if _load(_active_path(), "active").get("active_id") != active_id:
+		return "Active profile changed outside this session."
+	var current = load_decks()
+	if not current.error.is_empty():
+		return current.error
+	if current.snapshot != expected:
+		return "Decks changed outside this session. Reopen Deck Builder before editing."
+	if not _valid_data(next, "decks", active_id):
+		return "Invalid deck data."
+	if next == expected:
+		return ""
+	if DirAccess.make_dir_recursive_absolute(root.path_join(active_id).path_join("decks")) != OK:
+		return "Cannot create deck storage."
+	return _save(_deck_path(active_id), next, "decks", active_id)

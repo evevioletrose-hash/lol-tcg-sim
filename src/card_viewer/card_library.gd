@@ -29,6 +29,20 @@ var profile_selector: OptionButton
 var profile_name: LineEdit
 var profile_status: Label
 var collection_kind: String = ""
+var deck_mode: bool = false
+var deck_panel: VBoxContainer
+var deck_selector: OptionButton
+var deck_name: LineEdit
+var deck_rows: ItemList
+var deck_summary: Label
+var deck_notice: Label
+var deck_add: Button
+var deck_remove: Button
+var deck_rename: Button
+var deck_create: Button
+var deck_snapshot: Dictionary = {}
+var active_deck: String = ""
+const DeckComposition = preload("res://src/profiles/deck_composition.gd")
 var collection_mode: OptionButton
 var developer_grants: bool = false
 var grant_button: Button
@@ -202,6 +216,8 @@ func refresh_list() -> void:
 		var display = "%s  %s" % [id, display_name]
 		if not collection_kind.is_empty():
 			display += "  ×" + str(quantity)
+		elif deck_mode:
+			display += "  ×" + str(_deck_counts().get("tabletop:" + id, 0))
 		var index = cards.add_item(display)
 		cards.set_item_metadata(index, id)
 		if id == previous_id:
@@ -217,6 +233,8 @@ func refresh_list() -> void:
 			editor_panel.hide()
 		if not collection_kind.is_empty():
 			_update_collection_selection()
+		if deck_mode:
+			_update_deck_buttons()
 		return
 	if selection_index < 0:
 		selection_index = 0
@@ -304,6 +322,8 @@ func show_card(id: String) -> void:
 	_sync_flip_button()
 	if not collection_kind.is_empty():
 		_update_collection_selection()
+	if deck_mode:
+		_update_deck_buttons()
 
 func _configure_preview() -> void:
 	preview.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -889,6 +909,7 @@ func attach_profiles(store, allow_developer_grants: bool = false) -> void:
 		create.disabled = true
 		return
 	_build_collection_controls()
+	_build_deck_controls()
 	_refresh_profiles()
 
 func _refresh_profiles(message: String = "") -> void:
@@ -909,7 +930,10 @@ func _refresh_profiles(message: String = "") -> void:
 	profile_status.tooltip_text = message
 	if is_instance_valid(collection_summary):
 		_update_collection_summary()
-	if not collection_kind.is_empty():
+	if deck_mode:
+		_reload_decks()
+		refresh_list()
+	elif not collection_kind.is_empty():
 		collection_notice.text = ""
 		refresh_list()
 
@@ -933,7 +957,7 @@ func _build_collection_controls() -> void:
 	layout.add_child(mode_row)
 	layout.move_child(mode_row, 3)
 	collection_mode = OptionButton.new()
-	for label in ["Card Workshop", "Physical collection", "In-game collection"]:
+	for label in ["Card Workshop", "Physical collection", "In-game collection", "Deck Builder"]:
 		collection_mode.add_item(label)
 	collection_mode.item_selected.connect(_collection_mode_selected)
 	mode_row.add_child(collection_mode)
@@ -992,7 +1016,10 @@ func _build_collection_controls() -> void:
 	_update_collection_summary()
 
 func _collection_mode_selected(index: int) -> void:
-	_set_collection_mode(["", "physical", "digital"][index])
+	if index == 3:
+		_set_deck_mode()
+	else:
+		_set_collection_mode(["", "physical", "digital"][index])
 
 # Keep the physical regression exercising the same shared browser.
 func _set_physical_mode(enabled: bool) -> void:
@@ -1001,6 +1028,10 @@ func _set_physical_mode(enabled: bool) -> void:
 func _set_collection_mode(kind: String) -> void:
 	if not kind in ["", "physical", "digital"]:
 		return
+	deck_mode = false
+	if is_instance_valid(deck_panel):
+		deck_panel.hide()
+	details.show()
 	collection_kind = kind
 	collection_mode.select(["", "physical", "digital"].find(kind))
 	collection_controls.visible = not kind.is_empty()
@@ -1568,4 +1599,283 @@ func run_3d_preview_test() -> int:
 	for failure in failures:
 		push_error(failure)
 	print("LOL_3D_PREVIEW types=%d failures=%d" % [ids.size(), failures.size()])
+	return 0 if failures.is_empty() else 1
+
+# Deck editing shares the catalogue/preview but never writes an inventory.
+func _build_deck_controls() -> void:
+	deck_panel = VBoxContainer.new()
+	deck_panel.custom_minimum_size.x = 250
+	deck_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	details.get_parent().add_child(deck_panel)
+	var heading = Label.new()
+	heading.text = "Saved decks / unrestricted"
+	deck_panel.add_child(heading)
+	deck_selector = OptionButton.new()
+	deck_selector.item_selected.connect(_deck_selected)
+	deck_panel.add_child(deck_selector)
+	deck_name = LineEdit.new()
+	deck_name.placeholder_text = "Deck name"
+	deck_name.max_length = 64
+	deck_panel.add_child(deck_name)
+	var names = HBoxContainer.new()
+	deck_panel.add_child(names)
+	deck_create = Button.new()
+	deck_create.text = "New deck"
+	deck_create.pressed.connect(_create_deck)
+	names.add_child(deck_create)
+	deck_rename = Button.new()
+	deck_rename.text = "Rename"
+	deck_rename.pressed.connect(_rename_deck)
+	names.add_child(deck_rename)
+	deck_summary = Label.new()
+	deck_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	deck_panel.add_child(deck_summary)
+	deck_rows = ItemList.new()
+	deck_rows.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	deck_rows.custom_minimum_size.y = 90
+	deck_rows.item_selected.connect(func(_index: int): _update_deck_buttons())
+	deck_rows.item_activated.connect(_inspect_deck_row)
+	deck_panel.add_child(deck_rows)
+	deck_add = Button.new()
+	deck_add.text = "Add selected catalogue card +1"
+	deck_add.pressed.connect(_add_deck_card)
+	deck_panel.add_child(deck_add)
+	deck_remove = Button.new()
+	deck_remove.text = "Remove selected deck card -1"
+	deck_remove.pressed.connect(_remove_deck_card)
+	deck_panel.add_child(deck_remove)
+	deck_notice = Label.new()
+	deck_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	deck_panel.add_child(deck_notice)
+	deck_panel.hide()
+
+func _set_deck_mode() -> void:
+	_set_collection_mode("")
+	deck_mode = true
+	collection_mode.select(3)
+	collection_summary.text = "Unrestricted drafts • changes save immediately"
+	$Margin/Layout/Title.text = "Dance Off / Deck Builder"
+	details.hide()
+	deck_panel.show()
+	_reload_decks()
+	refresh_list()
+
+func _reload_decks() -> void:
+	var result: Dictionary = profile_store.load_decks()
+	deck_snapshot = result.snapshot
+	active_deck = ""
+	deck_notice.text = result.error
+	_rebuild_deck_selector()
+
+func _deck_counts() -> Dictionary:
+	return deck_snapshot.get("decks", {}).get(active_deck, {}).get("counts", {})
+
+func _rebuild_deck_selector() -> void:
+	deck_selector.clear()
+	var decks: Dictionary = deck_snapshot.get("decks", {})
+	var ids = decks.keys()
+	ids.sort_custom(func(a, b): return str(decks[a].name).nocasecmp_to(str(decks[b].name)) < 0)
+	if not decks.has(active_deck):
+		active_deck = str(ids[0]) if not ids.is_empty() else ""
+	for id in ids:
+		deck_selector.add_item(decks[id].name)
+		var index = deck_selector.item_count - 1
+		deck_selector.set_item_metadata(index, id)
+		if id == active_deck:
+			deck_selector.select(index)
+	deck_name.text = str(decks.get(active_deck, {}).get("name", ""))
+	_refresh_deck_rows()
+
+func _deck_selected(index: int) -> void:
+	active_deck = str(deck_selector.get_item_metadata(index))
+	deck_name.text = deck_snapshot.decks[active_deck].name
+	deck_notice.text = ""
+	_refresh_deck_rows()
+	refresh_list()
+
+func _write_deck_snapshot(next: Dictionary, next_id: String) -> bool:
+	var problem: String = profile_store.save_decks(deck_snapshot, next)
+	if not problem.is_empty():
+		deck_notice.text = problem
+		return false
+	deck_snapshot = next
+	active_deck = next_id
+	deck_notice.text = "Saved."
+	_rebuild_deck_selector()
+	refresh_list()
+	return true
+
+func _create_deck() -> void:
+	if not deck_mode or deck_snapshot.is_empty():
+		return
+	var name = deck_name.text.strip_edges()
+	if name.is_empty():
+		deck_notice.text = "Enter a name for the new deck."
+		return
+	var id = Crypto.new().generate_random_bytes(12).hex_encode()
+	var next = deck_snapshot.duplicate(true)
+	next.decks[id] = {"name": name, "counts": {}}
+	_write_deck_snapshot(next, id)
+
+func _rename_deck() -> void:
+	if not deck_mode or active_deck.is_empty():
+		return
+	var next = deck_snapshot.duplicate(true)
+	next.decks[active_deck].name = deck_name.text.strip_edges()
+	_write_deck_snapshot(next, active_deck)
+
+func _add_deck_card() -> void:
+	if not deck_mode or active_deck.is_empty() or not game.card_database.has(selected_id):
+		return
+	_change_deck_count("tabletop:" + selected_id, 1)
+
+func _remove_deck_card() -> void:
+	if not deck_mode or active_deck.is_empty():
+		return
+	var selected = deck_rows.get_selected_items()
+	if not selected.is_empty():
+		_change_deck_count(str(deck_rows.get_item_metadata(selected[0])), -1)
+
+func _change_deck_count(key: String, delta: int) -> void:
+	var counts = _deck_counts()
+	var quantity: int = int(counts.get(key, 0)) + delta
+	if quantity < 0 or quantity > ProfileStore.MAX_COUNT:
+		deck_notice.text = "Quantity out of range."
+		return
+	var next = deck_snapshot.duplicate(true)
+	if quantity == 0:
+		next.decks[active_deck].counts.erase(key)
+	else:
+		next.decks[active_deck].counts[key] = quantity
+	_write_deck_snapshot(next, active_deck)
+
+func _refresh_deck_rows() -> void:
+	var selected = deck_rows.get_selected_items()
+	var previous = str(deck_rows.get_item_metadata(selected[0])) if not selected.is_empty() else ""
+	deck_rows.clear()
+	var counts = _deck_counts()
+	var keys = counts.keys()
+	keys.sort()
+	for key in keys:
+		var id = str(key).trim_prefix("tabletop:")
+		var title = str(key)
+		if str(key).begins_with("tabletop:") and game.card_database.has(id):
+			title = id + " " + str(game.card_database[id].name)
+		var index = deck_rows.add_item("%d × %s" % [counts[key], title])
+		deck_rows.set_item_metadata(index, key)
+		if key == previous:
+			deck_rows.select(index)
+	var composition = DeckComposition.summarize(counts, game)
+	var rank_text = str(composition.known_rank)
+	if composition.unknown_rank > 0:
+		rank_text += " + ? (%d unresolved copies)" % composition.unknown_rank
+	var types: PackedStringArray = []
+	for kind in composition.types:
+		types.append("%s %d" % [kind, composition.types[kind]])
+	var clubs: PackedStringArray = []
+	for club in composition.clubs:
+		clubs.append("%s %d" % [club, composition.clubs[club]])
+	deck_summary.text = "%d cards • Rank %s\n%s\n%s" % [composition.copies, rank_text, " / ".join(types), " / ".join(clubs)]
+	if composition.unknown_definition > 0:
+		deck_summary.text += "\n%d unknown definition copies" % composition.unknown_definition
+	deck_summary.tooltip_text = deck_summary.text
+	_update_deck_buttons()
+
+func _update_deck_buttons() -> void:
+	deck_create.disabled = deck_snapshot.is_empty()
+	deck_rename.disabled = active_deck.is_empty()
+	deck_add.disabled = active_deck.is_empty() or not game.card_database.has(selected_id)
+	deck_remove.disabled = active_deck.is_empty() or deck_rows.get_selected_items().is_empty()
+
+func _inspect_deck_row(index: int) -> void:
+	var key = str(deck_rows.get_item_metadata(index))
+	var id = key.trim_prefix("tabletop:")
+	if key.begins_with("tabletop:") and game.card_database.has(id):
+		search.text = id
+		type_filter.select(0)
+		refresh_list()
+
+func run_deck_test() -> int:
+	var failures: Array[String] = []
+	var store = ProfileStore.new()
+	store.root = "user://deck-test-" + Crypto.new().generate_random_bytes(12).hex_encode() + "/"
+	attach_profiles(store)
+	if store.active_id.is_empty():
+		push_error("Deck fixture initialization failed")
+		return 1
+	_set_deck_mode()
+	deck_name.text = "First draft"
+	_create_deck()
+	var first = active_deck
+	if first.is_empty():
+		push_error("Deck creation failed: " + deck_notice.text)
+		return 1
+	search.text = "1-001"
+	refresh_list()
+	_add_deck_card()
+	_add_deck_card()
+	var key = "tabletop:1-001"
+	if _deck_counts().get(key, 0) != 2 or store.count("physical", key) != 0 or store.count("digital", key) != 0:
+		failures.append("Deck quantity or inventory isolation")
+	var summary = DeckComposition.summarize(_deck_counts(), game)
+	if summary.copies != 2 or summary.known_rank != 2 or summary.unknown_rank != 0:
+		failures.append("Composition calculation")
+	var unknown = DeckComposition.summarize({"digital:1-001": 3, "tabletop:1-055": 2}, game)
+	if unknown.unknown_rank != 5 or unknown.unknown_definition != 5:
+		failures.append("Unknown definition/rank accounting")
+	deck_rows.select(0)
+	_remove_deck_card()
+	if _deck_counts().get(key, 0) != 1:
+		failures.append("Remove copy")
+	deck_name.text = "Renamed draft"
+	_rename_deck()
+	deck_name.text = "Second draft"
+	_create_deck()
+	if active_deck == first or not _deck_counts().is_empty() or deck_snapshot.decks.size() != 2:
+		failures.append("Multiple independent decks")
+	var reopened = ProfileStore.new()
+	reopened.root = store.root
+	if not reopened.initialize().is_empty():
+		failures.append("Profile reload")
+	var saved: Dictionary = reopened.load_decks()
+	if saved.snapshot.get("decks", {}).get(first, {}).get("name") != "Renamed draft" or saved.snapshot.get("decks", {}).get(first, {}).get("counts", {}).get(key, 0) != 1:
+		failures.append("Deck persistence")
+	var stale = deck_snapshot.duplicate(true)
+	var next = stale.duplicate(true)
+	next.decks[first].counts["digital:1-001"] = 2
+	if not reopened.save_decks(stale, next).is_empty() or store.save_decks(stale, stale).is_empty():
+		failures.append("Unknown key preservation or stale write rejection")
+	profile_name.text = "Other collector"
+	_create_profile()
+	if store.active_id == "default" or not deck_snapshot.get("decks", {}).is_empty():
+		failures.append("Deck profile isolation")
+	for index in range(profile_selector.item_count):
+		if profile_selector.get_item_metadata(index) == "default":
+			_profile_selected(index)
+			break
+	if deck_snapshot.get("decks", {}).get(first, {}).get("counts", {}).get("digital:1-001", 0) != 2:
+		failures.append("Deck profile reload")
+	var bad = deck_snapshot.duplicate(true)
+	bad.decks[first].counts[key] = -1
+	if store.save_decks(deck_snapshot, bad).is_empty():
+		failures.append("Invalid counts accepted")
+	_set_collection_mode("")
+	# Only delete explicitly known files in our disposable fixture.
+	for entry in store.list_profiles():
+		var directory = store.root.path_join(entry.profile_id)
+		for filename in ["profile.json", "physical_collection.json", "digital_collection.json", "decks/index.json"]:
+			for suffix in ["", ".bak"]:
+				var path = directory.path_join(filename + suffix)
+				if FileAccess.file_exists(path):
+					DirAccess.remove_absolute(path)
+		DirAccess.remove_absolute(directory.path_join("decks"))
+		DirAccess.remove_absolute(directory)
+	for suffix in ["", ".bak"]:
+		var path = store.root.path_join("active_profile.json" + suffix)
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(path)
+	DirAccess.remove_absolute(store.root)
+	for failure in failures:
+		push_error(failure)
+	print("LOL_DECKS profiles=2 failures=%d" % failures.size())
 	return 0 if failures.is_empty() else 1
