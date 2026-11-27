@@ -65,11 +65,11 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 - [x] Shared inventory operations keyed by stable card ID: count, add, remove, validate nonnegative quantities; handle unknown IDs without losing data.
 - [x] Two-profile fixture test passed; owner verified graphical creation/switching and active profile persistence across process restart. No res:// data changes.
 
-### P2 — Physical collection (core implemented, pending local verification)
-- [ ] Track real card quantities independently of digital inventory; fast increment/decrement and completion filters.
+### P2 — Physical collection (core verified)
+- [x] Track real card quantities independently of digital inventory; fast increment/decrement and completion filters. All numbered slots available, including incomplete definitions.
 - [ ] Optional condition, wishlist and personal notes. Keep source verification of definitions separate from personal notes.
 - [ ] Physical collection import/export later, with explicit quantities and merge behavior.
-- [ ] Test zero, duplicates, missing IDs, persistence and isolation.
+- [x] Automated zero, duplicates, missing IDs, persistence and isolation checks passed; owner inspected graphical collection mode and reported it works.
 
 ### P3 — Digital collection
 - [ ] Separate digital inventory and acquisition operations; no automatic physical-to-digital conversion.
@@ -123,7 +123,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 1. A1: schema + lossless migration (verified).
 2. A2: editable workshop + save/reload (core verified; manual edge checks remain).
 3. A3a: import reconciliation (core verified); A3b: provenance and verification (core verified).
-4. P1: profile foundation (core verified); P2: physical collection (next); P3: in-game collection.
+4. P1: profile foundation (core verified); P2: physical collection (core verified); P3: in-game collection (next).
 5. Choose the next slice together (presentation, deck building or test pack). Rules work remains independent and may be interleaved in small checkpoints.
 
 At the end of each checkpoint: update this file and the restoration journal; keep the next action small enough for a single shared review.
