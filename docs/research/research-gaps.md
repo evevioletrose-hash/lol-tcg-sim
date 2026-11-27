@@ -10,7 +10,7 @@ Prioritize what improves the simulator or identifies the original authors. Curre
 | 1 | Rules ambiguities | Digital tie, exhaustion, board/attachment limits, full Call/Dress Up, spinner distribution, exact opponent logic, Spice stats discrepancy. Printed priority, phase skips, targeting and edge rulings. |
 | 2 | Art matching | 9 recovered digital art identities now crosswalked by path/ID, rarity frames, particles, pack animation; 33 plausible unindexed assets. Match actual screenshots and identify names of 12 NFT media. |
 | 2 | Products and progression | Starter eligibility/composition, pack odds, duplicate upgrades, reward repeatability, marketplace pricing, currency region; no paid system proposed. |
-| 2 | Regional and promotional cards | Copag packaging differences confirmed, FIFA 2022 twelve-card checklist identified and 2023 six-card lead; need readable scans, card numbers, stats/effects and mixing rules. French/German localization scans still needed. |
+| 2 | Regional and promotional cards | Copag packaging differences confirmed, FIFA 2022 all 12 promotional fronts transcribed (Style/Groove and x/12); need physical backs, club/effect confirmation, remaining ranks and mixing rules. FIFA 2023 fronts lack game stats; compatibility unverified. French/German localization scans still needed. |
 | 3 | Archive completeness | Four unresolved Common Crawl collections 2022-49, 2024-18, 2024-22, 2026-30. 317/317 known nonempty indexed objects recovered. Empty favicon inferred, not fetched. |
 | 3 | Reception, closure and NFT provenance | Original critic timestamps, competitive community, exact shutdown and verified token contract; avoid inferring from corporate liquidation. |
 

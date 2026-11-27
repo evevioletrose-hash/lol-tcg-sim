@@ -11,4 +11,4 @@ All large or third-party payloads (including the actual January game configurati
 
 - [Tabletop gap leads](tabletop-gap-leads.json): all 89 baseline incomplete records, 64 digital ID candidates and 25 physical collector-checklist names; not printed verification.
 - [Asset crosswalk](asset-crosswalk.json): nine digital art identities with both file sizes and other recovered asset groups, path-based associations only.
-- [FIFA 2022 checklist](fifa-2022-checklist.json): twelve crossover identities, unverified printed mechanics.
+- [FIFA 2022 checklist](fifa-2022-checklist.json): twelve crossover identities, visually transcribed promotional Style/Groove pairs and numbering, two individually readable ranks; back content and other printed mechanics unverified.
