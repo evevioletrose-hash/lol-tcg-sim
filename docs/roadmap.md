@@ -84,8 +84,8 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 - [x] V2: B.B. layout, labeled stat badges, shared frame/footer/back and Workshop flip verified. Owner approved Pop Heart front/back screenshots.
 - [x] V3: Item, Surprise and landscape Place layouts with shared power panel, frame and back passed automated verification across all 311 typed records.
 - [ ] V3 graphical review of Item, Surprise and Place, including small-window sizing and text fit.
-- [ ] V4: Original prototype inspected; optional 3D preview and portable texture-fed world-space card implemented using original mesh with generic fallback. Targeted static 3D tests passed at 23ae46c; V4b live Pop Heart artwork experiment implemented, pending local verification. Animated stat geometry deferred.
-- [ ] V5: Consider animation, materials, rarity finishes and model variants only after the first slice works; missing 3D assets fall back to 2D.
+- [x] V4: Portable texture-fed 3D card and optional inspection verified at 23ae46c; V4b live Pop Heart model viewport verified at 29eac6b (five meshes, imported original model, headless pass and owner graphical confirmation).
+- [ ] V5 (deferred, not a restoration blocker): Animation, materials, rarity finishes and model variants; keep 2D fallback.
 - [ ] Verify resizing, long names/effects, missing artwork and 2D/3D data parity. Never make 3D mandatory for gameplay.
 
 ## D — Deck builder
@@ -127,6 +127,8 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 2. A2: editable workshop + save/reload (core verified; manual edge checks remain).
 3. A3a: import reconciliation (core verified); A3b: provenance and verification (core verified).
 4. P1: profile foundation (core verified); P2: physical collection (core verified); P3: in-game collection (core verified).
-5. V1: artwork binding and fallback (verified); V2: first polished B.B. presentation (verified, artwork workflow deferred); V3: Item, Surprise and Place (automated core verified); V4: optional 3D presentation (next); review each slice together. Deck building and test packs remain available alternatives. Rules work remains independent and may be interleaved in small checkpoints.
+5. V1: artwork binding and fallback (verified); V2: first polished B.B. presentation (verified, artwork workflow deferred); V3: Item, Surprise and Place (automated core verified); V4: optional 3D presentation and live illustration proof of concept (verified); further visual work deferred.
+6. D1: Profile-local named deck persistence and deck composition summary (proposed next). D2 ownership modes, D3 championship validation, D4 two-deck comparison follow.
+7. B: Seedable product/pack experiments; G: rules laboratory. Rules work remains independent and may be interleaved in small checkpoints.
 
 At the end of each checkpoint: update this file and the restoration journal; keep the next action small enough for a single shared review.
