@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=3 uid="uid://nwq6qvssgbbm"]
+
+[ext_resource type="Script" uid="uid://b3aya6kpxulos" path="res://src/dance_floor.gd" id="1_3yg3q"]
+[ext_resource type="PackedScene" uid="uid://cy7famoqgr8m0" path="res://src/zones/Deck_Zone.tscn" id="2_bq6mc"]
+[ext_resource type="PackedScene" uid="uid://i2uf8eeq3rqy" path="res://src/zones/Discard_Zone.tscn" id="3_ryal7"]
+[ext_resource type="PackedScene" uid="uid://cqaamhghhh68n" path="res://src/zones/BB_Zone.tscn" id="4_28fh8"]
+[ext_resource type="PackedScene" uid="uid://elh2s7qgd0nx" path="res://src/zones/Item_Zone.tscn" id="5_28fh8"]
+[ext_resource type="PackedScene" uid="uid://dx4fp3wanjx3p" path="res://src/zones/Hand.tscn" id="6_1n5p2"]
+
+[node name="DanceFloor" type="Node2D"]
+script = ExtResource("1_3yg3q")
+
+[node name="DeckZone" parent="." instance=ExtResource("2_bq6mc")]
+position = Vector2(938, 353.99997)
+scale = Vector2(0.5559789, 0.5559789)
+
+[node name="DiscardZone" parent="." instance=ExtResource("3_ryal7")]
+position = Vector2(940, 35)
+scale = Vector2(0.5446423, 0.5446423)
+
+[node name="BBZone" parent="." instance=ExtResource("4_28fh8")]
+position = Vector2(24, 34)
+scale = Vector2(0.5899156, 0.5899156)
+
+[node name="BBZone2" parent="." instance=ExtResource("4_28fh8")]
+position = Vector2(248, 34)
+scale = Vector2(0.5899156, 0.5899156)
+
+[node name="BBZone3" parent="." instance=ExtResource("4_28fh8")]
+position = Vector2(473.00003, 34)
+scale = Vector2(0.5899156, 0.5899156)
+
+[node name="BBZone4" parent="." instance=ExtResource("4_28fh8")]
+position = Vector2(698, 34)
+scale = Vector2(0.5899156, 0.5899156)
+
+[node name="ItemZone" parent="." instance=ExtResource("5_28fh8")]
+position = Vector2(30, 305)
+scale = Vector2(0.5690869, 0.5690869)
+
+[node name="ItemZone2" parent="." instance=ExtResource("5_28fh8")]
+position = Vector2(252.99998, 305)
+scale = Vector2(0.5690869, 0.5690869)
+
+[node name="ItemZone3" parent="." instance=ExtResource("5_28fh8")]
+position = Vector2(476.99997, 305)
+scale = Vector2(0.5690869, 0.5690869)
+
+[node name="ItemZone4" parent="." instance=ExtResource("5_28fh8")]
+position = Vector2(701.99994, 305)
+scale = Vector2(0.5690869, 0.5690869)
+
+[node name="Hand" parent="." instance=ExtResource("6_1n5p2")]
+offset_left = 108.0
+offset_top = 607.0
+offset_right = 1263.0
+offset_bottom = 1045.0
+scale = Vector2(0.7085836, 0.7085836)

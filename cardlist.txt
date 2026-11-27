@@ -1,0 +1,400 @@
+1-001	Pop Heart	BB	1	8	2	Turn 1 face down B.B. face up.	Art	
+1-002	Shapes	BB	1	?	?	Choose a B.B. on the Dance Floor. Copy that B.B.s Starting Groove and Style.	Art	
+1-003	Scribbles	BB	1	7	3	"Tag! Ur it!"	Art	
+1-004	Hoops MVP	BB	1	8	0	 +1 Groove for each other Athletic B.B. on her team.	Athletic	
+1-005	Kicks	BB	1	6	3	"GOOOOOOOOOOOAL!"	Athletic	
+1-006	Court Champ	BB	1	7	5	Discard a Card	Athletic	
+1-007	Touchdown	BB	1	7	2	 +1 Groove to B.B.s next to her.	Athletic	
+1-008	Sprints	BB	1	6	2	Redo Audience Groove once if you want.	Athletic	
+1-009								
+1-010	Short Stop	BB	1	7	3	 +2 Groove if Sports Stadium is the Place	Athletic	
+1-011	Caddy Cutie	BB	1	7	3	  +1 Style if she has an item.	Athletic	
+1-012	Pins	BB	1	7	3	"Let's roll."	Athletic	
+1-013								
+1-014	Dribbles	BB	1	8	2	"Swoosh, there it is!"	Athletic	
+1-015								
+1-016	Slugger	BB	1	7	3	 +2 Groove if Sports Stadium is the Place.	Athletic	
+1-017	Bro Cheer	BB	1	7	1	If Sis Cheer is on the Dance Floor, +1 Groove to All B.B.s on his Team.	Athletic	
+1-018	Cozy Babe	BB	1	9	1	Remove a Place from the Dance Floor	Chill Out	
+1-019	Snow Angel	BB	1	8	2	"Brrr! It's cold in here."	Chill Out	
+1-020	Brr B.B.	BB	1	8	1	Skip the Dance off phase this Round.	Chill Out	
+1-021	Posh	BB	1	8	2	End the Call Your B.B.s phase right now.	Chill Out	
+1-022	Big City B.B.	BB	1	9	2	"! <3 city lyfe!"	Chill Out	
+1-023	Babe in the Woods	BB	1	8	3	Skip the Dress Up phase this round.	Chill Out	
+1-024	Fanime	BB	1	8	2	Pick a club. She's part of that club.	Cosplay	
+1-025	Midnight	BB	1	8	?	Discard a card. Her Groove is always half of her Style.	Cosplay	
+1-026	Neon Guy	BB	1	7	3	"Bright On!"	Cosplay	
+1-027								
+1-028	Center Stage	BB	1	7	5	Discard a card.	Dance	
+1-029	Royal High-Ney	BB	1	7	2	"Le sigh."	Glam	
+1-030	Leading Baby	BB	1	8	0	 +1 Groove for each other Glam B.B. on her team.	Glam	
+1-031	Miss Baby	BB	1	8	2	Put a sash on it at the end of effect.	Glam	
+1-032	It Baby	BB	1	8	1	This B.B. can have 2 items.	Glam	
+1-033								
+1-034	As If Baby	BB	1	9	2	"Whatever!"	Glam	
+1-035	Showbaby	BB	1	9	2	Discard an item from an Opponent's B.B.	Glam	
+1-036	Suite Princess	BB	1	7	3	"That's haute."	Glam	
+1-037	Jet Set Q.T.	BB	1	7	2	"Travel is my aesthetic."	Glam	
+1-038	Miss Punk	BB	1	8	2	When you give this B.B. an item, draw a card.	Glam	
+1-039	Darling	BB	1	8	3	That's the tea.	Glam	
+1-040	Rocker	BB	1	7	3	 +1 Style for each Rock B.B. on her Team.	Glee	
+1-041	MC Swag	BB	1	8	2	 +1 Groove if a Hip Hop B.B. is on her Team.	Glee	
+1-042	Swaggie	BB	1	7	.	"Got my mind on my swag & my swag on my mind"	Glee	
+1-043	$teezy	BB	1	7	2	 +1 Groove if a Pop B.B. is on his team.	Glee	
+1-044	Cosmic Queen	BB	1	9	4	Discard a card.	Glitterati	
+1-045	Splash Queen	BB	1	8	2	"I need vitamin sea."	Glitterati	
+1-046	Crystal Queen	BB	1	7	2	"Diamonds are my BFF."	Glitterati	
+1-047	Sugar Queen	BB	1	6	3	"Nuts about the stage."	Glitterati	
+1-048	Madame Queen	BB	1	9	0	"I promise nap time for ALL babies"	Glitterati	
+1-049								
+1-050	Glamour Queen	BB	1	7	1	 +1 Groove to other Glitterati B.B.s on her team.	Glitterati	
+1-051	Bling Queen	BB	1	9	0	"2 fly 4 words!"	Glitterati	
+1-052	Glitter Queen	BB	1	7	3	"I glitterally can't!"	Glitterati	
+1-053	Disco Queen	BB	1	6	2	 +1 Style for each other Glitterati B.B. on her Team.	Glitterati	
+1-054	Supreme Queen	BB	1	8	1	"Stop! In the name of <3!"	Glitterati	
+1-055	Kawaii Queen							
+1-056	DJ	BB	1	8	1	 +2 Groove if a Pop B.B. is on her Team.	Hip Hop	
+1-057	Shorty	BB	1	8	2	"Shorty from the toy blocks."	Hip Hop	
+1-058	Beats	BB	1	7	2	 +2 Style if a Rock B.B. is on her Team.	Hip Hop	
+1-059	Fancy	BB	1	7	1	If Fresh is on the Dance Floor, this B.B. gives +1 Style to All B.B.s on her Team.	Opposites	
+1-060	Fresh	BB	1	7	1	If Fancy is on the Dance Floor, this B.B. gives +1 Groove to All B.B.s on her Team.	Opposites	
+1-061	Yin B.B.	BB	1	7	1	All B.B.s have -1 Groove when dancing against your Team.	Opposites	
+1-062	Yang Q.T.	BB	1	7	1	All B.B.s have -1 Style when dancing against your team.	Opposites	
+1-063								
+1-064	Lace	BB	1	8	2	"Soft as a cloud."	Opposites	
+1-065	Peanut Buttah	BB	1	9	0	"Stuck on u."	Opposites	
+1-066	Jelly Jam	BB	1	6	3	"The sweetest thing."	Opposites	
+1-067								
+1-068	Ice	BB	1	7	4	 -2 Groove if Fyre is on the Dance Floor	Opposites	
+1-069	Oops Baby	BB	1	9	2	All players must discard a card from their hand.	Pop	
+1-070	Daring Diva	BB	1	7	5	Discard a card.	Pop	
+1-071	Jitterbug	BB	1	9	4	Discard a card.	Retro	
+1-072	Cherry	BB	1	7	3	"That's wild!"	Retro	
+1-073	Pink Baby	BB	1	8	1	"Baby school drop out."	Retro	
+1-074	B.B. Pop	BB	1	8	3	"Let me do it!"	Retro	
+1-075	Beatnik Babe	BB	1	8	3	Draw a card if your Team won last round.	Retro	
+1-076	Boogie Babe	BB	1	7	2	Redo Audience Groove once if you want.	Retro	
+1-077	Miss Jive	BB	1	8	3	"U should B dancing!"	Retro	
+1-078	Slick	BB	1	8	2	Draw a card if your Team lost last round.	Retro	
+1-079								
+1-080	Cheeky Babe	BB	1	10	4	Discard a card.	Rock	
+1-081	Grunge Grrrl	BB	1	8	1	 +2 Groove if a Hip Hop B.B. is on her Team.	Rock	
+1-082	Punk Boi	BB	1	8	5	Discard a card.	Rock	
+1-083	Babydoll	BB	1	7	1	Other Teams discard a B.B. from their dance floor.	Sleepover	
+1-084	Sleeping B.B.	BB	1	8	3	"Me + Snooze Button = BFFs"	Sleepover	
+1-085	Snuggle Babe	BB	1	8	2	Pick a B.B from another team, return it to their hand. Go to Dress Up phase.	Sleepover	
+1-086	Majorette	BB	1	8	2	"Follow my lead!"	Spirit	
+1-087	Cheer Captain	BB	1	7	2	 +1 Groove to all Athletic B.B.s	Athletic	
+1-088	Captain Q.B.	BB	1	8	3	Cards that effect Athletic B.B.s also effect this B.B.	Spirit	
+1-089	Smarty Pants	BB	1	8	0	"The Library is Open!" - Smarty Pants.	Spirit	
+1-090	Can Do Baby	BB	1	6	3	Draw a card.	Stem	
+1-091								
+1-092	Curious Q.T.	BB	1	2	3	Draw a card if you have a Trophy.	Storybook	
+1-093	Hops	BB	1	6	3	"Does running late count as exercise?"	Storybook	
+1-094	Kansas Q.T.	BB	1	8	3	Draw a card if you have no Trophies.	Storybook	
+1-095	Goodie	BB	1	9	1	"Witch upon a star."	Storybook	
+1-096	Rip Tide	BB	1	8	2	Play face down. Reveal when she dances.	Swim	
+1-097	Vacay Babay	BB	1	8	2	Play face down. Reveal when she dances.	Swim	
+1-098								
+1-099								
+1-100	In Sync	BB	1	8	2	Play Face Down. Reveal when she dances. +2 Groove if Maimi pool is the place.	Swim	
+1-101	Yacht B.B.	BB	1	8	3	Play Face Down Reveal when she dances.	Swim	
+1-102	Baby Cat	BB	1	8	4	 -1 Groove for each trophy you have.	Theater	
+1-103								
+1-104	Angel	BB	1	11	0	Return a B.B from your Discard pile to your hand.	Theater	
+1-105	Merbaby	BB	1	8	2	"I'd rather be swimming"	Theater	
+1-106	Super B.B.	BB	1	11	4	Discard a Card	Theater	
+1-107	Cool Cat	BB	1	9	2	LEVEL 7: Speed, slash, rawr.	Theater	
+1-108	Pharaoh Bro	BB	1	8	3	Play a Place from your Discard pile.	Theater	
+1-109								
+1-110	Drip Drop	BB	2	8	4	All players must Reveal any Face Down B.B.s on the Dance Floor.	Art	
+1-111								
+1-112	Sk8er Grrrl	BB	2	7	4	You may change the arrangement of B.B.s on a player's Dance Floor.	Athletic	
+1-113								
+1-114	Splits	BB	2	8	2	All Players must remove half their B.B.s from the Dance Floor.	Athletic	
+1-115	Glow Grrrl	BB	2	8	3	Other players must show their hand to you. Discard a card from their hand.	Athletic	
+1-116								
+1-117								
+1-118	Snow Bunny	BB	2	9	5	Whenever a Phase is skipped, draw a card.	Chill Out	
+1-119								
+1-120	Fan Boy	BB	2	9	2	Pick 2 clubs. This B.B. counts as part of those clubs.	Cosplay	
+1-121	Do-Si-Dude	BB	2	7	6	Discard a Card	Dance	
+1-122	Line Dancer	BB	2	8	5	Discard a Card	Dance	
+1-123	Sleigh Babe	BB	2	9	3	 +2 Groove and +2 Style for each trophy you have.	Chill Out	
+1-124	Her Majesty	BB	2	9	3	Can have as many items as B.B.s on her team.	Glam	
+1-125	Black Tie	BB	2	9	3	 +2 Groove if she has an item.	Glam	
+1-126								
+1-127	Cadet	BB	2	11	0	B.B.s next to this B.B. can have an extra item.	Glam	
+1-128	Tough Guy	BB	2	8	3	Items on this B.B. return to your hand after he is discarded.	Glam	
+1-129								
+1-130	Supa Star	BB	2	9	2	Remove a B.B. from a Player's Dance Floor.	Glee	
+1-131	Diva	BB	2	9	2	 +2 Groove for each other Glee B.B. on her Team.	Glee	
+1-132	Infinity Queen	BB	2	?	?	Starting Groove and Style are always equal to her opponent's Starting Groove and Style when she dances.	Glitterati	
+1-133	Queen Bee	BB	2	7	2	 +2 Groove for each other Glitterati B.B. on the Dance Floor.	Glitterati	
+1-134	Independent Queen	BB	2	10	2	 +4 Groove if she is the only B.B. on her Team.	Glitterati	
+1-135	Piano King	BB	2	7	3	 +1 Groove & +1 Style ALL other Gliterati B.B.s.	Glitterati	
+1-136	Purple Queen	BB	2	8	3	Draw a card for each other Glitterati B.B. on your Team.	Glitterati	
+1-137	King Bee	BB	2	8	4	You may play Queen Bee from your hand, discard pile, OR deck if you have her.	Glitterati	
+1-138	Agent 00L	BB	2	10	4	Rescue 2 B.B.s from your discard pile to your hand.	Glitterati	
+1-139								
+1-140	Honey Bun	BB	2	9	3	1 extra item for each other Rock, Hip Hop, & Glee B.B. on her team.	Hip Hop	
+1-141								
+1-142								
+1-143	Sunny	BB	2	8	4	Play Nightfall from your hand OR discard pile if he is there.	Opposites	
+1-144	Nightfall	BB	2	10	2	Play Sunny from your hand OR discard pile if he is there.	Opposites	
+1-145								
+1-146	Sweet Guy	BB	2	8	2	Challenged B.B.s have -2 Style when dancing against your team.	Opposites	
+1-147								
+1-148	Fierce	BB	2	9	3	 +1 Groove for each other Rock, Hip Hop, Pop, & Glee B.B. on her team.	Pop	
+1-149								
+1-150								
+1-151	Far Out	BB	2	9	3	If you won last round, +2 Groove and +2 Style.	Retro	
+1-152	Valley B.B.	BB	2	10	3	If you won last round, +2 Style to B.B.'s next to her.	Retro	
+1-153								
+1-154	Rhymes	BB	2	8	4	If you lost last round, this B.B. gives B.B.s next to her +2 Groove.	Retro	
+1-155	Teacher's Pet	BB	2	7	4	 +2 Groove to STEM, Athletic, Theater, & Art B.B.s on her Team.	Spirit	
+1-156								
+1-157	V.R.Q.T	BB	2	8	2	Draw 1 card for every other STEM, Theater, Spirit & Art B.B. on your team.	Stem	
+1-158								
+1-159	Glamstronaut	BB	2	7	3	Draw 5 cards. At the end of the Round, discard your hand.	Stem	
+1-160	Heartbreaker	BB	2	10	2	Draw 2 cards for each Trophy you have.	Storybook	
+1-161	Troublemaker	BB	2	8	2	Steal a trophy and place it on this B.B. They get the trophy back once this B.B. is discarded.	Storybook	
+1-162	Sailor Q.T.	BB	2	9	3	Play Face Down. Reveal when she dances. Return 2 items from your discard pile to your hand.	Swim	
+1-163	Treasure	BB	2	9	3	Play Face Down. Reveal when she dances. When revealed, draw 2 cards.	Swim	
+1-164	Precious	BB	2	7	3	Play Face Down. Reveal when she dances. When revealed, draw 3 cards.	Swim	
+1-165	Pranksta	BB	2	7	1	Remove a Trophy from another player.	Theater	
+1-166	Unicorn	BB	2	8	2	Get a trophy if you have no trophies	Theater	
+1-167	Pharaoh Babe	BB	2	10	3	Places cannot be discarded OR played.	Theater	
+1-168	Dreamy Dude	BB	2	9	3	Return 2 cards from your Discard pile to your hand.	Theater	
+1-169								
+1-170								
+1-171								
+1-172	Black Belt	BB	3	8	4	Discard a card. Other players must discard 1 B.B. for each Athletic B.B. on your Team.	Athletic	
+1-173								
+1-174	Bon Bon	BB	3	10	3	Discard a card. This B.B. is part of all Clubs.	Cosplay	
+1-175								
+1-176	Jammin'	BB	3	10	8	Discard 2 of your B.B.s from the Dance Floor.	Dance	
+1-177								
+1-178	The Great Baby	BB	3	9	4	Discard 2 cards. Draw a card whenever you discard a B.B.	Glam	
+1-179								
+1-180	Flower Child	BB	3	8	1	Discard a card. She can have up to 5 items & cannot be discarded by Surprises.	Glam	
+1-181	Harlequin Girl	BB	3	8	2	All other B.B.s have no Special Moves.	Glam	
+1-182	Kitty Queen	BB	3	9	3	Discard 1 of your B.B.'s from the Dance Floor. All your B.B.s gain +2 Groove.	Glitterati	
+1-183	The Queen	BB	3	9	2	Discard a card. Draw an extra card whenever you draw cards.	Glitterati	
+1-184	Startdust Queen	BB	3	10	4	Discard a card. Draw an extra card whenever you draw cards.	Glitterati	
+1-185	Twang	BB	3	8	2	Other B.B.s have -3 Groove when dancing against your team.	Opposites	
+1-186	Metal Babe	BB	3	8	2	Other B.B.s Hhave -3 Style when your team challenges them.	Opposites	
+1-187	Dawn	BB	3		5	Discard a card. Play Dusk from your hand, deck OR discard pile if you have her.	Opposites	
+1-188								
+1-189	Soul Babe	BB	3	9	6	Discard 1 of your B.B.s from the Dance Floor. If you lost last round, other players lose a trophy.	Retro	
+1-190	M.C.N.Y.C	BB	3	9	3	All players must shuffle their discard piles back into their decks.	Retro	
+1-191	Sleepy Bones	BB	3	9	4	Discard a card. This B.N cannot be affected by another player's cards.	Sleepover	
+1-192	Bebe Bonita	BB	3	10	3	Discard your hand. Then, add 7 cards from your discard pile to your hand.	Spooky	
+1-193	Countess	BB	3	8	2	Play up to 3 B.B.s from your Discard pile to your Dance Floor.	Spooky	
+1-194	P.H.D.B.B.	BB	3	8	4	Discard as many cards as you like, and then draw until you have 10 cards.	Stem	
+1-195	Tinz	BB	3	10	4	Discard a card. If you have the least trophies, gain 1 Trophy.	Storybook	
+1-196	Bhaddie	BB	3	8	2	Remove all trophies from ALL players.	Storybook	
+1-197	Captain B.B.	BB	3	10	3	Play Face Down. Reveal when she dances. Discard a card, discard 2 B.B.s from any Dance Floor.	Swim	
+1-198	Scuba Babe	BB	3	10	4	Discard a card. All your B.B.s are played Face Down and revealed when they dance.	Swim	
+1-199	Coconut Q.T.	BB	3	9	3	Discard a card. This B.B. returns to your hand if she is discarded from the Dance Floor.	Theater	
+1-200	Luau	BB	3	10	3	Discard a card. All players shuffle all discarded B.B.s back into their decks.	Theater	
+1-201	Athletics Club Break Time	Surprise	1			Discard a card. Athletics Club cannot dance this round.		Any Phase
+1-202	Chill Out Club Break Time 	Surprise	1			Discard a Card. Chill Out Club cannot dance this round.		Any Phase
+1-203								
+1-204	Dance Club Break Time	Surprise	1			Discard a Card. Dance Club cannot dance this round.		Any Phase
+1-205								
+1-206	Glee Club Break Time	Surprise	1			Discard a Card. Glee Club cannot dance this round.		Any Phase
+1-207	Glitterati Break Time	Surprise	1			Discard a Card. Glitterati cannot dance this round.		Any Phase
+1-208	Hip Hop Club Break Time	Surprise	1			Discard a Card. Hip Hop Club cannot dance this round.		Any Phase
+1-209	Opposites Club Break Time	Surprise	1			Discard a Card. Opposites Club cannot dance this round.		Any Phase
+1-210	Pop Club Break Time	Surprise	1			Discard a Card. Pop Club cannot dance this round.		Any Phase
+1-211	Retro Club Break Time	Surprise	1			Discard a Card. Retro Club cannot dance this round.		Any Phase
+1-212	Rock Club Break Time	Surprise	1			Discard a Card. Rock Club cannot dance this round.		Any Phase
+1-213	Sleepover Club Break Time	Surprise	1			Discard a Card. Sleepover Club cannot dance this round.		Any Phase
+1-214	Spirit Club Break Time	Surprise	1			Discard a Card. Spirit Club cannot dance this round.		Any Phase
+1-215	Spoilsport	Surprise	1			Play to stop any Surprise card, but another Spoilsport.		Any Phase
+1-216	Stem Club Break Time	Surprise	1			Discard a card. STEM Club cannot dance this round.		Any Phase
+1-217	Storybook Club Break Time	Surprise	1			Discard a Card. Storybook Club cannot dance this round.		Any Phase
+1-218	Surprise Surprise	Surprise	1			If another Player plays a Surprise, play this card to draw a card.		Any Phase
+1-219	Swim Club Break Time	Surprise	1			Discard a Card. Swim club cannot dance this round.		Any Phase
+1-220	Theatre Club Break Time	Surprise	1			Discard a Card. Theater Club cannot dance this round.		Any Phase
+1-221								
+1-222	Break's Over	Surprise	1			Put a B.B. from your discard pile onto the Dance Floor.		Call your B.B.'s
+1-223	Coffee Break	Surprise	1			Skip the Call your B.B.s phase this round.		Call your B.B.'s
+1-224	Coupon Code	Surprise	1			Discard 2 cards, Draw 2 cards.		Call your B.B.'s
+1-225	Half Off	Surprise	1			Draw 2 cards, keep 1, discard 1.		Call your B.B.'s
+1-226	Jukebox Frenzie	Surprise	1			Skip the Dress Up phase this round.		Call your B.B.'s
+1-227								
+1-228	Let's go Swimming	Surprise	1			Play 1 B.B. from your hand face down. Reveal them when they dance off.		Call your B.B.'s
+1-229	Pop Quiz	Surprise	1			Discard as many cards as you want, draw that many cards.		Call your B.B.'s
+1-230	Rainy Day	Surprise	1			Remove any Venues from the board.		Call your B.B.'s
+1-231	...and Found	Surprise	1			Give an item from your discard pile to a B.B		Dress Up
+1-232	A B.B. For B.B.	Surprise	1			All players must discard a B.B. from their Dance Floor.		Dress Up
+1-233	Buy 1 Get 1 Free	Surprise	1			When another player plays an item, draw an item from your discard pile.		Dress Up
+1-234	Crystal Ball	Surprise	1			Look at the top 3 cards of your deck. Put them back in the same order.		Dress Up
+1-235	Time Out	Surprise	1			Discard a B.B. from an opponent's Dance Floor.		Dress Up
+1-236	Lifeguard on Duty	Surprise	1			Reveal all face down B.B.s on the Dance Floor.		Dress Up
+1-237	Nap Time	Surprise	1			Return a B.B. from a Player's Dance Floor to their hand.		Dress Up
+1-238	Peekaboo	Surprise	1			Look at another Player's hand.		Dress Up
+1-239	X-Ray Specs	Surprise	1			Secretly look at the top 3 cards of another Player's Deck. Put them back in the same order.		Dress Up
+1-240	Consolation Prize	Surprise	1			When you lose a dance off, draw 2 cards.		Dance Off
+1-241	Flipped	Surprise	1			Flip a token to decide Dance Off winner.		Dance Off
+1-242	Freeze!	Surprise	1			Skip the Dance Off phase.		Dance Off
+1-243	Lost...	Surprise	1			Discard 1 item from any player's B.B.		Dance Off
+1-244	Matchmaker					Skip the Dance Off phase.		
+1-245								
+1-246	Scene Change	Surprise	1			Remove a Venue from the Dance Floor before dancing.		Dance Off
+1-247	Secret Accessory	Surprise	1			After your B.B. is chosen/challenged, before the Audience Groove, give them an item if they have no item.		Dance Off
+1-248	Wrong Size	Surprise	1			Before dancing, return an item from your opponent's Dance Floor to their hand.		Dance Off
+1-249	Birthday Surprise	Surprise	2			When another Player plays a B.B., get a card from your discard pile.		Any Phase
+1-250	Club Ban	Surprise	2			Pick a Club. Remove all B.B.s of that club from the Dance Floor.		Any Phase
+1-251								
+1-252								
+1-253	Thrift Shopping	Surprise	2			All players shuffle items in their discard piles back into their decks.		Any Phase
+1-254								
+1-255	B.B.s Day Off	Surprise	2			Skip the Dress Up phase and Dance Off phase. Start a new round.		Call your B.B.'s
+1-256								
+1-257								
+1-258								
+1-259								
+1-260	Pool Party	Surprise	2			All your B.B.s played this round are played face down. Reveal when they dance off.		Call your B.B.'s
+1-261								
+1-262								
+1-263								
+1-264	Beach Bonfire	Surprise	2			Reveal any face down cards.		Dress Up
+1-265								
+1-266								
+1-267								
+1-268	Reuse and Recycle	Surprise	2			Draw up to 3 items from your discard pile.		Dress Up
+1-269								
+1-270	Secret Edge	Surprise	2			Discard a Card. If a player has more trophies than you, get 1 trophy.		Dress Up
+1-271	Shopping Spree	Surprise	2			Draw 3 cards, keep any items drawn, discard the rest.		Dress Up
+1-272								
+1-273	Tag Team	Surprise	2			Swap a B.B. on your Dance Floor for one in your hand.		Dress Up
+1-274	Free Wifi	Surprise	2			Draw a card for every B.B. you played this round.		Dress Up
+1-275	X-Ray Machine	Surprise	2			Secretly look at the top 3 cards of an opponent's deck. Put them back in any order.		Dress Up
+1-276	Double Time	Surprise	2			B.B.s who dance this round are not discarded.		Dance Off
+1-277								
+1-278								
+1-279	Last Ditch Effort	Surprise	2			Have your opponent redo Audience Groove.		Dance Off
+1-280	New Friend	Surprise	2			After challenged, choose a B.B. from your opponent's Team to dance for your Team.		Dance Off
+1-281	Opposites Attract	Surprise	2			Switch your B.B.'s total STyle and Groove scores before dancing.		Dance Off
+1-282	Pair Up	Surprise	2			Challenge 2 B.B.s this round.		Dance Off
+1-283	Record Scratch	Surprise	2			No one wins the Dance Off. Both B.B.s are discarded.		Dance Off
+1-284	Round 2, Start!	Surprise	2			After being challenged, finish Dance Off, now challenge your opponent now.		Dance Off
+1-285	Spring Cleaning	Surprise	2			Discard all items from all B.B.s before Dancing.		Dance Off
+1-286	Super Secret Accessory	Surprise	2			After challenge, give an extra item to your B.B. before dancing.		Dance Off
+1-287	Talent Show	Surprise	2			All B.B. Special Moves are ignored this round.		Dance Off
+1-288	Wardrobe Swap	Surprise	2			After a challenge, swap your B.B's item with the other B.B.'s item. After Dancing, swap back.		Dance Off
+1-289	Silent Disco	Surprise	3			All items and B.B. Special Moves are ignored this round.		Any Phase
+1-290	Surprise Ball	Surprise	3			All B.B.s on the Dance Floor are returned to their player's hands.		Any Phase
+1-291	Throwback	Surprise	3			All players shuffle their discard piles back into their decks.		Any Phase
+1-292	Reunion Tour	Surprise	3			Draw up to 5 B.B.s from your discard pile.		Call your B.B.'s
+1-293	Bhaddie's Big Plan	Surprise	3			Discard all B.B.s from the Dance Floor.		Call your B.B.'s
+1-294	Dream Dessert	Surprise	3			Draw 5 Cards		Dress Up
+1-295	Private Party	Surprise	3			Pick a Club. B.B.s that are NOT part of that club are discarded from the Dance Floor.		Dress Up
+1-296								
+1-297	Future Sight	Surprise	3			Look at the top 4 cards of your deck. Put 1 in your hand, then put the rest back in any order.		Dress Up
+1-298	Fashion Fiasco	Surprise	3			Challenged B.B. adds their opponent's Groove to their Style this round.		Dance Off
+1-299	The Drop	Surprise	3			All B.B.s dance off this round. Any B.B. without an opponent is discarded.		Dance Off
+1-300								
+1-301	Artsy Camera	Items	1			 +1 Style AND counts as Art club.	Art	
+1-302	Athletic Jersey	Items	1			 +1 Groove AND counts as Athletic Club	Athletic	
+1-303	Beats' Headphones	Items	1			 +1 Groove, OR +2 Groove to Beats.		
+1-304	Bling Queen's Bling Bling	Items	1			 +1 Style, OR +2 Style to Bling Queen.		
+1-305	Brrr B.B.'s Scarf	Items	1			 +1 Style, OR +2 Style to Brr B.B.		
+1-306	Bunny Slippers	Items	1			Give to another player's B.B. This is the only item they can have.		
+1-307	Center Stage's Dancing Shoes	Items	1			 +1 Groove OR +2 Groove to Center Stage.		
+1-308	Chill Out Earmuffs	Items	1			 +1 Style AND counts as Chill Out Club	Chill Out	
+1-309	Cosplay Bow	Items	1			 +1 Style AND counts as Cosplay Club	Cosplay	
+1-310	Da Fresh's Parachute Pants	Items	1			 +1 Style OR +1 Groove, OR if on Da Fresh, he gets both.		
+1-311	Dancing Shoes	Items	1			 +1 Groove AND counts as Dance Club.		
+1-312	Diva's Glasses	Items	1			 +1 Style, OR +2 Style to Diva.		
+1-313	Fabulous Phone	Items	1			 +1 Style, OR +2 Style to any Glam B.B		
+1-314	Love Ya	Items	1			 +1 Groove and +1 Style for each B.B. with Love Ya.		
+1-315								
+1-316	Glam Gown	Items	1			 +1 Style AND counts as Glam Club.	Glam	
+1-317	Glee Skirt	Items	1			 +1 Groove AND counts as Glee Club	Glee	
+1-318								
+1-319	Glittering Glitterbomb	Items	1			 +1 Style, OR +2 Style to any Glitterati B.B.		
+1-320	Groovy Disco Ball	Items	1			 +1 Groove OR +2 Groove to any Retro B.B.		
+1-321	Heavy Weights	Items	1			 +1 Groove OR +2 Groove to any Athletic B.B.		
+1-322	Hip Hop Sneakers	Items	1			 +1 Groove AND counts as Hip Hop Club.	Hip Hop	
+1-323	Loose Glitter	Items	1			 +1 Groove for each Glitterati B.B. on your team.		
+1-324	Marvelous Microphone	Items	1			 +1 Groove, OR +2 Groove to any Glee B.B.		
+1-325	Opposites Necklace	Items	1			 +1 Groove AND counts as Opposites Club.	Opposites	
+1-326	Pop Headband	Items	1			 +1 Groove AND counts as Pop Club	Pop	
+1-327	Queen Bee's Honey Bee	Items	1			 +2 Groove OR +2 Style		
+1-328	Retro Glasses	Items	1			 +1 Groove AND counts as Retro Club.	Retro	
+1-329								
+1-330	Rock Jacket	Items	1			 +1 Groove AND counts as Rock Club.	Rock	
+1-331	Roller Sk8er's Skates	Items	1			 +1 Groove and +1 Style, OR if given to Roller Sk8er, she gets both.		
+1-332	Sleepover PJ's	Items	1			 +1 Style AND counts as Sleepover Club.	Sleepover	
+1-333								
+1-334	Sparkly Style	Items	1			 +1 Style and this B.B. can have an extra item.		
+1-335	School Uniform	Items	1			 +1 Style AND counts as Spirit Club.	Spirit	
+1-336	Spooky Costume	Items	1			 +1 Groove AND counts as Spooky Club	Spooky	
+1-337								
+1-338	DJ's Stereo	Items	1			B.B.s next to this B.B get +1 Groove AND if on DJ, she gets +2 Groove.		
+1-339	Storybook Hairpiece	Items	1			 +1 Style AND counts as Storybook Club.	Storybook	
+1-340								
+1-341	Theater Hat	Items	1			 +1 Style AND counts as Theater Club.	Theater	
+1-342	Treasure's Treasure	Items	1			 +1 Style AND play an extra item from your discard pile to this B.B.		
+1-343	Water Bottle	Items	1			Allows a B.B. to redo the Audience Groove		
+1-344	Unique Necklace	Items	1			This B.B.'s Style and Groove cannot be swapped by any power.		
+1-345	Angel's Wings	Items	2			 +2 Style AND discard to let B.B. stay on the Dance Floor after losing Dance Off.		
+1-346								
+1-347	Ballroom Dress	Items	2			 +2 Groove, OR +4 Groove to Dance B.B.		
+1-348								
+1-349	Chilly Snowball	Items	2			 +2 Groove, OR +4 Groove to Chill Out B.B.		
+1-350								
+1-351	Dancebot's Dancing Shoes	Items	2			 +2 Groove and +2 Style, OR on Dancebot, +3 Groove and +3 Style. Discard after dancing.		
+1-352	Hot Cocoa	Items	2			 +1 Groove AND end Dress Up phase.		
+1-353								
+1-354								
+1-355	Kitty Queen's Cat Ears	Items	2			 +2 Style, AND if on Kitty Queen, she also gets +2 Groove.		
+1-356	MC Swag's Boom Box	Items	2			B.B.s next to this B.B. get +2 Groove, AND if given to MC Swag, she also gets +2 Groove.		
+1-357	Paint Splatters	Items	2			Pick a B.B. This B.B.s Groove and Style now match that B.B.		
+1-358	Pharaoh Babe's Dress	Items	2			Gives B.B.s next to this B.B. +2 Style AND on Pharoah Babe, she also gets +2 Style.		
+1-359								
+1-360	Platform Shoes	Items	2			 +2 Style, OR if given to Pop, Rock, OR Hip Hop B.B, also + 2 Groove.		
+1-361	Pop Pumps	Items	2			 +2 Groove, OR +4 Groove to Pop Club B.B.		
+1-362	Princess Crown	Items	2			 +2 Style, OR +4 Style to Storybook B.B.		
+1-363	Promp Princess' Sash	Items	2			If this B.B. loses a Dance Off, discard this item to make it a draw.		
+1-364	Rockin' Guitar	Items	2			 +2 Groove, OR +4 Groove to any Rock B.B.		
+1-365	Safety Goggles	Items	2			Lose all Style, but gain that much in Groove. Can't be challenged this round.		
+1-366								
+1-367	Scuba Babe's Snorkles	Items	2			B.B.s played next to this B.B. are played Face Down.		
+1-368	Style and Groove	Items	2			 +2 Groove OR +2 Style		
+1-369	Sleepy Teddybear	Items	2			 +2 Style, OR +4 Style to Sleepover B.B.		
+1-370	Spooky Skull	Items	2			 +1 Groove and +1 Style, OR +2 Groove and +2 Style to Spooky Club B.B.		
+1-371	Swaggie Shades	Items	2			 +2 Style, OR +4 Style to Hip Hop B.B.		
+1-372	Swimmin' Floaty	Items	2			 +1 Groove for each face down B.B. on the Dance Floor		
+1-373	Swimmin' Flippers	Items	2			 +2 Groove, OR +4 Groove to any Swim B.B.		
+1-374	Troublemaker's Cat Ears	Items	2			Take a trophy from your opponent and place it on this B.B. When this B.B. is removed from the Dance Floor, give it back.		
+1-375	Sur-Fur Puppy's Surf Board	Items	2			Reveal all opponent's face-down B.B's		
+1-376								
+1-377	Blackbelt's Belt	Items	3			 +3 Groove and +3 Style.		
+1-378	E.D.M. B.B.s Glow Sticks	Items	3			Can never be discarded.		
+1-379	Goodie's Magic Wand	Items	3			Put a player's Trophies on this item. Return them when the item is discarded.		
+1-380								
+1-381								
+1-382								
+1-383	Univorn's Horn	Items	3			Wins Dance off get 2 trophies. Item discarded after dancing.		
+1-384	V.R. Headset	Items	3			Draw a card at the start of the Dress Up and Dance Off phases.		
+1-385	Witchay Babay's Hat	Items	3			Return all discarded Surprises back to your hand at the end of round.		
+1-386	Boss Coffee	Items	3			 +3 Groove. If this B.B loses a Dance Off, it is not discarded.		
+1-387	Flower Child's Flower Crown	Items	3			Get up to 3 items. On Flower Child, she also gets +2 Groove and +2 Style.		
+1-388								
+1-389	Diva's Beauty Salon	Place	2			B.B.s subtract Groove from Style when Dancing, highest remaining Style wins.		
+1-390								
+1-391								
+1-392								
+1-393	SleepyBones' Sleepover	Place	2			All teams must have 2 B.B.s on their Dance Floor to Dance Off.		
+1-394	Snowy Ski Resort	Place	2			B.B.s can only dance if they have an item.		
+1-395	The Boardwalk	Place	2			All players can redo Audience Groove once per Dance Off.		
+1-396								
+1-397	The Concert Stage	Place	3			Groove and Style are switched.		
+1-398								
+1-399								
+1-400	Pop Heart	BB	1	9	3	Turn 1 face down B.B. face up.	Art	

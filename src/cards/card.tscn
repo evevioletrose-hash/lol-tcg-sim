@@ -1,0 +1,83 @@
+[gd_scene load_steps=4 format=3 uid="uid://co1me3ivm6hp3"]
+
+[ext_resource type="Theme" uid="uid://0spingy6q2el" path="res://src/card_theme.tres" id="1_02hr8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_02hr8"]
+bg_color = Color(0.456524, 0.19766644, 0.6286616, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8848267, 0.5447941, 0.8117638, 1)
+corner_radius_top_left = 17
+corner_radius_top_right = 17
+corner_radius_bottom_right = 17
+corner_radius_bottom_left = 17
+corner_detail = 6
+shadow_color = Color(0.27987683, 0.14477804, 0.23830807, 0.6)
+shadow_size = 4
+shadow_offset = Vector2(2.255, 2.13)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b64nv"]
+bg_color = Color(0.9624284, 0.94499594, 0.8698456, 1)
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.83137256, 0.7647059, 0.38039216, 1)
+corner_radius_top_left = 17
+corner_radius_top_right = 17
+corner_radius_bottom_right = 17
+corner_radius_bottom_left = 17
+corner_detail = 6
+shadow_color = Color(0.87058824, 0.78039217, 0.35686275, 1)
+shadow_size = 11
+
+[node name="Card" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 327.0
+offset_bottom = 438.0
+theme = ExtResource("1_02hr8")
+
+[node name="img" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 331.0
+offset_bottom = 436.0
+
+[node name="back" type="Panel" parent="img"]
+visible = false
+z_index = 1
+layout_mode = 0
+offset_right = 328.0
+offset_bottom = 441.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_02hr8")
+
+[node name="card_num" type="Label" parent="img"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 19.0
+offset_top = 410.0
+offset_right = 24.0
+offset_bottom = 393.0
+text = "X-XXX"
+
+[node name="card_rank" type="Label" parent="img"]
+layout_mode = 0
+offset_left = 268.0
+offset_top = 409.0
+offset_right = 313.0
+offset_bottom = 432.0
+text = "X"
+horizontal_alignment = 2
+
+[node name="can_play" type="Panel" parent="img"]
+visible = false
+layout_mode = 0
+offset_left = -1.0
+offset_top = 1.0
+offset_right = 332.0
+offset_bottom = 435.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_b64nv")

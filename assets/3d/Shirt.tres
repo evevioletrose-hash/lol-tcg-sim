@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c6gw0ku0kmyff"]
+
+[resource]
+resource_name = "Shirt"
+cull_mode = 2
+roughness = 0.5

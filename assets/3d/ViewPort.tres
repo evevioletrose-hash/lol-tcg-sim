@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://wrkr4yyi85u7"]
+
+[resource]
+resource_name = "ViewPort"
+cull_mode = 2
+albedo_color = Color(0.19366561, 0.12442606, 0.20252344, 1)
+metallic = 0.2777778
+roughness = 0.5

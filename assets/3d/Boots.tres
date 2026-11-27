@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b4j1t55c47eds"]
+
+[resource]
+resource_name = "Boots"
+cull_mode = 2
+albedo_color = Color(0.9063318, 0.9063318, 0.9063318, 1)
+metallic = 0.31746033
+roughness = 0.515873

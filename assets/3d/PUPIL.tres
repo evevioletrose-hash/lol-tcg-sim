@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b3vhbk450rt44"]
+
+[resource]
+resource_name = "PUPIL"
+cull_mode = 2
+albedo_color = Color(0, 0, 0, 1)
+metallic = 0.952381
+roughness = 0.0

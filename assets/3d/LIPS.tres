@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://y2volmanxq6o"]
+
+[resource]
+resource_name = "LIPS"
+cull_mode = 2
+albedo_color = Color(0.73946023, 0.42121774, 0.42121774, 1)
+metallic = 0.4920635
+roughness = 0.5

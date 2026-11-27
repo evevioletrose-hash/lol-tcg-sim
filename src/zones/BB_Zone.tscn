@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqaamhghhh68n"]
+
+[ext_resource type="Script" uid="uid://ckkdvcdn4d82w" path="res://src/zones/bb_zone.gd" id="1_eksnx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h2jru"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.101960786, 0.101960786, 0.101960786, 0.21568628)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.9317682, 0.7267724, 0.87880236, 1)
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+corner_detail = 5
+
+[sub_resource type="LabelSettings" id="LabelSettings_h2jru"]
+font_size = 39
+font_color = Color(1, 0.7058824, 1, 0.6117647)
+
+[node name="BBZone" type="Node2D"]
+script = ExtResource("1_eksnx")
+
+[node name="Outline" type="PanelContainer" parent="."]
+offset_right = 358.0
+offset_bottom = 466.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_h2jru")
+
+[node name="Container" type="CenterContainer" parent="."]
+offset_left = 13.0
+offset_top = 15.0
+offset_right = 346.0
+offset_bottom = 460.0
+use_top_left = true
+
+[node name="Label" type="Label" parent="."]
+offset_left = 47.0
+offset_top = -48.0
+offset_right = 320.0
+offset_bottom = 6.0
+text = "BB"
+label_settings = SubResource("LabelSettings_h2jru")
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_left = 9.0
+offset_right = 351.0
+offset_bottom = 462.0

@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b1l11vylx2la5"]
+
+[resource]
+resource_name = "hairband"
+cull_mode = 2
+albedo_color = Color(0.5822871, 0.33975774, 0.29023358, 1)
+metallic = 0.35714287

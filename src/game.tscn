@@ -1,0 +1,70 @@
+[gd_scene load_steps=7 format=3 uid="uid://chmjy1f4spomt"]
+
+[ext_resource type="Script" uid="uid://c3nfpy72osboh" path="res://src/game.gd" id="1_7uq6d"]
+[ext_resource type="PackedScene" uid="uid://nwq6qvssgbbm" path="res://src/dance_floor.tscn" id="2_3msxb"]
+[ext_resource type="Script" uid="uid://cfwckltbis8u1" path="res://src/context_menu.gd" id="3_bs6l1"]
+[ext_resource type="Script" uid="uid://fnfd51xfws63" path="res://src/game_state.gd" id="4_kc8ui"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3msxb"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.11489687, 0.1148968, 0.1148968, 0.8117647)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 4
+border_width_bottom = 4
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 5
+
+[sub_resource type="LabelSettings" id="LabelSettings_xq6wo"]
+font_size = 29
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_7uq6d")
+
+[node name="phasetext" type="Label" parent="."]
+offset_left = 952.0
+offset_top = 299.0
+offset_right = 1122.0
+offset_bottom = 342.0
+text = "PHASE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Board" type="Node2D" parent="."]
+
+[node name="P1 Board" parent="Board" instance=ExtResource("2_3msxb")]
+
+[node name="P2 Board" parent="Board" instance=ExtResource("2_3msxb")]
+position = Vector2(1164, 0)
+rotation = 3.1415925
+
+[node name="info" type="PanelContainer" parent="."]
+visible = false
+offset_left = 264.0
+offset_top = 16.0
+offset_right = 965.0
+offset_bottom = 97.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_3msxb")
+
+[node name="Label" type="Label" parent="info"]
+layout_mode = 2
+text = "You need to blah blah blah"
+label_settings = SubResource("LabelSettings_xq6wo")
+horizontal_alignment = 1
+
+[node name="ContextMenu" type="VBoxContainer" parent="."]
+offset_left = 1006.0
+offset_top = 10.0
+offset_right = 1143.0
+offset_bottom = 195.0
+mouse_filter = 2
+script = ExtResource("3_bs6l1")
+
+[node name="State" type="Node" parent="."]
+script = ExtResource("4_kc8ui")

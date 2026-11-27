@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://dx4fp3wanjx3p"]
+
+[ext_resource type="Script" uid="uid://ckktgu72blxat" path="res://src/zones/hand.gd" id="1_eeahk"]
+
+[node name="Hand" type="PanelContainer"]
+anchors_preset = -1
+anchor_right = 1.5090001
+anchor_bottom = 0.68200004
+offset_top = 3.0
+offset_right = -620.36804
+offset_bottom = 10.063965
+script = ExtResource("1_eeahk")
+
+[node name="Container" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_stretch_ratio = 3.7
