@@ -2,7 +2,7 @@
 
 [ext_resource type="FontFile" uid="uid://td45vx1yltqw" path="res://assets/Planet Comic.ttf" id="1_pk8ah"]
 [ext_resource type="Material" uid="uid://cxlgvuladt76e" path="res://assets/3d/Card.tres" id="2_cfail"]
-[ext_resource type="ArrayMesh" uid="uid://cjrdam3kkqokm" path="res://assets/3d/card_mesh.tres" id="2_v5mov"]
+[ext_resource type="ArrayMesh" uid="uid://d0ohijftnfhoy" path="res://assets/3d/card_mesh.tres" id="2_v5mov"]
 [ext_resource type="Material" uid="uid://d128idwm6jfbs" path="res://assets/3d/Black.tres" id="3_ntgsp"]
 [ext_resource type="Material" uid="uid://civuxr6sirv04" path="res://assets/3d/Border_Rare.tres" id="4_g460w"]
 [ext_resource type="Script" uid="uid://cq5vueykvo4v5" path="res://src/utils/rotator.gd" id="6_cfail"]
