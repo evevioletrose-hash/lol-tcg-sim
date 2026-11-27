@@ -1,6 +1,7 @@
 extends Node
 class_name Card
 
+var catalogue_id: String
 var setNum : int
 var number : int
 var card_name : String
@@ -29,7 +30,8 @@ func populate(data):
 	cardback_ui = get_node("Card/img/back")
 	card_ui = get_node("Card")
 	# card_number,Have,Name,type,rank,style,groove,text,club,phase
-	var data_card_num = data.number.split('-')
+	catalogue_id = data.number
+	var data_card_num = catalogue_id.split('-')
 	setNum = int(data_card_num[0])
 	number = int(data_card_num[1])
 	card_name = data.name
@@ -42,7 +44,7 @@ func populate(data):
 	
 func update_cardtext():
 	rank_ui.text = str(rank)
-	cardnum_ui.text = str(setNum) + "-" + str(number)
+	cardnum_ui.text = catalogue_id
 
 func set_face(up = true):
 	if up:

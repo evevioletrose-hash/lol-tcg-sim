@@ -9,9 +9,9 @@ var phase : Game.Game_Phases
 func populate(data):
 	super.populate(data)
 
-	name_ui = get_node("Name")
-	phase_ui = get_node("Phase")
-	cardtext_ui = get_node("Text/card_text")
+	name_ui = get_node("Card/Name")
+	phase_ui = get_node("Card/Phase")
+	cardtext_ui = get_node("Card/Text/card_text")
 
 	phase = data.phase
 	update_cardtext()

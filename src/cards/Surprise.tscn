@@ -76,4 +76,3 @@ layout_mode = 0
 offset_right = 333.0
 offset_bottom = 432.0
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed" flags=18]

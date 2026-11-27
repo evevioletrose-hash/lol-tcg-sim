@@ -199,7 +199,7 @@ func initialize_game(deck, deck2):
 	
 	
 	
-func spawn_card(card_number : String) -> Card:
+func spawn_card(card_number : String, presentation_parent: Node = null) -> Card:
 	var card_data = card_database.get(card_number)
 	if card_data == null:
 		push_warning("Unknown card number: " + card_number)
@@ -216,10 +216,18 @@ func spawn_card(card_number : String) -> Card:
 		_:
 			push_warning("No card scene for " + card_number)
 			return null
-	add_child(card_object)
+	if presentation_parent == null:
+		presentation_parent = self
+	presentation_parent.add_child(card_object)
 	card_object.populate(card_data)
 	return card_object
 	
 func open_library():
+	board.hide()
+	infobox.hide()
+	context.hide()
+	get_node("phasetext").hide()
 	var library = load("res://src/card_viewer/card_library.tscn").instantiate()
 	add_child(library)
+	library.setup(self)
+	return library

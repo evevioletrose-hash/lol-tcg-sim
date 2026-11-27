@@ -22,3 +22,13 @@ Use the local Godot executable path if it is not on PATH. Inspect the first impo
 ## Next checkpoint
 
 Restore card scene population and preview a few individual cards, then inspect zone transfers and phase progression separately.
+
+## Checkpoint 2: Card workshop
+
+- The primary rules reference is [rule-book.pdf](rule-book.pdf), supplied by the project owner. No new rules are implemented here.
+- Godot 4.8 migration was committed locally as 168d43d after import and boot verification; the two incomplete catalogue warnings remain expected.
+- Startup now opens the original card library scene, with a searchable list, type filter, existing 2D card previews and definition details. Use `-- --board` to see the old board.
+- The five Places are inspectable as text only. The 3D card remains untouched. No artwork has been added.
+- A preview is a disposable Card node with no zone or match. The existing factory accepts an optional parent so the board and workshop can share it.
+- Preserve the printed card ID including leading zeroes; correct Surprise label paths and remove its orphaned button signal.
+- Local smoke test: `godot --headless --path . -- --card-workshop-test` checks identity, text and B.B. stats across the current catalogue, and reports counts and failures. No runtime validation yet. Counts intentionally pin this restoration snapshot; update the test when the catalogue grows.
