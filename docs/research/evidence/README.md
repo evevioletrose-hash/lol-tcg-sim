@@ -5,4 +5,6 @@
 - [Original objects](original-objects.json): 229 original recovered responses, URLs, capture timestamps, SHA-256 and private relative paths. Not the final temporal inventory.
 - [CDX original](cdx-original.json) and [expanded 2021–2024](cdx-2021-2024.json): original supplied indexes. The final 438-row index and Common Crawl WARC records are private and more recent. 
 
+- [Legacy archive inventory](legacy-archive-inventory.json): exact Git blob fingerprints of every original tracked archaeology file, for retirement verification.
+
 All large or third-party payloads (including the actual January game configuration), complete screenshot/atlas inventories, video hashes, final indexes and recovery scripts belong to the private vault. See [workspace](../workspace.md). The repository is a usable factual reference, not a complete copy of the original platform. The source game database digest is RM43E7CVBGHRIQHDKCHTS67Y5ZOYKXJY.

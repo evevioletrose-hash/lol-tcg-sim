@@ -14,4 +14,6 @@ Prioritize what improves the simulator or identifies the original authors. Curre
 | 3 | Archive completeness | Four unresolved Common Crawl collections 2022-49, 2024-18, 2024-22, 2026-30. 317/317 known nonempty indexed objects recovered. Empty favicon inferred, not fetched. |
 | 3 | Reception, closure and NFT provenance | Original critic timestamps, competitive community, exact shutdown and verified token contract; avoid inferring from corporate liquidation. |
 
+Additional leads: original Ioconic-related entities (Canadian Ioconic CA Inc., UK IO GAMES LTD) require verified project links; obtain the exact Reddit reception anecdote and timecoded Kohdok critique. Preserve representative physical finish and packaging photographs with unique QR codes redacted. See [archive recovery](archive-recovery.md).
+
 For new evidence record source URL/identity, timestamp or page, claim, observation vs inference, checksum and private relative path where applicable. Update relevant reference section rather than append a chronological diary. Preserve contradictions. Never expose unique QR codes, account details or unpublished correspondence.

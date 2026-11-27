@@ -15,6 +15,7 @@ Independent preservation and simulator research. This is the shared reference, n
 | [People and outreach](outreach.md) | Professional leads and questions for original developers |
 | [Evidence data](evidence/README.md) | Card fact projection, capture indexes, provenance and combat fixtures |
 | [Outstanding questions](research-gaps.md) | One current research queue |
+| [Archive recovery](archive-recovery.md) | Exact capture recovery, remaining archive gaps and reusable procedures |
 | [Private workspace](workspace.md) | Where the original materials live and how to verify them |
 
 ## Established collection

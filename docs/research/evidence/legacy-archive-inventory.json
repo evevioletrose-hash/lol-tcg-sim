@@ -1,0 +1,1236 @@
+{
+  "source_commit": "163ca35664a35e78e018ddfc77e0ee8b01c3ef91",
+  "root": "archaeology",
+  "files": [
+    {
+      "path": "README.txt",
+      "git_blob_sha1": "aa57fa49c7ea72d3262e44318cbf338fe7e6ae68",
+      "bytes": 2082
+    },
+    {
+      "path": "cc_recover.py",
+      "git_blob_sha1": "e4bd03d87eba3800d5c8fd6bdc9bb0239ff47ff4",
+      "bytes": 8255
+    },
+    {
+      "path": "cdx-index.json",
+      "git_blob_sha1": "7ccf2fff70b19df7a48759619cdb6adc659c19fe",
+      "bytes": 45706
+    },
+    {
+      "path": "extract_digital.py",
+      "git_blob_sha1": "0ab4d1a863f2be88cb2d6c9ad9c81a387ecd8f8d",
+      "bytes": 2103
+    },
+    {
+      "path": "harvest.py",
+      "git_blob_sha1": "2be6439649c89c9807816da649f79cef9ad48c25",
+      "bytes": 9632
+    },
+    {
+      "path": "indexes/2021-2024.json",
+      "git_blob_sha1": "86dcfdd67713b0fbdeb3eee9ef54526796ebdc22",
+      "bytes": 76982
+    },
+    {
+      "path": "inventory.txt",
+      "git_blob_sha1": "4bf91955362f2fc11dfa76f7dc35b78f91b89411",
+      "bytes": 34921
+    },
+    {
+      "path": "reading_room.py",
+      "git_blob_sha1": "95a64f1b5cf469616f58a85afacce0e83af0db08",
+      "bytes": 14377
+    },
+    {
+      "path": "recovered/attempts.jsonl",
+      "git_blob_sha1": "0f0150f9bcad2a2dcb2bc3767d2f088b176ee74d",
+      "bytes": 193303
+    },
+    {
+      "path": "recovered/manifest.json",
+      "git_blob_sha1": "b8294fda39e8c30e500d71d68221ace4435c1fb2",
+      "bytes": 204560
+    },
+    {
+      "path": "recovered/payloads/game.playlolsurprise.com/index__20230209115736.html",
+      "git_blob_sha1": "32017a8ab918abe33504305c93340cf4c563b858",
+      "bytes": 186
+    },
+    {
+      "path": "recovered/payloads/game.playlolsurprise.com/production/json/json__20220104043838.js",
+      "git_blob_sha1": "543eaa19a82fdab913d236a59a8d508221f4f5c6",
+      "bytes": 486856
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-044-cosmicqueen-small__20220104041956.png",
+      "git_blob_sha1": "a1653a93b5b7c10d4e3db5f805080bae672a73c2",
+      "bytes": 26443
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-044-cosmicqueen__20220104041947.png",
+      "git_blob_sha1": "151f9acd5d9a36a9688e55c115f6a28cc64aba49",
+      "bytes": 415646
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-093-hops-small__20220104041912.png",
+      "git_blob_sha1": "dbc98b5409842d84cfb02e026a805c8b5674f286",
+      "bytes": 17406
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-093-hops__20220104041955.png",
+      "git_blob_sha1": "09d2c07fd565dce947b2928116d010ddbfecfbc4",
+      "bytes": 139980
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-175-dancebot-small__20220104041933.png",
+      "git_blob_sha1": "aa310028a925299d397dc2adddf4aafb0274ff32",
+      "bytes": 26217
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-175-dancebot__20220104041949.png",
+      "git_blob_sha1": "0684306c7684105eac9879282effe4824677e041",
+      "bytes": 450903
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-195-tinz-small__20220104041940.png",
+      "git_blob_sha1": "8b606cba7a6ed2342bf1cf3d488fb531e5bda5fe",
+      "bytes": 25196
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-195-tinz__20220104041937.png",
+      "git_blob_sha1": "3b205d6197413d79e4340506900958554658f785",
+      "bytes": 402144
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-197-captainbb-small__20220104041932.png",
+      "git_blob_sha1": "ab8a19ac080e602daedd8c45e6223c6de9457860",
+      "bytes": 17556
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/bbs/1-197-captainbb__20220104041948.png",
+      "git_blob_sha1": "6b2452bcbfb91ef65cccbcc8e69c35e7a63c7e23",
+      "bytes": 249265
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/items/1-337-stemlabcoat-small__20220104041941.png",
+      "git_blob_sha1": "de35d414422bce037187d90c193cd5770019becd",
+      "bytes": 18168
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/items/1-337-stemlabcoat__20220104041939.png",
+      "git_blob_sha1": "daf4fc4dead31bb355c30addcc2b40335aab907c",
+      "bytes": 166109
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/items/1-349-chillysnowball-small__20220104041901.png",
+      "git_blob_sha1": "1e349bed8b5bac7315345efd6d2d284d1b59d0e9",
+      "bytes": 8850
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/items/1-349-chillysnowball__20220104041930.png",
+      "git_blob_sha1": "dc20b6dc4efb32610feda4f534cd09926f393a20",
+      "bytes": 72059
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/items/1-356-mcswagsboombox-small__20220104041929.png",
+      "git_blob_sha1": "83274cf1402cfb7eeabf3fd7fcef9030785acefe",
+      "bytes": 29217
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/items/1-356-mcswagsboombox__20220104041956.png",
+      "git_blob_sha1": "ebe9d591a8ed11946ae520fac55fd0487fa11326",
+      "bytes": 422938
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/items/1-362-princesscrown-small__20220104041857.png",
+      "git_blob_sha1": "8037b8f631cb0c56f4f23fe296b5db7328bdfc5e",
+      "bytes": 16747
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/cards/items/1-362-princesscrown__20220104041947.png",
+      "git_blob_sha1": "4abec9e6f020de037860fad1321adb14a9c9e9b0",
+      "bytes": 262345
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/documents/LOL+Surprise!+Dance+Off!+Guide+%2526+Instructions__20220226145300.pdf",
+      "git_blob_sha1": "d8e1e3f3c1b813fe1a0943a7feb4150c62dfee4f",
+      "bytes": 14351712
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/documents/LOL+Surprise!+Dance+Off!+Instructions__20211216082226.pdf",
+      "git_blob_sha1": "c3bbc8723c011640dc3766a09fa49e78fee1240f",
+      "bytes": 8196876
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/documents/LOL+Surprise%2521+Dance+Off%2521+Instructions-Chinese__20220104042221.pdf",
+      "git_blob_sha1": "0a1600b8fe4968c9ccebd89c10bbef120a003077",
+      "bytes": 3970216
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-1-001__20220104042212.mp4",
+      "git_blob_sha1": "279302579c001e73ce245b6282e2948eea8c927c",
+      "bytes": 1180184
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-1-002__20220104042213.mp4",
+      "git_blob_sha1": "fdf2513a59046623bf22d74bd2cc0c718277ef4b",
+      "bytes": 1341895
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-1-003__20220104043845.mp4",
+      "git_blob_sha1": "139eb5ccced5e764d79c754b5f1aea21afd7ec77",
+      "bytes": 617594
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-2-001__20220104042214.mp4",
+      "git_blob_sha1": "5c8efa794a353f60c8e9f40971dc94435c4bab47",
+      "bytes": 2541989
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-2-002__20220104042219.mp4",
+      "git_blob_sha1": "ff786c240547aeb4661447626105c865919c0ee8",
+      "bytes": 2837964
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-2-003__20220104042218.mp4",
+      "git_blob_sha1": "4d3f275f845719c4e200c17237c198da015b395c",
+      "bytes": 2935794
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-3-001__20220104042215.mp4",
+      "git_blob_sha1": "7f55cac08cfd940753bd6cdc20a55caba39d1e3a",
+      "bytes": 1266883
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-3-002__20220104042218.mp4",
+      "git_blob_sha1": "7ada21932bedd85097a83cc34cf48f36e8a524d3",
+      "bytes": 1164667
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-3-003__20220104042224.mp4",
+      "git_blob_sha1": "ec6acf5823b2f1f02749dfbaad6437b3fd13d26a",
+      "bytes": 1092833
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-3-004__20220104043838.mp4",
+      "git_blob_sha1": "35d152ef9b44c9bd0a5cbdce585b9a1320f6d5da",
+      "bytes": 1130322
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-3-005__20220104042227.mp4",
+      "git_blob_sha1": "27bc023e0c12d81812a3b8b8405935b8ab24ca26",
+      "bytes": 1222714
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/nfts/nft-3-006__20220104042227.mp4",
+      "git_blob_sha1": "be0bc23675c241df75b2ca08a32b63c71d1521ca",
+      "bytes": 1851227
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/packs/regular-pack-shop__20220104043748.png",
+      "git_blob_sha1": "0f999cce9ce1d09164767cf770ee3f5ba6b4456e",
+      "bytes": 19263
+    },
+    {
+      "path": "recovered/payloads/media.playlolsurprise.com/packs/starter-pack-shop__20220104041755.png",
+      "git_blob_sha1": "9fcf9e9964e75543d89cf7975676c8a87766a069",
+      "bytes": 29055
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/animations/card-animation/pink/card-animation-pink__20220104043835.png",
+      "git_blob_sha1": "cdfe65aa610256516ff4c31858e17bb8cf627e38",
+      "bytes": 1449202
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/animations/card-animation/pink/card-animation-pink__20220104043843.json",
+      "git_blob_sha1": "a201f77d104ca2313eae0b1cac81c8593fe6a96f",
+      "bytes": 5607
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/animations/pack-opening/LOL_web_platform_card_purchase2__20220104041807.png",
+      "git_blob_sha1": "3d50b74f2c8cd335093a6fda213257939a661ac8",
+      "bytes": 416475
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/animations/pack-opening/LOL_web_platform_card_purchase__20220104041752.png",
+      "git_blob_sha1": "1dae57bfcd7404e46a316982d1b24e0a51421693",
+      "bytes": 643824
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/animations/pack-opening/LOL_web_platform_card_purchase__20220104042229.atlas",
+      "git_blob_sha1": "5af5b0ccd3d1fab686985c5ae7e3ebf1ed016b92",
+      "bytes": 1385
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/animations/pack-opening/LOL_web_platform_card_purchase__20220104043820.json",
+      "git_blob_sha1": "3bc959496e3ca5eabf9d97666a2ae94d97819c96",
+      "bytes": 442134
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/cdn-cgi/l/email-protection__20220519174719.html",
+      "git_blob_sha1": "671a6a13101ba3bc2d7d06506bcf88c977864d85",
+      "bytes": 4107
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/contact-us__20220519183611.html",
+      "git_blob_sha1": "36b215b9953e40ce053f0850cdeb21c4ed889394",
+      "bytes": 39032
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/css/styles__20220104042203.css",
+      "git_blob_sha1": "a824e7f7e2dd5900af2084720d1db14a27c2926a",
+      "bytes": 68617
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/css/styles__q-6ff691ec8471__20220226145340.css",
+      "git_blob_sha1": "f21d37dd33e805a9ea510e5b1731d891b75829ca",
+      "bytes": 70620
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/css/styles__q-bbe22cd7148c__20221206023354.css",
+      "git_blob_sha1": "1996869fa0926a046083f716a76bd3a51ba098d3",
+      "bytes": 75949
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/css/welcome2__20211216082329.css",
+      "git_blob_sha1": "1b0ead707472272fc46c812732b0ba44c4482749",
+      "bytes": 36533
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/css/welcome2__q-1f5869d88c78__20211216082216.css",
+      "git_blob_sha1": "1b0ead707472272fc46c812732b0ba44c4482749",
+      "bytes": 36533
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/css/welcome2__q-60a7ec07b94d__20220226145424.css",
+      "git_blob_sha1": "457ee2d37ebaf76a445136054b2fd678b2af5868",
+      "bytes": 37630
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/fonts/vag-rounded-bold__20220104042225.woff",
+      "git_blob_sha1": "7c5c17a2dcacb429fb19191053fe546caa0ffd93",
+      "bytes": 20596
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/fonts/vag-rounded-light__20220104042217.woff",
+      "git_blob_sha1": "518d7f60c18298f519c4e786b3f6b96313bc06b4",
+      "bytes": 19528
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/forgot-password__20221130064636.html",
+      "git_blob_sha1": "2ba946d0dd5286c94813b83892413ef57219d6ff",
+      "bytes": 58574
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/3-disco-balls-with-beams__20211216082207.png",
+      "git_blob_sha1": "caf0f3b8cfedfbd2a5007ce88f99e55cead59dc0",
+      "bytes": 23084
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/Chinese-Banner-0522__20221206050534.png",
+      "git_blob_sha1": "191e6a8a489d38a0ee54ab97f51426f3b96a8c5b",
+      "bytes": 694394
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/art-gallery-banner__20220104042104.png",
+      "git_blob_sha1": "e1b395c5b3c9589c0618a88b6bb22d4a0fceeb7d",
+      "bytes": 13697
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/art-gallery-bg-squares__20220104042108.png",
+      "git_blob_sha1": "5367766fa106eded8e5c88e36d80ccdbfe969f40",
+      "bytes": 1359
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/art-gallery-icon@2x__20220226145316.png",
+      "git_blob_sha1": "7269d1f2d055e1db2a0caafbfb8bc0ec7b7c5f06",
+      "bytes": 1523
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/art-gallery-icon__20220104041839.png",
+      "git_blob_sha1": "c62880d3a46e0f0a45b965e2b15936554ec016bb",
+      "bytes": 741
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/art-shop-banner__20220104042110.png",
+      "git_blob_sha1": "8ee649eb543bb692699110118227e17f3b7b1daa",
+      "bytes": 7894
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/art-shop-icon__20220104041831.png",
+      "git_blob_sha1": "5be15509d3372e67c0811fd2f075127681f7f4af",
+      "bytes": 1924
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/b-bs-left-big-screen__20220104043752.png",
+      "git_blob_sha1": "cc77bfb815dd0a773cdba6e9dcb475e6a27fc7e1",
+      "bytes": 51514
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/b-bs-left__20220104041912.png",
+      "git_blob_sha1": "b278e27f3996049289a43a21cac17e9227d171d9",
+      "bytes": 33548
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/b-bs-right-big-screen__20220104041856.png",
+      "git_blob_sha1": "dd1cd91d504a35a9a6478c21542d724e639b02f1",
+      "bytes": 56260
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/b-bs-right__20220104041857.png",
+      "git_blob_sha1": "6fcce7224864a0145c05b497ad5491808dcec450",
+      "bytes": 33033
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/background-scene-a__20220104041756.png",
+      "git_blob_sha1": "65fe333afb5b1e9963eec0df088d75d95b143fa3",
+      "bytes": 130156
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/background-scene-b__20220104043855.png",
+      "git_blob_sha1": "2b4823d561b5df077a4e3a358f3a1bd6039c56ab",
+      "bytes": 126475
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/background-scene-c__20220104041806.png",
+      "git_blob_sha1": "2becf683bde0a352c16288cc3a6becf58e65aaf2",
+      "bytes": 100048
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-01@2x__20211216082228.png",
+      "git_blob_sha1": "a6b8dcc18382dcca8fd9291c078786978e861dc7",
+      "bytes": 39290
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-01__20211216082224.png",
+      "git_blob_sha1": "4691681dbb5d272cbf787d4718ed8e01c33d5fdf",
+      "bytes": 16176
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-02@2x__20211216082215.png",
+      "git_blob_sha1": "a6085b7d753df5befbc3c06a71dd49f5ea5ecf5f",
+      "bytes": 68569
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-02__20211216082220.png",
+      "git_blob_sha1": "fde5aa90192871335d05229c9de6ed0fb631c62f",
+      "bytes": 22316
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-03@2x__20211216082239.png",
+      "git_blob_sha1": "125fc98cc74275073b191e472f946e7a205cb4f1",
+      "bytes": 59023
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-03__20211216082254.png",
+      "git_blob_sha1": "271194db03ad62220ad33aa52e9d211bd0fe383b",
+      "bytes": 23850
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-04@2x__20211216082244.png",
+      "git_blob_sha1": "4328d6f65f2f4bae1fe9805ccd51afbd953532cb",
+      "bytes": 67538
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-04__20211216082210.png",
+      "git_blob_sha1": "ed4b662b58ca2210aefb6834af6a1efb6ad25e7f",
+      "bytes": 21712
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-05@2x__20211216082225.png",
+      "git_blob_sha1": "7b0e727c45e5f249d7de4694241b8b7754fe37d7",
+      "bytes": 36860
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-05__20211216082208.png",
+      "git_blob_sha1": "f42cb9630dd941d44cc703ede2764f0d40203472",
+      "bytes": 16178
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-06@2x__20211216082220.png",
+      "git_blob_sha1": "a6420fc8334c40b03c7667505783018ebeafcf72",
+      "bytes": 34121
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-06__20211216082234.png",
+      "git_blob_sha1": "7fef6e280feeb1730293139d137cc273728b050b",
+      "bytes": 13083
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-art__20220104042103.png",
+      "git_blob_sha1": "4abd81c0a10aaa927a6795bf708212357f3fbacc",
+      "bytes": 76919
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-bubble-01__20220104041755.png",
+      "git_blob_sha1": "4a95b7c28661ef3bd23748962adf48adcb05ed80",
+      "bytes": 22919
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-bubble-02__20220104043753.png",
+      "git_blob_sha1": "f45c4ac7cb1e1ae5ef531c4cc936a13034fb2828",
+      "bytes": 23070
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-bubble-03__20220104041754.png",
+      "git_blob_sha1": "8ef8abd0582a16ba32a6bd5d3fcc78b162c2196e",
+      "bytes": 23973
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-bubble-04__20220104041753.png",
+      "git_blob_sha1": "fe23890a7e99bf6d97c6fefe39340b52d4dceb4e",
+      "bytes": 26456
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-card-collection__20220104042111.png",
+      "git_blob_sha1": "d720f39c26ca13d017860a66f2078c0a678e7459",
+      "bytes": 76308
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bb-card-icon__20220104043810.png",
+      "git_blob_sha1": "ead9c06e92bc9c535bfbb5fdf2b670ec81835b98",
+      "bytes": 7622
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/bg_error__20220104041842.png",
+      "git_blob_sha1": "2f8a1daf5a13d1eb03e6b5e1f457648c971609ba",
+      "bytes": 70958
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/blockchain-icon@2x__20220226145257.png",
+      "git_blob_sha1": "5e7a77b2dba650f8127eb2902cd7523767e1e329",
+      "bytes": 2316
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/blockchain-icon__20220104042043.png",
+      "git_blob_sha1": "c14902e90f4de8692a79c268d219a744b5d41e85",
+      "bytes": 1190
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/blue-light__20211216082209.png",
+      "git_blob_sha1": "33652fe4017b96432aaf9f27a49971486834627a",
+      "bytes": 8991
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-10__20220104041815.png",
+      "git_blob_sha1": "72d0b21baee46c904b6ceb32cf042b3aa3a6704e",
+      "bytes": 15547
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-11__20220104041832.png",
+      "git_blob_sha1": "59c4f6fdfc1c411233b63eca516b20e741002b2b",
+      "bytes": 8194
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-12__20220104041821.png",
+      "git_blob_sha1": "3ec57d900bab050ecfdbc7e89a6bcced12af8555",
+      "bytes": 5441
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-13__20220104041836.png",
+      "git_blob_sha1": "66ec3a6cc8fae5152edbffeaf1332596effa4ef6",
+      "bytes": 32357
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-1__20220104043746.png",
+      "git_blob_sha1": "658dabeb911f3e81efd57021b332454686acacc5",
+      "bytes": 9694
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-2__20220104043806.png",
+      "git_blob_sha1": "63ca6b4763eda110a08d5cceebd39007619b40b4",
+      "bytes": 7186
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-3__20220104041801.png",
+      "git_blob_sha1": "cbb0bdd9f605571a1e2f9f19bd3234dd8bf031c1",
+      "bytes": 9889
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-4__20220104041815.png",
+      "git_blob_sha1": "71382e10ba108eefc1720d96741ef484c28dd82c",
+      "bytes": 20501
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-5__20220104041804.png",
+      "git_blob_sha1": "247512505808c5469c945bf5b04f60195f65379e",
+      "bytes": 35736
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-6__20220104043745.png",
+      "git_blob_sha1": "0b4a6cec8e9b2ca34ed381c527e717e19f71303d",
+      "bytes": 16212
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-7__20220104041813.png",
+      "git_blob_sha1": "58540a023d14383183321caaf3fdb81b7023891f",
+      "bytes": 7975
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-8__20220104043749.png",
+      "git_blob_sha1": "e1ece82d502e556a1b86aedd0fe6dc3bd27f0e99",
+      "bytes": 8078
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-9__20220104041815.png",
+      "git_blob_sha1": "1d57eaac191d92ab5f28ae2a8957b7ca7551b5d6",
+      "bytes": 12990
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-back__20220104043755.png",
+      "git_blob_sha1": "36166b0fe16212d68eb0092974772b1259c891e4",
+      "bytes": 240247
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-backs__20211216082207.png",
+      "git_blob_sha1": "7d2df273cd1496d4132fa85f4682891c7c5f6525",
+      "bytes": 110547
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-border-rarity-1__20220104041959.png",
+      "git_blob_sha1": "36138b5e8ae2b69f507190cd15c230141a497a45",
+      "bytes": 17383
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-border-rarity-2__20220104042004.png",
+      "git_blob_sha1": "a5c80567e33bb5233f43ce23e99810b55752827f",
+      "bytes": 32316
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-border-rarity-3__20220104042004.png",
+      "git_blob_sha1": "c60e06730d6730bd57112fa8c8550809affe5e72",
+      "bytes": 46250
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-border-rarity-4__20220104042006.png",
+      "git_blob_sha1": "fb1d842d4ba892941f075bebcfab1ebaa531d0d6",
+      "bytes": 83461
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-border-rarity-5__20220104042005.png",
+      "git_blob_sha1": "58ec99d5bb0860bf6afc626ae83c94df15e78200",
+      "bytes": 95107
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/24k-gold-particle__20220104043821.png",
+      "git_blob_sha1": "b07f4be5eabe0af7d997e14c3a549246291db69f",
+      "bytes": 1625
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/art-particle__20220104043816.png",
+      "git_blob_sha1": "b8ed62f63bd77891ee7a3b3b6833b60821ea1573",
+      "bytes": 1490
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/athletic-particle__20220104042132.png",
+      "git_blob_sha1": "336ed2d9c6d7a8967ca56dcd5395b61667acc40d",
+      "bytes": 1148
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/chill-out-particle__20220104042132.png",
+      "git_blob_sha1": "1aa4f83f49468c97ccaf75b9eabef1fe78b6646b",
+      "bytes": 1476
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/cosplay-particle__20220104042148.png",
+      "git_blob_sha1": "7071f3d759f4243ed5d3bb04cba8ed1b42badabf",
+      "bytes": 1204
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/dance-particle__20220104042135.png",
+      "git_blob_sha1": "e155e967e73f13c4ed8e896fb191e7915569ed21",
+      "bytes": 1012
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/elektro-particle__20220104042150.png",
+      "git_blob_sha1": "8525df69bf997ded9131d68647f44b9f9966ae6b",
+      "bytes": 1107
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/glam-particle__20220104042143.png",
+      "git_blob_sha1": "0adc9189e03597ebeda39c85f01ed862d79fcaf4",
+      "bytes": 1379
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/glee-particle__20220104042145.png",
+      "git_blob_sha1": "1b48488e0386e82345d6e8803c12ffb7642086d8",
+      "bytes": 1141
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/glitterati-particle__20220104042011.png",
+      "git_blob_sha1": "4a38e802ed674b16861b65e5466bd103c75affd0",
+      "bytes": 957
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/hip-hop-particle__20220104042149.png",
+      "git_blob_sha1": "1923ab3260e0afc83bccc0096210bd69f6e45697",
+      "bytes": 761
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/opposites-particle__20220104042145.png",
+      "git_blob_sha1": "0ec5bbf9295b6d2dbcd6d9da85c4bb6dc8dc9f25",
+      "bytes": 784
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/pop-particle__20220104042201.png",
+      "git_blob_sha1": "b0ecffcd21196c4739e38620853826b296762816",
+      "bytes": 1345
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/retro-particle__20220104042151.png",
+      "git_blob_sha1": "91f3c50ecae2682fb6a59104c1818de2bbb62282",
+      "bytes": 1269
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/rock-particle__20220104042132.png",
+      "git_blob_sha1": "c3d428704f79e7f02149bda1c190bc298dda3a2a",
+      "bytes": 1239
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/sleepover-particle__20220104043831.png",
+      "git_blob_sha1": "7be274049d624785d8187e87096c049936931fd5",
+      "bytes": 1449
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/spirit-particle__20220104042154.png",
+      "git_blob_sha1": "ff4a790e964f1d0aaf4b97f5d2feaa59715f267a",
+      "bytes": 1584
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/spooky-particle__20220104043826.png",
+      "git_blob_sha1": "70eebb4ea3aa93370c60246f3c22f3a70754e4f5",
+      "bytes": 876
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/stem-particle__20220104043817.png",
+      "git_blob_sha1": "1ffae9c8d5d420d0d7ede960dbf0442adeb937a8",
+      "bytes": 1612
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/storybook-particle__20220104042023.png",
+      "git_blob_sha1": "b1059ef9c839560e58d28fec2aa22052ae8b7031",
+      "bytes": 1019
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/swim-particle__20220104042011.png",
+      "git_blob_sha1": "6783ca2c86accdb73390411791768745a56cf667",
+      "bytes": 947
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/theater-particle__20220104043843.png",
+      "git_blob_sha1": "854236645f96721e685ef4082c769fa184340ede",
+      "bytes": 1671
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-club/uncompleted-number-indicator__20220104042217.svg",
+      "git_blob_sha1": "74eb34a5b9ecbb4db146498d4f9e59919fa405dd",
+      "bytes": 1177
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-collection-banner__20220104042116.png",
+      "git_blob_sha1": "6bd4a323163406082b20d9bbd2f9800164ccbe24",
+      "bytes": 40804
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-collection-bg-squares__20220104042109.png",
+      "git_blob_sha1": "bb7f3904c52e16fe566f59898aed480a0f9d9a4a",
+      "bytes": 2070
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-collection-icon@2x__20211216082230.png",
+      "git_blob_sha1": "aef1f9b2c01daa1a96c47a1e2cea761a162d3948",
+      "bytes": 15411
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-collection-icon__20211216082223.png",
+      "git_blob_sha1": "7d8c8ac7d7ba3834c6ad183240bd0aa8d9abee7b",
+      "bytes": 2808
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-pack-icon@2x__20211216082225.png",
+      "git_blob_sha1": "0e674d106f75797c1820ad2594823f38a6f59b6b",
+      "bytes": 16307
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-pack-icon__20211216082228.png",
+      "git_blob_sha1": "d269c54e238280e61d82459fe4c803ed3143265e",
+      "bytes": 6599
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-pack@2x__20220226145305.png",
+      "git_blob_sha1": "514a748e125c814abf149fcf9ddccab68e4dbc72",
+      "bytes": 11225
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-pack__20220104042052.png",
+      "git_blob_sha1": "03187a2abdf39168b5099565cbbd5bfd223af93a",
+      "bytes": 5014
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-scan-image@2x__20220226234619.png",
+      "git_blob_sha1": "db7f7a5013bbfe469ec5ff1900afacacce66fe78",
+      "bytes": 193511
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-scan-image__20220104042051.png",
+      "git_blob_sha1": "91d498e935cca868d41fd2ad103a6c9458459bb9",
+      "bytes": 58656
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-shop-banner__20220104042028.jpg",
+      "git_blob_sha1": "554636e98b3a737be66892e221e99ccb2026dc83",
+      "bytes": 35896
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/card-shop-icon__20220104043745.png",
+      "git_blob_sha1": "84c2e1f76befc2a87d75c6eb054a45bba8dd9db0",
+      "bytes": 1312
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/cards-icon@2x__20220226145316.png",
+      "git_blob_sha1": "f1e84d1b3d474e65464b82d298f882b36f434914",
+      "bytes": 8718
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/cards-icon__20220104042042.png",
+      "git_blob_sha1": "375fdcf592dcc672607316e5b07a7a224eda50cb",
+      "bytes": 3917
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/child-dashboard-background__20220104041830.png",
+      "git_blob_sha1": "d054569172b47bc524de6cd2f9cd44613635c707",
+      "bytes": 324303
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/coin-shop-icon__20220104043745.png",
+      "git_blob_sha1": "b009985f8684ee0b911beac16cadab5d91eb5d98",
+      "bytes": 1023
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/coin__20220104041805.png",
+      "git_blob_sha1": "44cb7657a321d4b25c19d40820fb59d82f998fbb",
+      "bytes": 4798
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/coins-group@2x__20220226145310.png",
+      "git_blob_sha1": "f6431612190d46ecde3fd73cf281a68a4fb08346",
+      "bytes": 16751
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/coins-group__20220104041803.png",
+      "git_blob_sha1": "a525a7c8d1e6af1e01626db721f6886e06a9d180",
+      "bytes": 44848
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/crowd-image-tile__20220104041913.svg",
+      "git_blob_sha1": "cda44041641aa90d3587e1b82fd4f52212969457",
+      "bytes": 11596
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/dance-floor__20220104041828.png",
+      "git_blob_sha1": "0f89aab6529190a0dece6a6881dc16b962921465",
+      "bytes": 525614
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/down-button@2x__20211216082254.png",
+      "git_blob_sha1": "2d37980349b24aa1fd2aed111a240a8a63173dea",
+      "bytes": 4180
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/down-button__20211216082215.png",
+      "git_blob_sha1": "5bdc593f8203b3a3597dccee8bf530a789707902",
+      "bytes": 1970
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/green-squares__20220104042021.png",
+      "git_blob_sha1": "17dc9d424a7e8e157ef9ffcb56fa5dfee55423f6",
+      "bytes": 2798
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/android-icon-192x192__20221206044019.png",
+      "git_blob_sha1": "81ad6aef594f64d6ddd09e427d79a649d71b209f",
+      "bytes": 23886
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/apple-icon-114x114__20221209093214.png",
+      "git_blob_sha1": "165d1767bd011f17551f52af7f3f699519473ac2",
+      "bytes": 12845
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/apple-icon-120x120__20221206032059.png",
+      "git_blob_sha1": "f475d9a3425049c7efd5e4f50dab77f8b7782c3f",
+      "bytes": 13816
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/apple-icon-144x144__20221208104518.png",
+      "git_blob_sha1": "21e339dc5c8b9e90a424b273c3f75a03e02e4fff",
+      "bytes": 17717
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/apple-icon-152x152__20221206023906.png",
+      "git_blob_sha1": "33d766ed976ce86626dd23e823f942c733e15a92",
+      "bytes": 19148
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/apple-icon-180x180__20221206035552.png",
+      "git_blob_sha1": "29d28f5f8114369e46822f1cef331b5a155a17bc",
+      "bytes": 24299
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/apple-icon-57x57__20221207171223.png",
+      "git_blob_sha1": "71bc61be49037c79b148e47c36a9d6354e1b4453",
+      "bytes": 4938
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/apple-icon-60x60__20221207144322.png",
+      "git_blob_sha1": "fcc31035365b1bcce00d2c9a30d7dda09dccfa57",
+      "bytes": 5307
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/apple-icon-72x72__20221206135453.png",
+      "git_blob_sha1": "828b02ea7a1e2f16bc6e9316ccecb20a1f2456d5",
+      "bytes": 6763
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/apple-icon-76x76__20221206042419.png",
+      "git_blob_sha1": "22fe89214335f08a89883b7d79b49b15f3285cb8",
+      "bytes": 7273
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/favicon-16x16__20221206064217.png",
+      "git_blob_sha1": "f016f15b05605fda0af5f7eb660a542ab28e60ff",
+      "bytes": 1527
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/favicon-32x32__20221206030614.png",
+      "git_blob_sha1": "6ee5f8b2953a8676ee58682445872bcb0903e721",
+      "bytes": 2487
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/favicon-96x96__20221206091407.png",
+      "git_blob_sha1": "3eb395c27ec776b09da5f37856427778876ac1da",
+      "bytes": 10083
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/icons/manifest__20221208020119.json",
+      "git_blob_sha1": "013d4a6a53334fae827a32824eaf51a889396514",
+      "bytes": 720
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/item-card-icon__20220104042120.png",
+      "git_blob_sha1": "95306f67c1696d3b68bdf0fe55d611c1be5620bb",
+      "bytes": 4716
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/locked-icon@2x__20220226145308.png",
+      "git_blob_sha1": "addbabbbc4b6ded7cb91f641d69f9e89424f273c",
+      "bytes": 3662
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/locked-icon__20220104042041.png",
+      "git_blob_sha1": "823ee39e60a22f432c1c2d890120cad16aa25497",
+      "bytes": 1817
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/lol-beta-logo__20211216082212.png",
+      "git_blob_sha1": "78bf96d9936b2786d4d5cc976b6158efb99f3bf9",
+      "bytes": 13356
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/manifest-icons/icon-192x192__20220104041907.png",
+      "git_blob_sha1": "291151134102d33d5e4880ae4b89993ed0eba820",
+      "bytes": 23784
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/manifest-icons/icon-256x256__20220104041848.png",
+      "git_blob_sha1": "326db199dd43fb739fb357936cd5982da72f6090",
+      "bytes": 35594
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/manifest-icons/icon-384x384__20220104041907.png",
+      "git_blob_sha1": "cf83556264578427a19f389f62cbbc98bc2466b6",
+      "bytes": 70145
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/manifest-icons/icon-512x512__20220104041856.png",
+      "git_blob_sha1": "f000bbb23a25cdd22c71f909cbe72ea6e9a6db3f",
+      "bytes": 104301
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/marketplace-bg-tile__20220104042037.png",
+      "git_blob_sha1": "3bea97636f8a1222f2b13c4e762a36c229ca5efb",
+      "bytes": 3455
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/marketplace-icon__20220104041901.png",
+      "git_blob_sha1": "1cd593e0e8169809b86d1174949b837ac1207d11",
+      "bytes": 1827
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/nft-icon@2x__20211216082238.png",
+      "git_blob_sha1": "02e32cc77d523185dcdbf254a2ca0798ca7e92a3",
+      "bytes": 5582
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/nft-icon__20211216082224.png",
+      "git_blob_sha1": "2469cfb8cd186f6f0f19725b0e6e20ec9fca6086",
+      "bytes": 3625
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/no-chat-icon@2x__20220226145320.png",
+      "git_blob_sha1": "b4c878e46a08de4f060e2a9d3b982770f97e8ced",
+      "bytes": 2929
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/no-chat-icon__20220104042040.png",
+      "git_blob_sha1": "94db5e059565f746499f0a3eee8809c9ffc459f3",
+      "bytes": 1503
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/phone-mockup-01__20211216082213.png",
+      "git_blob_sha1": "1c50927f9d4f8c45745dd4fa8501f235aa2b3d24",
+      "bytes": 85643
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/phone-mockup-02__20211216082244.png",
+      "git_blob_sha1": "fdda9707454388a24e3202aaa7a788896637b1b3",
+      "bytes": 80033
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/phone-mockup-03__20211216082230.png",
+      "git_blob_sha1": "3c9de62157fac9b82f76eeed76589d463ff4f7ef",
+      "bytes": 75333
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/phone-mockup-04__20211216082220.png",
+      "git_blob_sha1": "7356fadc552110dd7b704410e2ca37c5f9ed5a69",
+      "bytes": 117112
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/phone-mockup-05__20211216082249.png",
+      "git_blob_sha1": "7083624ac6a7f13b6f12d40c8088026afae43200",
+      "bytes": 79217
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/pink-bg-scene-02-desktop__20220104042046.png",
+      "git_blob_sha1": "5d53f4be1a13f4926998cd87b239bb83e3972421",
+      "bytes": 109234
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/pink-light__20211216082230.png",
+      "git_blob_sha1": "4ba9c506af67a08c7d9ef9eaec6d9f29f2b29328",
+      "bytes": 8826
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/pink-squares__20220104042017.png",
+      "git_blob_sha1": "333ae622c47bd9e9f0a6cde6627dc592e71e3b93",
+      "bytes": 4052
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/pink-stripes__20220104043751.png",
+      "git_blob_sha1": "268ff72fe0525b12215260c6bc94942e1cbcbad2",
+      "bytes": 782
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/place-card-icon__20220104043834.png",
+      "git_blob_sha1": "decb319083a16757770b5ce8df096f034ff5e02d",
+      "bytes": 10788
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/play-icon@2x__20211216082256.png",
+      "git_blob_sha1": "2e2b8ee0ba2fdc5b4951bd5496f6dd8c27805472",
+      "bytes": 3549
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/play-icon__20211216082303.png",
+      "git_blob_sha1": "1457d431044ec6fbce31ec06aa41ed678c0baed1",
+      "bytes": 1597
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/privacy-icon@2x__20220226145258.png",
+      "git_blob_sha1": "b86b68ac0949d73788b6d90f917edf44724a1d62",
+      "bytes": 2703
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/privacy-icon__20220104043755.png",
+      "git_blob_sha1": "7eb4753604d5c09aa4cdff35aab60186cf749c61",
+      "bytes": 1348
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/purple-stripes__20220104042035.png",
+      "git_blob_sha1": "73b867d59baf94afd0208271075070475132d3fb",
+      "bytes": 674
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/secure-icon@2x__20220226145301.png",
+      "git_blob_sha1": "561088c20e2ca4ff6a368f1d242f89fe63533781",
+      "bytes": 2846
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/secure-icon__20220104042046.png",
+      "git_blob_sha1": "e3cacb1578cc993cb26ab4fe2aa39e3449a38b2a",
+      "bytes": 1402
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/speech-bubble-banner__20220104042028.png",
+      "git_blob_sha1": "be3e811df14786d0ca1ddf1df9a0409b452df1cc",
+      "bytes": 5525
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/surprise-card-icon__20220104042124.png",
+      "git_blob_sha1": "366694e296f5214105df24e766f83601471e1dd5",
+      "bytes": 1932
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/svg/flags/de-flag__20211216082219.svg",
+      "git_blob_sha1": "45c048b28d7d163d149fe609b7888b6a4d0e8d5b",
+      "bytes": 1702
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/svg/flags/it-flag__20211216082242.svg",
+      "git_blob_sha1": "79bc0e46dd3460e7ed9c6df85f8e16f71b46d42f",
+      "bytes": 615
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/svg/flags/us-flag__20211216082238.svg",
+      "git_blob_sha1": "f27a1b9905fc3681d832bc75e5305a235fbbd979",
+      "bytes": 3017
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/teal-stripes__20220104042029.png",
+      "git_blob_sha1": "fb8ba65a2eb689404c7d92679bc9dc78104f5afd",
+      "bytes": 320
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/trade-icon@2x__20220226145304.png",
+      "git_blob_sha1": "e0eb7581c67f22c5c51d2ad81aa723aa73222bc8",
+      "bytes": 12657
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/images/trade-icon__20220104042058.png",
+      "git_blob_sha1": "7323a7b34bb856fc560b5322db6fb78072d5f495",
+      "bytes": 5624
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/index__20211216082037.html",
+      "git_blob_sha1": "a8bca79a72d63de274b782bfedb0526744ca3034",
+      "bytes": 19924
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/js/animations__20220104043831.js",
+      "git_blob_sha1": "6444c18dd507838b9f9e456ab7ffca6fbd608f56",
+      "bytes": 3344
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/js/app__20220104042201.js",
+      "git_blob_sha1": "2ee9bfe0153395c13bc2153e0fbdba03cec7dd3c",
+      "bytes": 142478
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/js/app__q-2622a5709194__20221207095332.js",
+      "git_blob_sha1": "1a63e80102b04fd3990396e7f92df1ec966bf02c",
+      "bytes": 144892
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/js/app__q-44c0d25dd2ed__20220226145315.js",
+      "git_blob_sha1": "8c69987c777cd4bbb4f11b8ed382c05867484ac0",
+      "bytes": 144160
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/js/manifest__20220104042204.js",
+      "git_blob_sha1": "8208a6b88eacf7fdadc1a59e0b642052ebc4a933",
+      "bytes": 1478
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/js/manifest__q-f2ba5e3ee4c0__20220226145251.js",
+      "git_blob_sha1": "8208a6b88eacf7fdadc1a59e0b642052ebc4a933",
+      "bytes": 1478
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/js/vendor__20220104042159.js",
+      "git_blob_sha1": "ef92529eb29e28eecdd19b212240f6d11a2816c0",
+      "bytes": 968592
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/js/vendor__q-336a76b97304__20220226145329.js",
+      "git_blob_sha1": "ef92529eb29e28eecdd19b212240f6d11a2816c0",
+      "bytes": 968592
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/login__20220226145217.html",
+      "git_blob_sha1": "81de72538e316ae3092d30e0d78af139f99d3d07",
+      "bytes": 75988
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/manifest__20220104042214.webmanifest",
+      "git_blob_sha1": "f89b81f91fe9b463b1877c56c32d7136dc96eed4",
+      "bytes": 896
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/parent-login__20220519173145.html",
+      "git_blob_sha1": "9ebfde8fe6451751ff279e3810647ceeadd186f4",
+      "bytes": 61876
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/privacy__20220519191420.html",
+      "git_blob_sha1": "07e61708ce56b9d0e547cadcf5b5b0245cb25313",
+      "bytes": 46775
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/register__20220519180430.html",
+      "git_blob_sha1": "8d9a4bd1970f700fdff3972c1c282484d4de0eb9",
+      "bytes": 64917
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/robots__20211216082212.txt",
+      "git_blob_sha1": "eb0536286f3081c6c0646817037faf5446e3547d",
+      "bytes": 24
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/service-worker__20220104042203.js",
+      "git_blob_sha1": "8dcb6b7c56bfb1836c387e2bcb53d4b607450177",
+      "bytes": 210
+    },
+    {
+      "path": "recovered/payloads/playlolsurprise.com/terms__20220519190722.html",
+      "git_blob_sha1": "a7fc08a2620d9c56e27c31e80b1b2541ebb560a0",
+      "bytes": 63497
+    },
+    {
+      "path": "survey.py",
+      "git_blob_sha1": "6139e4cdd64e00e6443401039398b8571ce9d608",
+      "bytes": 14264
+    },
+    {
+      "path": "temporal.py",
+      "git_blob_sha1": "4d0a74fdc33140f6bbacfc16876a0142dc0022bb",
+      "bytes": 10451
+    },
+    {
+      "path": "test_cc_recover.py",
+      "git_blob_sha1": "4ec251006d17e5e6a28cf14d1a0c9549cf1f00ef",
+      "bytes": 2399
+    },
+    {
+      "path": "test_reading_room.py",
+      "git_blob_sha1": "cbe3018a2d715b1dce6e275c91c4d17e1a6183d8",
+      "bytes": 1742
+    },
+    {
+      "path": "test_survey.py",
+      "git_blob_sha1": "e6ce486701f91378896a8160c8505ad812e7950a",
+      "bytes": 1571
+    },
+    {
+      "path": "test_temporal.py",
+      "git_blob_sha1": "448c8b878ef1d5f096da968d9f58bc1c234f6d51",
+      "bytes": 1591
+    },
+    {
+      "path": "workspace.py",
+      "git_blob_sha1": "2bf8af27164a06a39fbd5bc9247be51a16773a55",
+      "bytes": 4797
+    }
+  ]
+}
