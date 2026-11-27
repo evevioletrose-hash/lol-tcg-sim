@@ -29,6 +29,6 @@ func update_cardtext():
 	ui_style.text = base_style
 	ui_groove.text = base_groove
 	ui_name.text = card_name
-	ui_club.text = Game.Clubs.keys()[club].replace("_", " ")
+	ui_club.text = "Club not catalogued" if club == Game.Clubs.Unknown else Game.Clubs.keys()[club].replace("_", " ") + " Club"
 	ui_text.text = text
 	

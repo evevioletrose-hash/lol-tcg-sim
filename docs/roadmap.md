@@ -81,7 +81,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 
 - [x] V1: Artwork resolver, shared aperture and missing-art fallback verified. Existing 1-001.jpg is a temporary full-card reference photo, not isolated artwork.
 - [ ] Actual artwork sourcing, cropping and production workflow explicitly deferred by owner; do not block layout work on it.
-- [ ] V2: Make one beautiful B.B. using shared components (Pop Heart); typography, readable text, Style/Groove iconography and card back.
+- [ ] V2: B.B. layout, labeled stat badges, shared frame/footer/back and Workshop flip implemented; pending graphical and regression verification.
 - [ ] V3: Support Item, Surprise and landscape Place layouts, retaining existing scene reuse where sensible.
 - [ ] V4: Inspect original 3D card, bind its printed fields to the catalogue, and provide optional 2D/3D workshop preview for supported assets.
 - [ ] V5: Consider animation, materials, rarity finishes and model variants only after the first slice works; missing 3D assets fall back to 2D.

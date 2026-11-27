@@ -57,8 +57,8 @@ func bind_artwork(edition: String = "tabletop") -> void:
 	artwork_panel.size = Vector2(310, 218)
 	match type:
 		Game.Card_Types.BB:
-			artwork_panel.position.y = 76
-			artwork_panel.size.y = 200
+			artwork_panel.position = Vector2(12, 88)
+			artwork_panel.size = Vector2(307, 182)
 		Game.Card_Types.Surprise:
 			artwork_panel.size.y = 245
 	var resolved = ArtworkResolver.resolve(edition, catalogue_id)
@@ -83,6 +83,14 @@ func set_face(up = true):
 		face_up = false
 	if is_instance_valid(artwork_panel):
 		artwork_panel.visible = face_up
+	# Hide front content explicitly; rounded card back corners cannot expose labels.
+	if is_instance_valid(card_ui):
+		for child in card_ui.get_children():
+			if child != card_ui.get_node("img") and child is CanvasItem:
+				child.visible = face_up
+		cardnum_ui.visible = face_up
+		rank_ui.visible = face_up
+		card_ui.get_node("img/RankCaption").visible = face_up
 
 func highlight():
 	if(!selected):

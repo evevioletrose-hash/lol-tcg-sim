@@ -137,3 +137,7 @@ Operation Glitter begins with a reusable edition-qualified artwork resolver and 
 ### V1 local acceptance evidence
 
 Owner-supplied log at 23055ac, Godot 4.8.beta5: editor import and structural validation plus eight Godot regression tests all exited 0. LOL_ARTWORK available=1 placeholders=305 unsupported=5 failures=0. Only expected unknown-card-type warnings; one generated artwork script UID remains untracked. Owner screenshot confirms the existing 1-001.jpg renders inside the aperture; the image is a photograph of the full physical card, not isolated illustration. Owner explicitly defers deciding how card artwork will work. Preserve the resolver and fallback, treat this binding as temporary reference, do not crop or generate assets without agreement. V2 may focus on card composition independent of final art. Export packaging remains untested.
+
+## V2: B.B. presentation (pending local acceptance)
+
+Shared card frame, explicit rank footer and simulator back, B.B. header/stat badges and high-contrast power panel, Workshop/Archivist flip control. Existing node paths and footprint retained. Artwork workflow deferred; temporary photo unchanged. Item/Surprise inherit shared components only. Added --bb-presentation-test across typed B.B. records and long-text fixture. Full regression, screenshot review and resizing remain pending. See card-presentation.md.

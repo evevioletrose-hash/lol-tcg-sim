@@ -3,6 +3,7 @@ extends Control
 # This workshop inspects definitions. It does not create a match or run powers.
 var game: Game
 var preview: Card
+var flip_button: Button
 var selected_id: String = ""
 var archivist: bool = false
 var draft: Dictionary = {}
@@ -66,6 +67,13 @@ func setup(source: Game, edit_mode: bool = false) -> void:
 		type_filter.add_item("Typed slots", TYPED_FILTER)
 		type_filter.add_item("Incomplete slots", INCOMPLETE_FILTER)
 		build_editor()
+	flip_button = Button.new()
+	flip_button.text = "Show card back"
+	flip_button.disabled = true
+	flip_button.pressed.connect(_flip_preview)
+	var catalogue_panel = type_filter.get_parent()
+	catalogue_panel.add_child(flip_button)
+	catalogue_panel.move_child(flip_button, type_filter.get_index() + 1)
 	type_filter.select(0)
 	search.text_changed.connect(_on_search_changed)
 	type_filter.item_selected.connect(_on_filter_changed)
@@ -202,11 +210,22 @@ func refresh_list() -> void:
 	cards.select(selection_index)
 	_on_card_selected(selection_index)
 
+func _flip_preview() -> void:
+	if not is_instance_valid(preview):
+		return
+	preview.set_face(not preview.face_up)
+	_sync_flip_button()
+
+func _sync_flip_button() -> void:
+	flip_button.disabled = not is_instance_valid(preview)
+	flip_button.text = "Show card front" if is_instance_valid(preview) and not preview.face_up else "Show card back"
+
 func clear_preview() -> void:
 	if is_instance_valid(preview):
 		preview.free()
 	preview = null
 	selected_id = ""
+	_sync_flip_button()
 
 func show_card(id: String) -> void:
 	clear_preview()
@@ -246,6 +265,7 @@ func show_card(id: String) -> void:
 			lines.append("")
 			lines.append("Artwork: " + ("available" if preview.artwork_status == "available" else "not available"))
 	details.text = "\n".join(lines)
+	_sync_flip_button()
 	if not collection_kind.is_empty():
 		_update_collection_selection()
 
@@ -525,6 +545,7 @@ func update_draft() -> void:
 			preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
 			preview.rank_ui.text = "?" if draft.rank == null or draft.rank == "" else str(draft.rank)
 			status.text += "\nArtwork: " + preview.artwork_status
+	_sync_flip_button()
 
 func save_draft() -> void:
 	if not is_dirty():
@@ -1336,4 +1357,59 @@ func run_artwork_test() -> int:
 	for failure in failures:
 		push_error(failure)
 	print("LOL_ARTWORK available=%d placeholders=%d unsupported=%d failures=%d" % [available, placeholders, unsupported, failures.size()])
+	return 0 if failures.is_empty() else 1
+
+func run_bb_presentation_test() -> int:
+	var failures: Array[String] = []
+	var tested = 0
+	var frame = Rect2(0, 0, 331, 436)
+	for id in game.card_database:
+		var data: Dictionary = game.card_database[id]
+		if data.type != Game.Card_Types.BB:
+			continue
+		show_card(id)
+		if preview == null:
+			failures.append(id + ": missing B.B.")
+			continue
+		tested += 1
+		var face = preview.get_node("Card")
+		var name_label: Label = face.get_node("Name")
+		var club_label: Label = face.get_node("Club")
+		var style_label: Label = face.get_node("Style")
+		var groove_label: Label = face.get_node("Groove")
+		var power: RichTextLabel = face.get_node("Text/card_text")
+		if name_label.text != data.name or style_label.text != data.style or groove_label.text != data.groove or power.text != data.text:
+			failures.append(id + ": printed field mismatch")
+		if preview.cardnum_ui.text != id or preview.rank_ui.text != str(data.rank):
+			failures.append(id + ": footer mismatch")
+		for region in ["Name", "Club", "StyleBadge", "GrooveBadge", "Text", "img/Artwork", "img/card_num", "img/card_rank"]:
+			var node: Control = face.get_node(region)
+			var local_rect = Rect2(node.global_position - face.global_position, node.size)
+			if not frame.encloses(local_rect):
+				failures.append(id + ": region outside face: " + region)
+		if name_label.get_rect().intersects(club_label.get_rect()) or name_label.get_rect().intersects(face.get_node("StyleBadge").get_rect()):
+			failures.append(id + ": header overlap")
+		_flip_preview()
+		if preview.face_up or not preview.cardback_ui.visible or name_label.visible or power.is_visible_in_tree() or preview.artwork_panel.visible or preview.rank_ui.visible:
+			failures.append(id + ": front content visible on back")
+		_flip_preview()
+		if not preview.face_up or preview.cardback_ui.visible or not name_label.visible or not preview.artwork_panel.visible:
+			failures.append(id + ": failed to restore front")
+	# Long names and effects are exercised on an in-memory definition, never saved.
+	var sample: Dictionary = game.card_database["1-001"].duplicate(true)
+	sample.name = "An exceptionally long B.B. name for a layout stress fixture"
+	sample.text = "A long power description. ".repeat(24)
+	clear_preview()
+	preview = game.spawn_card_definition(sample, preview_holder)
+	if preview == null:
+		failures.append("Long text fixture failed to spawn")
+	else:
+		var long_name: Label = preview.get_node("Card/Name")
+		var long_power: RichTextLabel = preview.get_node("Card/Text/card_text")
+		if long_name.text != sample.name or long_power.text != sample.text or long_name.max_lines_visible != 2:
+			failures.append("Long text fixture lost content or wrap limit")
+	refresh_list()
+	for failure in failures:
+		push_error(failure)
+	print("LOL_BB_PRESENTATION cards=%d failures=%d" % [tested, failures.size()])
 	return 0 if failures.is_empty() else 1

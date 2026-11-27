@@ -56,7 +56,8 @@ func _ready() -> void:
 	var physical_test = "--physical-collection-test" in OS.get_cmdline_user_args()
 	var digital_test = "--digital-collection-test" in OS.get_cmdline_user_args()
 	var artwork_test = "--card-artwork-test" in OS.get_cmdline_user_args()
-	var testing = editor_test or reconciliation_test or provenance_test or physical_test or digital_test or artwork_test or "--card-workshop-test" in OS.get_cmdline_user_args()
+	var bb_test = "--bb-presentation-test" in OS.get_cmdline_user_args()
+	var testing = editor_test or reconciliation_test or provenance_test or physical_test or digital_test or artwork_test or bb_test or "--card-workshop-test" in OS.get_cmdline_user_args()
 	if library == null or not library.has_method("run_smoke_test"):
 		push_error("LOL_WORKSHOP initialization failed")
 		if testing:
@@ -66,7 +67,9 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if testing:
-		if artwork_test:
+		if bb_test:
+			get_tree().quit(library.run_bb_presentation_test())
+		elif artwork_test:
 			get_tree().quit(library.run_artwork_test())
 		elif digital_test:
 			get_tree().quit(library.run_digital_collection_test())
