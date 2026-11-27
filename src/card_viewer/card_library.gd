@@ -4,6 +4,9 @@ extends Control
 var game: Game
 var preview: Card
 var flip_button: Button
+var inspect_3d_button: Button
+var inspect_3d: SubViewportContainer
+const Inspector3D = preload("res://src/card_viewer/card_inspector_3d.gd")
 var selected_id: String = ""
 var archivist: bool = false
 var draft: Dictionary = {}
@@ -75,6 +78,13 @@ func setup(source: Game, edit_mode: bool = false) -> void:
 	var catalogue_panel = type_filter.get_parent()
 	catalogue_panel.add_child(flip_button)
 	catalogue_panel.move_child(flip_button, type_filter.get_index() + 1)
+	inspect_3d_button = Button.new()
+	inspect_3d_button.text = "Inspect in 3D"
+	inspect_3d_button.disabled = true
+	inspect_3d_button.visible = not archivist
+	inspect_3d_button.pressed.connect(_toggle_3d)
+	catalogue_panel.add_child(inspect_3d_button)
+	catalogue_panel.move_child(inspect_3d_button, flip_button.get_index() + 1)
 	type_filter.select(0)
 	search.text_changed.connect(_on_search_changed)
 	type_filter.item_selected.connect(_on_filter_changed)
@@ -217,13 +227,43 @@ func _flip_preview() -> void:
 	if not is_instance_valid(preview):
 		return
 	preview.set_face(not preview.face_up)
+	if is_instance_valid(inspect_3d):
+		inspect_3d.set_face(preview.face_up)
 	_sync_flip_button()
 
 func _sync_flip_button() -> void:
 	flip_button.disabled = not is_instance_valid(preview)
 	flip_button.text = "Show card front" if is_instance_valid(preview) and not preview.face_up else "Show card back"
+	inspect_3d_button.disabled = archivist or not is_instance_valid(preview)
+
+func _close_3d() -> void:
+	if is_instance_valid(inspect_3d):
+		inspect_3d.free()
+	inspect_3d = null
+	if is_instance_valid(preview):
+		preview.show()
+	inspect_3d_button.text = "Inspect in 3D"
+
+func _toggle_3d() -> void:
+	if is_instance_valid(inspect_3d):
+		_close_3d()
+		return
+	if archivist or not is_instance_valid(preview) or not game.card_database.has(selected_id):
+		return
+	var candidate = Inspector3D.new()
+	preview_holder.add_child(candidate)
+	candidate.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if not candidate.setup(game, game.card_database[selected_id], preview.face_up):
+		candidate.free()
+		inspect_3d_button.tooltip_text = "3D unavailable; showing the 2D card."
+		return
+	inspect_3d = candidate
+	preview.hide()
+	inspect_3d_button.text = "Return to 2D"
+	inspect_3d_button.tooltip_text = ""
 
 func clear_preview() -> void:
+	_close_3d()
 	if is_instance_valid(preview):
 		preview.free()
 	preview = null
@@ -1457,4 +1497,58 @@ func run_card_family_test() -> int:
 	for failure in failures:
 		push_error(failure)
 	print("LOL_CARD_FAMILY counts=%s failures=%d" % [str(counts), failures.size()])
+	return 0 if failures.is_empty() else 1
+
+func run_3d_preview_test() -> int:
+	var failures: Array[String] = []
+	var ids: Array[String] = []
+	for kind in [Game.Card_Types.BB, Game.Card_Types.Item, Game.Card_Types.Surprise, Game.Card_Types.Place]:
+		for id in game.card_database:
+			if game.card_database[id].type == kind:
+				ids.append(id)
+				break
+	for id in ids:
+		show_card(id)
+		_toggle_3d()
+		if not is_instance_valid(inspect_3d):
+			failures.append(id + ": failed to open 3D")
+			continue
+		var definition: Dictionary = game.card_database[id]
+		var inspector = inspect_3d
+		if preview.visible or inspector.front_source.catalogue_id != id or inspector.back_source.catalogue_id != id:
+			failures.append(id + ": 2D/3D identity mismatch")
+		if inspector.front_source.card_name != definition.name or inspector.front_source.text != definition.text or inspector.front_source.rank != definition.rank:
+			failures.append(id + ": 2D/3D printed field mismatch")
+		if not inspector.front_source.face_up or inspector.back_source.face_up:
+			failures.append(id + ": front/back source state")
+		if inspector.front_source.type == Game.Card_Types.BB:
+			if inspector.front_source.base_style != definition.style or inspector.front_source.base_groove != definition.groove:
+				failures.append(id + ": B.B. stat parity")
+		if not inspector.object.using_authored_mesh:
+			failures.append(id + ": original card body unavailable")
+		if (inspector.object.extent.x > inspector.object.extent.y) != (definition.type == Game.Card_Types.Place):
+			failures.append(id + ": physical orientation")
+		_flip_preview()
+		if not is_equal_approx(inspector.object.rotation.y, PI) or preview.face_up:
+			failures.append(id + ": flip sync")
+		_toggle_3d()
+		if is_instance_valid(inspect_3d) or not preview.visible or preview.face_up:
+			failures.append(id + ": 2D restore")
+	# A generic host can supply textures without any authored geometry.
+	var image = Image.create(4, 4, false, Image.FORMAT_RGBA8)
+	image.fill(Color.WHITE)
+	var texture = ImageTexture.create_from_image(image)
+	var standalone = preload("res://src/presentation/card_object_3d.gd").new()
+	if not standalone.configure(texture, texture, Vector2(2, 3)) or standalone.using_authored_mesh or not standalone.body.mesh is BoxMesh:
+		failures.append("Portable fallback body")
+	standalone.free()
+	show_card("1-001")
+	_toggle_3d()
+	show_card("1-400")
+	if is_instance_valid(inspect_3d) or not preview.visible:
+		failures.append("Selection did not dispose 3D inspector")
+	refresh_list()
+	for failure in failures:
+		push_error(failure)
+	print("LOL_3D_PREVIEW types=%d failures=%d" % [ids.size(), failures.size()])
 	return 0 if failures.is_empty() else 1

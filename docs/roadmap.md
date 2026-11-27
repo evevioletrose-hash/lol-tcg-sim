@@ -84,7 +84,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 - [x] V2: B.B. layout, labeled stat badges, shared frame/footer/back and Workshop flip verified. Owner approved Pop Heart front/back screenshots.
 - [x] V3: Item, Surprise and landscape Place layouts with shared power panel, frame and back passed automated verification across all 311 typed records.
 - [ ] V3 graphical review of Item, Surprise and Place, including small-window sizing and text fit.
-- [ ] V4: Inspect original 3D card, bind its printed fields to the catalogue, and provide optional 2D/3D workshop preview for supported assets.
+- [ ] V4: Original prototype inspected; optional 3D preview and portable texture-fed world-space card implemented using original mesh with generic fallback. Pending local verification. Original animated stat/character staging deferred.
 - [ ] V5: Consider animation, materials, rarity finishes and model variants only after the first slice works; missing 3D assets fall back to 2D.
 - [ ] Verify resizing, long names/effects, missing artwork and 2D/3D data parity. Never make 3D mandatory for gameplay.
 
