@@ -82,7 +82,8 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 - [x] V1: Artwork resolver, shared aperture and missing-art fallback verified. Existing 1-001.jpg is a temporary full-card reference photo, not isolated artwork.
 - [ ] Actual artwork sourcing, cropping and production workflow explicitly deferred by owner; do not block layout work on it.
 - [x] V2: B.B. layout, labeled stat badges, shared frame/footer/back and Workshop flip verified. Owner approved Pop Heart front/back screenshots.
-- [ ] V3: Item, Surprise and landscape Place layouts implemented with shared power panel, frame and back; pending local verification.
+- [x] V3: Item, Surprise and landscape Place layouts with shared power panel, frame and back passed automated verification across all 311 typed records.
+- [ ] V3 graphical review of Item, Surprise and Place, including small-window sizing and text fit.
 - [ ] V4: Inspect original 3D card, bind its printed fields to the catalogue, and provide optional 2D/3D workshop preview for supported assets.
 - [ ] V5: Consider animation, materials, rarity finishes and model variants only after the first slice works; missing 3D assets fall back to 2D.
 - [ ] Verify resizing, long names/effects, missing artwork and 2D/3D data parity. Never make 3D mandatory for gameplay.
@@ -126,6 +127,6 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 2. A2: editable workshop + save/reload (core verified; manual edge checks remain).
 3. A3a: import reconciliation (core verified); A3b: provenance and verification (core verified).
 4. P1: profile foundation (core verified); P2: physical collection (core verified); P3: in-game collection (core verified).
-5. V1: artwork binding and fallback (verified); V2: first polished B.B. presentation (verified, artwork workflow deferred); V3: Item, Surprise and Place (next); review each slice together. Deck building and test packs remain available alternatives. Rules work remains independent and may be interleaved in small checkpoints.
+5. V1: artwork binding and fallback (verified); V2: first polished B.B. presentation (verified, artwork workflow deferred); V3: Item, Surprise and Place (automated core verified); V4: optional 3D presentation (next); review each slice together. Deck building and test packs remain available alternatives. Rules work remains independent and may be interleaved in small checkpoints.
 
 At the end of each checkpoint: update this file and the restoration journal; keep the next action small enough for a single shared review.

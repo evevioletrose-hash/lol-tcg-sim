@@ -23,6 +23,11 @@ Keep existing 333 x 442 card footprint and gameplay node paths. New plum frame, 
 
 At 3dcb612 all ten validation/regression commands exited 0, including LOL_BB_PRESENTATION cards=161 failures=0. Actual Pop Heart front/back screenshots approved by owner. Retain the composition as the baseline for V3. Actual small-window sizing, long-text GUI readability and gameplay interaction still need review; no claim that these are fully verified.
 
-## V3: Card family (pending local acceptance)
+## V3: Card family (automated core verified)
 
 Extract approved B.B. cream power panel to reusable power_panel.tscn without changing its portrait placement or field paths. Item and Surprise use the same panel/frame/footer, reserved artwork, mint Item badge and amber Surprise timing badge. Surprise preview shows actual printed phase text (blank explicitly not catalogued), not the legacy enum fallback; rules semantics unchanged. Place shares item name/effect binding and frame components, native 436 x 331 face with artwork left, power right and footer below. Portrait back rotated 90 degrees with Place rather than inventing a distinct identifying back. Workshop fits preview width uniformly, including live Archivist drafts. Legacy board Place spawning remains blocked pending gameplay rules. Artwork workflow unchanged. New --card-family-test covers all typed records and checks fields, orientation, width, overlap, flips and timing; smoke and artwork tests now require Place previews. Expected artwork counts 1 available, 310 placeholders, 0 unsupported at current catalogue. Actual rendering, text fit and small viewport review pending; no gameplay or profile changes.
+
+
+### V3 local acceptance
+
+At 429e65c all eleven validation/regression commands exited 0. LOL_CARD_FAMILY counts={ "B.B.": 161, "Surprise": 75, "Item": 70, "Place": 5 } failures=0; artwork now reports zero unsupported typed records. Clean working tree. Graphical inspection of the new types is still outstanding, as are small-window and long-text readability checks and gameplay integration. Proceed incrementally toward optional 3D preview without altering the catalogue or artwork workflow.
