@@ -4,6 +4,17 @@ extends Control
 var game: Game
 var preview: Card
 var selected_id: String = ""
+var archivist: bool = false
+var draft: Dictionary = {}
+var filling: bool = false
+var inputs: Dictionary = {}
+var field_rows: Dictionary = {}
+var editor_panel: VBoxContainer
+var status: Label
+var save_button: Button
+var revert_button: Button
+var close_dialog: ConfirmationDialog
+const INCOMPLETE_FILTER = 100
 
 @onready var search: LineEdit = $Margin/Layout/Body/Catalogue/Search
 @onready var type_filter: OptionButton = $Margin/Layout/Body/Catalogue/TypeFilter
@@ -12,8 +23,9 @@ var selected_id: String = ""
 @onready var preview_holder: Control = $Margin/Layout/Body/Inspection/Preview
 @onready var details: RichTextLabel = $Margin/Layout/Body/Inspection/Details
 
-func setup(source: Game) -> void:
+func setup(source: Game, edit_mode: bool = false) -> void:
 	game = source
+	archivist = edit_mode
 	get_viewport().size_changed.connect(_sync_viewport_layout)
 	_sync_viewport_layout()
 	type_filter.add_item("All types", 0)
@@ -21,6 +33,9 @@ func setup(source: Game) -> void:
 	type_filter.add_item("Item", Game.Card_Types.Item + 1)
 	type_filter.add_item("Surprise", Game.Card_Types.Surprise + 1)
 	type_filter.add_item("Place", Game.Card_Types.Place + 1)
+	if archivist:
+		type_filter.add_item("Incomplete slots", INCOMPLETE_FILTER)
+		build_editor()
 	type_filter.select(0)
 	search.text_changed.connect(_on_search_changed)
 	type_filter.item_selected.connect(_on_filter_changed)
@@ -55,7 +70,14 @@ func _on_filter_changed(_index: int) -> void:
 	refresh_list()
 
 func _on_card_selected(index: int) -> void:
-	show_card(str(cards.get_item_metadata(index)))
+	var id = str(cards.get_item_metadata(index))
+	if archivist and is_dirty():
+		for i in range(cards.item_count):
+			if cards.get_item_metadata(i) == selected_id:
+				cards.select(i)
+				break
+		return
+	show_card(id)
 
 func type_name(value: int) -> String:
 	match value:
@@ -83,26 +105,39 @@ func phase_name(data: Dictionary) -> String:
 func refresh_list() -> void:
 	var previous_id = selected_id
 	cards.clear()
-	var ids = game.card_database.keys()
+	var ids = game.catalogue.records.keys() if archivist else game.card_database.keys()
 	ids.sort()
 	var query = search.text.strip_edges().to_lower()
 	var filter_id = type_filter.get_selected_id()
 	var selection_index = -1
 	for id in ids:
-		var data: Dictionary = game.card_database[id]
-		if filter_id > 0 and data.type != filter_id - 1:
+		var raw: Dictionary = game.catalogue.records[id]
+		var typed = game.card_database.has(id)
+		var kind = game.get_card_type(str(raw.get("type", "")))
+		if filter_id == INCOMPLETE_FILTER:
+			if typed:
+				continue
+		elif filter_id > 0 and (not typed or kind != filter_id - 1):
 			continue
-		var searchable = "%s %s %s %s %s" % [id, data.name, club_name(data), data.text, phase_name(data)]
+		var searchable = "%s %s %s %s %s" % [id, raw.name, raw.club, raw.text, raw.phase]
 		if not query.is_empty() and not searchable.to_lower().contains(query):
 			continue
-		var index = cards.add_item("%s  %s" % [id, data.name])
+		var display_name = "" if raw.name == null else str(raw.name)
+		if display_name.is_empty():
+			display_name = "(unnamed)"
+		if not typed:
+			display_name += " [incomplete]"
+		var index = cards.add_item("%s  %s" % [id, display_name])
 		cards.set_item_metadata(index, id)
 		if id == previous_id:
 			selection_index = index
-	count_label.text = "%d / %d cards" % [cards.item_count, game.card_database.size()]
+	count_label.text = "%d / %d cards" % [cards.item_count, ids.size()]
 	if cards.item_count == 0:
 		clear_preview()
 		details.text = "No matching cards."
+		if archivist:
+			draft.clear()
+			editor_panel.hide()
 		return
 	if selection_index < 0:
 		selection_index = 0
@@ -118,6 +153,9 @@ func clear_preview() -> void:
 func show_card(id: String) -> void:
 	clear_preview()
 	selected_id = id
+	if archivist:
+		load_draft(id)
+		return
 	var data: Dictionary = game.card_database[id]
 	var lines: PackedStringArray = [
 		data.name, id, type_name(data.type), "Rank: %s" % data.rank
@@ -172,9 +210,10 @@ func run_smoke_test() -> int:
 		if cards.item_count != expected:
 			failures.append("Type filter count mismatch: " + type_name(wanted))
 	type_filter.select(0)
-	search.text = "1-001"
+	var first_id = str(game.card_database.keys()[0]) if not game.card_database.is_empty() else ""
+	search.text = first_id
 	refresh_list()
-	if cards.item_count != 1 or selected_id != "1-001":
+	if not first_id.is_empty() and (cards.item_count != 1 or selected_id != first_id):
 		failures.append("Card ID search failed")
 	search.text = ""
 	refresh_list()
@@ -201,9 +240,225 @@ func run_smoke_test() -> int:
 			if preview.get_node("Card/Text/card_text").text != data.text:
 				failures.append(id + ": effect text mismatch")
 	refresh_list()
-	if counts != {"B.B.": 161, "Item": 70, "Surprise": 75, "Place": 5}:
-		failures.append("Unexpected catalogue counts")
+	if game.card_database.size() != game.catalogue.typed_count():
+		failures.append("Runtime typed count differs from canonical catalogue")
 	for failure in failures:
 		push_error(failure)
 	print("LOL_WORKSHOP counts=%s failures=%d" % [str(counts), failures.size()])
+	return 0 if failures.is_empty() else 1
+
+func build_editor() -> void:
+	$Margin/Layout/Title.text = "Dance Off / Card Archivist"
+	$Margin/Layout/Body.split_offset = 270
+	details.hide()
+	var scroll = ScrollContainer.new()
+	scroll.custom_minimum_size.x = 275
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	details.get_parent().add_child(scroll)
+	editor_panel = VBoxContainer.new()
+	editor_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(editor_panel)
+	for field in ["name", "type", "rank", "club", "style", "groove", "phase", "text"]:
+		var row = VBoxContainer.new()
+		editor_panel.add_child(row)
+		field_rows[field] = row
+		var label = Label.new()
+		label.text = "Printed effect / flavour text" if field == "text" else field.capitalize()
+		row.add_child(label)
+		if field in ["type", "club", "phase"]:
+			var choice = OptionButton.new()
+			row.add_child(choice)
+			inputs[field] = choice
+			choice.item_selected.connect(_choice_changed.bind(field))
+		elif field == "text":
+			var area = TextEdit.new()
+			area.custom_minimum_size.y = 105
+			area.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+			row.add_child(area)
+			inputs[field] = area
+			area.text_changed.connect(_effect_changed)
+		else:
+			var line = LineEdit.new()
+			row.add_child(line)
+			inputs[field] = line
+			line.text_changed.connect(_set_draft_field.bind(field))
+	status = Label.new()
+	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	editor_panel.add_child(status)
+	var buttons = HBoxContainer.new()
+	editor_panel.add_child(buttons)
+	save_button = Button.new()
+	save_button.text = "Save card"
+	save_button.pressed.connect(save_draft)
+	buttons.add_child(save_button)
+	revert_button = Button.new()
+	revert_button.text = "Revert"
+	revert_button.pressed.connect(revert_draft)
+	buttons.add_child(revert_button)
+	get_tree().auto_accept_quit = false
+	close_dialog = ConfirmationDialog.new()
+	close_dialog.title = "Discard unsaved changes?"
+	close_dialog.dialog_text = "This card has unsaved changes. Quit without saving?"
+	close_dialog.confirmed.connect(func(): get_tree().quit())
+	add_child(close_dialog)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST and archivist:
+		if is_dirty():
+			close_dialog.popup_centered()
+		else:
+			get_tree().quit()
+
+func choices_for(field: String) -> Array:
+	match field:
+		"type": return ["", "BB", "Items", "Surprise", "Place"]
+		"phase": return ["", "Any Phase", "Call your B.B.'s", "Dress Up", "Dance Off"]
+		"club":
+			var values: Array = [""]
+			for key in Game.Clubs.keys():
+				if key != "Unknown":
+					values.append(str(key).replace("_", " "))
+			return values
+	return []
+
+func load_draft(id: String) -> void:
+	draft = game.catalogue.records[id].duplicate(true)
+	filling = true
+	editor_panel.show()
+	for field in inputs:
+		var value = "" if draft[field] == null else str(draft[field])
+		var control = inputs[field]
+		if control is OptionButton:
+			control.clear()
+			var options = choices_for(field)
+			if not value in options:
+				options.append(value)
+			for option in options:
+				control.add_item("(unknown / blank)" if option == "" else option)
+				control.set_item_metadata(control.item_count - 1, option)
+			control.select(options.find(value))
+		else:
+			control.text = value
+	filling = false
+	update_draft()
+
+func _choice_changed(index: int, field: String) -> void:
+	_set_draft_field(str(inputs[field].get_item_metadata(index)), field)
+
+func _effect_changed() -> void:
+	_set_draft_field(inputs["text"].text, "text")
+
+func _set_draft_field(value: String, field: String) -> void:
+	if filling or draft.is_empty():
+		return
+	draft[field] = value
+	update_draft()
+
+func is_dirty() -> bool:
+	return not selected_id.is_empty() and not draft.is_empty() and draft != game.catalogue.records.get(selected_id)
+
+func update_draft() -> void:
+	var dirty = is_dirty()
+	var problem = game.catalogue.validate_edit(selected_id, draft)
+	save_button.disabled = not dirty or not problem.is_empty()
+	revert_button.disabled = not dirty
+	search.editable = not dirty
+	type_filter.disabled = dirty
+	cards.mouse_filter = Control.MOUSE_FILTER_IGNORE if dirty else Control.MOUSE_FILTER_STOP
+	cards.focus_mode = Control.FOCUS_NONE if dirty else Control.FOCUS_ALL
+	field_rows["club"].visible = draft.type == "BB"
+	field_rows["style"].visible = draft.type == "BB"
+	field_rows["groove"].visible = draft.type == "BB"
+	field_rows["phase"].visible = draft.type == "Surprise"
+	status.text = selected_id + (" / Unsaved: save or revert to switch cards" if dirty else " / Saved record")
+	if not problem.is_empty():
+		status.text += "\n" + problem
+	if is_instance_valid(preview):
+		preview.free()
+	preview = null
+	var projected = game.project_card_data(game.catalogue.legacy_row(draft), false)
+	if projected.is_empty():
+		status.text += "\nIncomplete definition: name and type needed for preview."
+	elif projected.type == Game.Card_Types.Place:
+		status.text += "\nPlace preview not implemented yet."
+	else:
+		preview = game.spawn_card_definition(projected, preview_holder)
+		if is_instance_valid(preview):
+			preview.set_anchors_preset(Control.PRESET_TOP_LEFT)
+			preview.position = Vector2.ZERO
+			preview.size = Vector2(333, 442)
+			preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
+			preview.rank_ui.text = "?" if draft.rank == null or draft.rank == "" else str(draft.rank)
+
+func save_draft() -> void:
+	if not is_dirty():
+		return
+	var problem = game.catalogue.save_record(selected_id, draft)
+	if not problem.is_empty():
+		status.text = problem
+		return
+	game.refresh_card_definition(selected_id)
+	# Keep the saved card selected if a type change would hide it.
+	search.text = ""
+	type_filter.select(0)
+	refresh_list()
+	status.text = selected_id + " / Saved to catalogue"
+
+func revert_draft() -> void:
+	if not selected_id.is_empty():
+		load_draft(selected_id)
+
+func run_editor_test() -> int:
+	var failures: Array[String] = []
+	if cards.item_count != game.catalogue.records.size():
+		failures.append("All-slot listing mismatch")
+	type_filter.select(type_filter.item_count - 1)
+	refresh_list()
+	if cards.item_count != game.catalogue.records.size() - game.card_database.size():
+		failures.append("Incomplete filter mismatch")
+	type_filter.select(0)
+	search.text = "1-055"
+	refresh_list()
+	if selected_id != "1-055":
+		failures.append("Incomplete search failed")
+		return 1
+	var original: Dictionary = game.catalogue.records[selected_id].duplicate(true)
+	var original_dir: String = game.catalogue.card_dir
+	var fixture = "user://catalogue-test-" + str(Time.get_ticks_usec()) + "/"
+	if DirAccess.make_dir_recursive_absolute(fixture) != OK:
+		push_error("Cannot create test fixture")
+		return 1
+	var id = selected_id
+	var path = fixture.path_join(id + ".json")
+	if DirAccess.copy_absolute(original_dir.path_join(id + ".json"), path) != OK:
+		push_error("Cannot copy test fixture")
+		return 1
+	game.catalogue.card_dir = fixture
+	_set_draft_field("Items", "type")
+	_set_draft_field("2", "rank")
+	if not is_dirty() or preview == null or game.card_database.has(id):
+		failures.append("Draft preview or isolation failed")
+	_set_draft_field("bad", "rank")
+	if not save_button.disabled:
+		failures.append("Invalid rank accepted")
+	revert_draft()
+	if is_dirty() or draft != original:
+		failures.append("Revert failed")
+	_set_draft_field("Items", "type")
+	_set_draft_field("2", "rank")
+	save_draft()
+	if is_dirty() or not game.card_database.has(id) or game.catalogue.read_json(path) != game.catalogue.records[id]:
+		failures.append("Save/reload or runtime projection failed")
+	# Restore the real catalogue path, then reload original records.
+	game.catalogue.card_dir = original_dir
+	game.load_cardlist()
+	refresh_list()
+	DirAccess.remove_absolute(path)
+	DirAccess.remove_absolute(fixture)
+	if game.catalogue.records[id] != original:
+		failures.append("Canonical record unexpectedly changed")
+	for failure in failures:
+		push_error(failure)
+	print("LOL_ARCHIVIST slots=%d failures=%d" % [game.catalogue.records.size(), failures.size()])
 	return 0 if failures.is_empty() else 1

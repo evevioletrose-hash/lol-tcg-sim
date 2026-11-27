@@ -6,6 +6,7 @@ const CARD_DIR = "res://data/cards/"
 const FIELDS = ["id", "name", "type", "rank", "style", "groove", "text", "club", "phase"]
 const KNOWN_TYPES = ["BB", "Items", "Surprise", "Place"]
 
+var card_dir: String = CARD_DIR
 var records: Dictionary = {}
 var errors: Array[String] = []
 
@@ -39,7 +40,7 @@ func load_records() -> bool:
 		if pattern.search(id) == null or records.has(id):
 			errors.append("Invalid or duplicate card ID: " + id)
 			continue
-		var record = read_json(CARD_DIR + id + ".json")
+		var record = read_json(card_dir + id + ".json")
 		if not record is Dictionary or record.get("id") != id:
 			errors.append("Missing record or ID mismatch: " + id)
 			continue
@@ -74,3 +75,54 @@ func typed_count() -> int:
 		if is_typed(record):
 			count += 1
 	return count
+
+# Accept partial transcriptions. Preserve unknown values.
+func validate_edit(id: String, record: Dictionary) -> String:
+	if not records.has(id) or record.get("id") != id:
+		return "Card identity cannot change."
+	for field in FIELDS:
+		if not record.has(field) or (record[field] != null and not record[field] is String):
+			return "Invalid field: " + field
+	var kind = record.get("type")
+	if kind != null and kind != "" and not kind in KNOWN_TYPES:
+		return "Unknown card type."
+	var rank = record.get("rank")
+	if rank != null and not rank in ["", "?", "1", "2", "3"]:
+		return "Rank must be 1, 2, 3, ? or blank."
+	for field in ["style", "groove"]:
+		var value = record[field]
+		if value != null and not value in ["", "?", "."]:
+			if not value.is_valid_int() or int(value) < 0:
+				return field.capitalize() + " must be nonnegative, ?, . or blank."
+	return ""
+
+func save_record(id: String, record: Dictionary) -> String:
+	var problem = validate_edit(id, record)
+	if not problem.is_empty():
+		return problem
+	if record == records[id]:
+		return ""
+	if card_dir.begins_with("res://") and not OS.has_feature("editor"):
+		return "Catalogue editing requires the Godot editor build."
+	var path = card_dir.path_join(id + ".json")
+	var disk = read_json(path)
+	if not disk is Dictionary or disk != records[id]:
+		return "File changed outside the workshop. Restart and reconcile before saving."
+	var temporary = path + ".tmp-" + str(Time.get_ticks_usec())
+	var file = FileAccess.open(temporary, FileAccess.WRITE)
+	if file == null:
+		return "Cannot write temporary card file."
+	file.store_string(JSON.stringify(record, "\t", false) + "\n")
+	file.flush()
+	var write_error = file.get_error()
+	file.close()
+	var reread = read_json(temporary)
+	if write_error != OK or not reread is Dictionary or reread != record:
+		DirAccess.remove_absolute(temporary)
+		return "Temporary write verification failed."
+	var result = DirAccess.rename_absolute(temporary, path)
+	if result != OK:
+		DirAccess.remove_absolute(temporary)
+		return "Could not replace card file: " + error_string(result)
+	records[id] = record.duplicate(true)
+	return ""

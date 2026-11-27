@@ -54,3 +54,7 @@ LOL_WORKSHOP counts={ "B.B.": 161, "Surprise": 75, "Item": 70, "Place": 5 } fail
 ```
 
 Migration verifier, editor import, and workshop test all exited 0. Expected untyped warnings for 1-055 and 1-244. Only untracked file: Godot-generated src/cards/card_catalogue.gd.uid; preserve via local commit. A1 is sealed; A2 is next. Graphical layout after migration has not been separately re-tested.
+
+## A2: Archivist editor (implementation pending local acceptance)
+
+Launch with `-- --catalogue-editor` in the Godot editor build. Normal startup remains read-only. All numbered slots are searchable; incomplete filter shows slots without runtime definitions. Drafts update preview using the shared factory without altering runtime data, save/revert unlocks navigation, closing prompts before discarding. Saves validate fields, detect changed disk records, write a temporary sibling and replace the original without deleting it first. Partial transcriptions remain legal; hidden type-specific fields are preserved. A test uses a disposable user:// copy of 1-055, not real catalogue data. Run `-- --catalogue-editor-test` and the original `-- --card-workshop-test`. Verify actual UI and Windows replacement behavior before checking off A2. Verification metadata and external reconciliation remain A3; profile data remains separate.

@@ -122,29 +122,29 @@ func get_game_phase(game_phase) -> Game_Phases:
 			return Game_Phases.Dance_Off
 	return Game_Phases.Any_Phase
 
-func add_card_db(card_data):
+func project_card_data(card_data, warn: bool = true) -> Dictionary:
 	# Some numbered rows are placeholders; the final B.B. row has no phase column.
 	if card_data.size() < 8:
-		if not card_data.is_empty() and not card_data[0].strip_edges().is_empty():
+		if warn and not card_data.is_empty() and not card_data[0].strip_edges().is_empty():
 			push_warning("Incomplete card row: " + card_data[0])
-		return
+		return {}
 	var card_number = card_data[0].strip_edges()
 	var card_name = card_data[1].strip_edges()
 	if card_name.is_empty():
-		return
+		return {}
 	if not card_number.contains("-"):
-		push_warning("Invalid card number: " + card_number)
-		return
+		if warn:
+			push_warning("Invalid card number: " + card_number)
+		return {}
 	var card_type = get_card_type(card_data[2].strip_edges())
 	if card_type == Card_Types.Unknown:
-		push_warning("Unknown card type for " + card_number)
-		return
+		if warn:
+			push_warning("Unknown card type for " + card_number)
+		return {}
 	if card_type == Card_Types.Surprise and card_data.size() < 9:
-		push_warning("Missing Surprise phase: " + card_number)
-		return
-	if card_database.has(card_number):
-		push_warning("Duplicate card number: " + card_number)
-		return
+		if warn:
+			push_warning("Missing Surprise phase: " + card_number)
+		return {}
 
 	var card_data_object = {
 		"number": card_number,
@@ -164,7 +164,18 @@ func add_card_db(card_data):
 	elif card_type == Card_Types.Surprise:
 		card_data_object.phase = get_game_phase(card_data[8].strip_edges())
 
-	card_database[card_number] = card_data_object
+	return card_data_object
+
+func add_card_db(card_data):
+	var data = project_card_data(card_data)
+	if not data.is_empty():
+		card_database[data.number] = data
+
+func refresh_card_definition(id: String) -> void:
+	card_database.erase(id)
+	var data = project_card_data(catalogue.legacy_row(catalogue.records[id]), false)
+	if not data.is_empty():
+		card_database[id] = data
 
 func load_cardlist():
 	card_database.clear()
@@ -212,6 +223,9 @@ func spawn_card(card_number : String, presentation_parent: Node = null) -> Card:
 		push_warning("Unknown card number: " + card_number)
 		return null
 	
+	return spawn_card_definition(card_data, presentation_parent)
+
+func spawn_card_definition(card_data: Dictionary, presentation_parent: Node = null) -> Card:
 	var card_object : Card
 	match card_data.type:
 		Card_Types.BB:
@@ -221,7 +235,7 @@ func spawn_card(card_number : String, presentation_parent: Node = null) -> Card:
 		Card_Types.Item:
 			card_object = load("res://src/cards/Item.tscn").instantiate()
 		_:
-			push_warning("No card scene for " + card_number)
+			push_warning("No card scene for " + str(card_data.number))
 			return null
 	if presentation_parent == null:
 		presentation_parent = self
@@ -229,7 +243,7 @@ func spawn_card(card_number : String, presentation_parent: Node = null) -> Card:
 	card_object.populate(card_data)
 	return card_object
 	
-func open_library():
+func open_library(archivist: bool = false):
 	board.hide()
 	infobox.hide()
 	context.hide()
@@ -245,5 +259,5 @@ func open_library():
 	ui_layer.layer = 10
 	add_child(ui_layer)
 	ui_layer.add_child(library)
-	library.setup(self)
+	library.setup(self, archivist)
 	return library
