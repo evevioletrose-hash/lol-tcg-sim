@@ -43,3 +43,10 @@ Even a name or introduction would be enormously appreciated. Thank you for your 
 
 ## Outreach log
 No messages sent. For future entries record date, channel, recipient's professional role, request, response, consent to quote, and next action. Do not publish private correspondence without permission.
+
+## Additional public professional leads / scope
+- [Santi Jaramillo, reported by BetaKit](https://betakit.com/dapper-labs-makes-investment-in-web3-gaming-company-gameon/): joined Ioconic in 2022 after leading product at GameOn. Potential organizational introduction, not credited on Dance Off.
+- [Joao Barao professional profile](https://ca.linkedin.com/in/joaobarao): public posts associated with Ioconic hiring for games, later than the 2021 launch; project association not established.
+- [Patrick Panella portfolio](https://www.patrickpanella.dev/): Ioconic Unreal engineering Oct 2023–Feb 2024 on an unnamed game. Not evidence Dance Off used Unreal. Low-priority referral lead only.
+- [Total Licensing partnership coverage](https://www.totallicensing.com/ioconic-teams-with-mga-for-nft-and-collectibles-for-l-o-l-surprise/) attributes platform development to Ioconic but names no implementing studio. Contemporary [Christie's speaker biography](https://www.christies.com/exhibitions/art-tech-nfts-and-beyond-speakers) confirms Jamie Lewis's licensing background, not game-design authorship.
+- Avoid treating generic eBay 'Illustrator: Match' metadata as an actual artist credit. No substantiated designer, contractor, engine, app package, launch URL or client binary found in this search. No outreach sent.

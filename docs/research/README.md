@@ -11,6 +11,8 @@ Independent preservation and simulator research. This is the shared reference, n
 | [Visual evidence](visual-evidence.md) | Four video sources, screen atlas, asset associations and timestamps |
 | [Economy and products](economy.md) | Prices, packs, rewards, trading, upgrades, NFT gallery |
 | [Development](development.md) | Practical implementation implications, client hunt and edition boundaries |
+| [Extended collection](extended-collection.md) | Copag, FIFA crossovers and all 89 baseline missing-card leads |
+| [Artwork](artwork.md) | Original asset crosswalk and reconstruction constraints |
 | [History and reception](history.md) | Launch, localizations, public reception, retirement evidence |
 | [People and outreach](outreach.md) | Professional leads and questions for original developers |
 | [Evidence data](evidence/README.md) | Card fact projection, capture indexes, provenance and combat fixtures |
