@@ -60,10 +60,10 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 
 ## P — Profiles and two collections
 
-### P1 — Profile foundation (implemented, pending local verification)
-- [ ] Versioned profile storage under user://profiles/; default profile, create/switch profiles, safe save/load and backup/recovery.
-- [ ] Shared inventory operations keyed by stable card ID: count, add, remove, validate nonnegative quantities; handle unknown IDs without losing data.
-- [ ] Test two profiles and persistence across restart; no res:// changes.
+### P1 — Profile foundation (core verified)
+- [x] Versioned profile storage under user://profiles/; default profile, create/switch profiles, safe save/load and backup/recovery.
+- [x] Shared inventory operations keyed by stable card ID: count, add, remove, validate nonnegative quantities; handle unknown IDs without losing data.
+- [x] Two-profile fixture test passed; owner verified graphical creation/switching and active profile persistence across process restart. No res:// data changes.
 
 ### P2 — Physical collection
 - [ ] Track real card quantities independently of digital inventory; fast increment/decrement and completion filters.
@@ -123,7 +123,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 1. A1: schema + lossless migration (verified).
 2. A2: editable workshop + save/reload (core verified; manual edge checks remain).
 3. A3a: import reconciliation (core verified); A3b: provenance and verification (core verified).
-4. P1: profile foundation (next); P2–P3: independent collections.
+4. P1: profile foundation (core verified); P2: physical collection (next); P3: in-game collection.
 5. Choose the next slice together (presentation, deck building or test pack). Rules work remains independent and may be interleaved in small checkpoints.
 
 At the end of each checkpoint: update this file and the restoration journal; keep the next action small enough for a single shared review.

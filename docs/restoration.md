@@ -102,10 +102,14 @@ LOL_PROVENANCE edition=tabletop failures=0
 
 All five commands exited 0. Working tree clean. Only expected untyped warnings for 1-055 and 1-244. Automated A3b acceptance complete; manual provenance UI and earlier reconciliation/cancel edge checks remain. No claims of actual physical verification. P1 next; preserve namespace and ownership independence.
 
-## P1: Profile foundation (pending local acceptance)
+## P1: Profile foundation (core verified)
 
 Independent versioned local profile store, default and named profiles, active pointer, separate physical and earned-in-game collections with edition-qualified keys, count/add/remove/adjust, preserved unknown IDs, verified temporary saves and previous-valid backups. Normal workshop profile selector/create controls; no profile writes from developer archivist or catalogue tests. Disposable --profile-test covers isolation, fresh-instance reload, stale session, recovery and refusal to reset corrupt files. Actual process restart and graphical review pending. See profile-schema.md. No quantity editing UI, deck implementation, account system or cross-file atomic guarantee yet.
 
 ### P1 first local run and corrective patch
 
 At d46b059, owner reported editor import, structural validation and all four catalogue Godot tests exit 0; profile-test exit 1 at temporary verification of default physical_collection.json. Normal workshop profile field disabled because initialization failed. Suspected Godot JSON numeric type mismatch in dictionary equality; normalize schema version and nested counts to integers before comparing. Split write vs schema vs round-trip error diagnostics. Resume interrupted empty default creation conservatively (no active pointer/identity, only valid empty inventory snapshots and no deck contents), without deleting files. Profile test now starts from interrupted default creation with one valid empty inventory; named profile tests fresh creation. Full visible initialization error and warning in normal workshop. Owner must rerun profile test and graphical creation/switch/restart; P1 remains pending.
+
+### P1 local acceptance evidence
+
+Owner-supplied Godot 4.8.beta5 log at 74674d8: LOL_PROFILES profiles=2 namespaces=2 failures=0, exit 0. Owner confirmed graphical profile creation and switching, and active profile persists after closing/reopening. The d46b059 run had editor import, structural validation and all four catalogue tests exit 0 before the initial profile-save failure; the corrective patch was tested with the targeted profile test, not a repeat of the full catalogue suite. Two new script UID files were untracked at acceptance and owner instructed to commit them. No canonical card edits. P1 core accepted; P2 next. Single-writer design, manual recovery limits and no deletion/rename UI remain documented in profile-schema.md.
