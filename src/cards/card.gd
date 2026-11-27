@@ -6,6 +6,11 @@ var setNum : int
 var number : int
 var card_name : String
 var artwork : String
+var artwork_status: String = "unmapped"
+var artwork_panel: ColorRect
+var artwork_texture: TextureRect
+var artwork_placeholder: Label
+const ArtworkResolver = preload("res://src/cards/card_artwork.gd")
 var rank : int
 var text : String
 var club : Game.Clubs
@@ -38,10 +43,33 @@ func populate(data):
 	rank = data.rank
 	text = data.text
 	type = data.type
+	bind_artwork(str(data.get("edition", "tabletop")))
 	
 	if data.get("club") != null:
 		club = data.club
 	
+# Shared artwork aperture for the existing card faces. Layout refinements are V2/V3.
+func bind_artwork(edition: String = "tabletop") -> void:
+	artwork_panel = get_node("Card/img/Artwork")
+	artwork_texture = artwork_panel.get_node("Texture")
+	artwork_placeholder = artwork_panel.get_node("Placeholder")
+	artwork_panel.position = Vector2(10, 58)
+	artwork_panel.size = Vector2(310, 218)
+	match type:
+		Game.Card_Types.BB:
+			artwork_panel.position.y = 76
+			artwork_panel.size.y = 200
+		Game.Card_Types.Surprise:
+			artwork_panel.size.y = 245
+	var resolved = ArtworkResolver.resolve(edition, catalogue_id)
+	artwork = resolved.path
+	artwork_status = resolved.status
+	artwork_texture.texture = resolved.texture
+	artwork_texture.visible = resolved.texture != null
+	artwork_placeholder.visible = resolved.texture == null
+	artwork_placeholder.text = "Artwork unavailable" if artwork_status == "missing_resource" else "Artwork not yet catalogued"
+	artwork_panel.visible = face_up
+
 func update_cardtext():
 	rank_ui.text = str(rank)
 	cardnum_ui.text = catalogue_id
@@ -53,6 +81,8 @@ func set_face(up = true):
 	else:
 		cardback_ui.visible = true
 		face_up = false
+	if is_instance_valid(artwork_panel):
+		artwork_panel.visible = face_up
 
 func highlight():
 	if(!selected):

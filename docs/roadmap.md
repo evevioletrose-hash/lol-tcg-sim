@@ -79,7 +79,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 
 ## V — Card presentation vertical slice
 
-- [ ] V1: Assign actual available artwork by stable ID; graceful placeholder, no invented art or card stats.
+- [ ] V1: Artwork resolver, shared aperture and missing-art fallback implemented; pending local verification. Explicit tabletop ID binding for existing 1-001.jpg; no invented art or card stats.
 - [ ] V2: Make one beautiful B.B. using shared components (Pop Heart); typography, readable text, Style/Groove iconography and card back.
 - [ ] V3: Support Item, Surprise and landscape Place layouts, retaining existing scene reuse where sensible.
 - [ ] V4: Inspect original 3D card, bind its printed fields to the catalogue, and provide optional 2D/3D workshop preview for supported assets.

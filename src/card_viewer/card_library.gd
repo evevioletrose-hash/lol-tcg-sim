@@ -243,6 +243,8 @@ func show_card(id: String) -> void:
 			preview.position = Vector2.ZERO
 			preview.size = Vector2(333, 442)
 			preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
+			lines.append("")
+			lines.append("Artwork: " + ("available" if preview.artwork_status == "available" else "not available"))
 	details.text = "\n".join(lines)
 	if not collection_kind.is_empty():
 		_update_collection_selection()
@@ -522,6 +524,7 @@ func update_draft() -> void:
 			preview.size = Vector2(333, 442)
 			preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
 			preview.rank_ui.text = "?" if draft.rank == null or draft.rank == "" else str(draft.rank)
+			status.text += "\nArtwork: " + preview.artwork_status
 
 func save_draft() -> void:
 	if not is_dirty():
@@ -1271,4 +1274,66 @@ func run_digital_collection_test() -> int:
 	for failure in failures:
 		push_error(failure)
 	print("LOL_DIGITAL slots=%d failures=%d" % [game.catalogue.records.size(), failures.size()])
+	return 0 if failures.is_empty() else 1
+
+func run_artwork_test() -> int:
+	var failures: Array[String] = []
+	var resolver = preload("res://src/cards/card_artwork.gd")
+	var sample_path = "res://assets/card arts/1-001.jpg"
+	var sample: Dictionary = resolver.resolve("tabletop", "1-001")
+	if sample.path != sample_path or sample.status != "available" or not sample.texture is Texture2D:
+		failures.append("Pop Heart artwork failed to resolve; import the existing JPEG")
+	if resolver.path_for("digital", "1-001") != "" or resolver.path_for("tabletop", "../1-001") != "":
+		failures.append("Artwork identity isolation")
+	if resolver.load_texture("res://assets/card arts/__missing_artwork_fixture__.png") != null:
+		failures.append("Missing texture did not return null")
+	var available = 0
+	var placeholders = 0
+	var unsupported = 0
+	for id in game.card_database:
+		show_card(id)
+		if game.card_database[id].type == Game.Card_Types.Place:
+			unsupported += 1
+			if preview != null:
+				failures.append(id + ": unexpected Place preview")
+			continue
+		if preview == null:
+			failures.append(id + ": missing card scene")
+			continue
+		var expected: Dictionary = resolver.resolve("tabletop", id)
+		if preview.artwork != expected.path or preview.artwork_status != expected.status:
+			failures.append(id + ": artwork identity mismatch")
+		if preview.artwork_texture.texture != expected.texture:
+			failures.append(id + ": texture binding mismatch")
+		if expected.texture == null:
+			placeholders += 1
+			if not preview.artwork_placeholder.visible or preview.artwork_texture.visible:
+				failures.append(id + ": missing artwork fallback not visible")
+		else:
+			available += 1
+			if preview.artwork_placeholder.visible or not preview.artwork_texture.visible:
+				failures.append(id + ": valid texture not visible")
+		if preview.artwork_panel.size.x <= 0 or preview.artwork_panel.size.y <= 0:
+			failures.append(id + ": invalid artwork aperture")
+	# Reuse one live B.B. scene to exercise clearing the previous card's texture.
+	show_card("1-001")
+	if preview != null:
+		preview.set_face(false)
+		if preview.artwork_panel.visible:
+			failures.append("Face-down artwork leaked")
+		preview.set_face(true)
+		if not preview.artwork_panel.visible:
+			failures.append("Face-up artwork did not return")
+		if game.card_database.has("1-400"):
+			preview.populate(game.card_database["1-400"])
+			var rare: Dictionary = resolver.resolve("tabletop", "1-400")
+			if preview.artwork_texture.texture != rare.texture or preview.artwork_placeholder.visible != (rare.texture == null):
+				failures.append("Repopulation retained stale artwork")
+			preview.populate(game.card_database["1-001"])
+			if preview.artwork_texture.texture != sample.texture:
+				failures.append("Repopulation failed to restore original artwork")
+	refresh_list()
+	for failure in failures:
+		push_error(failure)
+	print("LOL_ARTWORK available=%d placeholders=%d unsupported=%d failures=%d" % [available, placeholders, unsupported, failures.size()])
 	return 0 if failures.is_empty() else 1
