@@ -166,6 +166,10 @@ Owner log at 23ae46c reports card-family-test and card-3d-test exit 0, LOL_3D_PR
 
 Owner log at 29eac6b (Godot 4.8.beta5): LOL_LIVE_ART card=1-001 meshes=5 source=res://assets/3d/MERGED_popheart.blend (two inspector opens); LOL_3D_PREVIEW types=4 failures=0; exit 0; clean working tree. Owner confirmed live character renders in GUI. Targeted acceptance only, no full regression after live-art patch or fallback import, broad rendering/performance or export verification. Operation Glitter proof of concept complete; owner requested return to restoration. Defer V5 and broader art workflow. Portable CardObject3D and ModelArtView remain in this repo, no FPS integration. D1 profile-local deck storage and composition summary proposed next; no deck implementation yet.
 
-## D1: Named deck drafts (pending local acceptance)
+## D1: Named deck drafts (core verified)
 
 ProfileStore optional decks/index.json, same verified replacement/backup and stale expected snapshot guard as inventory; no changes to existing profiles required. Deck Builder mode reuses catalogue and preview, profile-local selector, creation/rename, add/remove copies, weighted type/club and known rank summary. No legality or ownership enforcement yet. Unknown edition-qualified keys retained; incomplete definitions not addable through typed browser. --deck-test exercises disposable profiles and snapshot writes, UI handlers and summary. GUI sizing, corrupt index recovery and full regression pending. No canonical data or research changes.
+
+### D1 acceptance
+
+Owner log at 5a93af3: structural validator and all twelve Godot regression commands exit 0, LOL_DECKS profiles=2 failures=0, LOL_3D_PREVIEW types=4 failures=0, live model five meshes, clean working tree. Only expected unknown-type warnings. Owner created a deck in the GUI and approved core workflow; actual process restart not explicitly confirmed, deck-specific corrupt-index fault injection and small-window sizing outstanding. Owner observes UI becoming heavy and explicitly defers redesign because the workbench currently combines numerous subsystems. Preserve functional workbench; later split screens and extract reusable widgets, not state. D2 ownership modes next. No runtime changes in acceptance commit.
