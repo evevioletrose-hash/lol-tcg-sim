@@ -1,4 +1,4 @@
-extends Node
+extends Control
 class_name Card
 
 var catalogue_id: String

@@ -111,12 +111,11 @@ func show_card(id: String) -> void:
 		lines.append("Place preview not implemented yet.")
 	else:
 		preview = game.spawn_card(id, preview_holder)
-		if preview is Control:
-			var visual = preview as Control
-			visual.set_anchors_preset(Control.PRESET_TOP_LEFT)
-			visual.position = Vector2.ZERO
-			visual.size = Vector2(333, 442)
-			visual.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if is_instance_valid(preview):
+			preview.set_anchors_preset(Control.PRESET_TOP_LEFT)
+			preview.position = Vector2.ZERO
+			preview.size = Vector2(333, 442)
+			preview.get_node("Button").mouse_filter = Control.MOUSE_FILTER_IGNORE
 	details.text = "\n".join(lines)
 
 func run_smoke_test() -> int:

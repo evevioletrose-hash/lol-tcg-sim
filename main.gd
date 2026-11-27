@@ -39,5 +39,9 @@ func _ready() -> void:
 
 	var library = game.open_library()
 	if "--card-workshop-test" in OS.get_cmdline_user_args():
+		if library == null or not library.has_method("run_smoke_test"):
+			push_error("LOL_WORKSHOP initialization failed")
+			get_tree().quit(1)
+			return
 		get_tree().quit(library.run_smoke_test())
 	# game.initialize_game(item_deck, sample_deck)

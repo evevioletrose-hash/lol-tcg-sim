@@ -228,6 +228,10 @@ func open_library():
 	context.hide()
 	get_node("phasetext").hide()
 	var library = load("res://src/card_viewer/card_library.tscn").instantiate()
+	if not library.has_method("setup"):
+		library.free()
+		push_error("Could not initialize card library script")
+		return null
 	add_child(library)
 	library.setup(self)
 	return library
