@@ -28,6 +28,9 @@ var item_deck = [
 	"1-313",
 ]
 func _ready() -> void:
+	if "--profile-test" in OS.get_cmdline_user_args():
+		get_tree().quit(preload("res://src/profiles/profile_store_test.gd").new().run())
+		return
 	var game = preload("res://src/game.tscn").instantiate()
 	add_child(game)
 	game.load_cardlist()
@@ -67,5 +70,7 @@ func _ready() -> void:
 		else:
 			get_tree().quit(library.run_editor_test() if editor_test else library.run_smoke_test())
 	else:
+		if not archivist:
+			library.attach_profiles(preload("res://src/profiles/profile_store.gd").new())
 		library.report_layout()
 	# game.initialize_game(item_deck, sample_deck)

@@ -20,6 +20,10 @@ var sheet_status: Label
 var verification_filter: OptionButton
 var verification_input: OptionButton
 var source_input: LineEdit
+var profile_store
+var profile_selector: OptionButton
+var profile_name: LineEdit
+var profile_status: Label
 const TYPED_FILTER = 101
 const Reconciliation = preload("res://src/cards/catalogue_reconciliation.gd")
 const ReconciliationWindow = preload("res://src/card_viewer/reconciliation_window.gd")
@@ -733,3 +737,71 @@ func run_provenance_test() -> int:
 		push_error(failure)
 	print("LOL_PROVENANCE edition=tabletop failures=%d" % failures.size())
 	return 0 if failures.is_empty() else 1
+
+# Player profiles are intentionally absent from the developer archivist.
+func attach_profiles(store) -> void:
+	profile_store = store
+	var layout = $Margin/Layout
+	var toolbar = HBoxContainer.new()
+	layout.add_child(toolbar)
+	layout.move_child(toolbar, 1)
+	var label = Label.new()
+	label.text = "Collector"
+	toolbar.add_child(label)
+	profile_selector = OptionButton.new()
+	profile_selector.custom_minimum_size.x = 150
+	profile_selector.item_selected.connect(_profile_selected)
+	toolbar.add_child(profile_selector)
+	profile_name = LineEdit.new()
+	profile_name.placeholder_text = "New profile name"
+	profile_name.max_length = 64
+	profile_name.custom_minimum_size.x = 175
+	toolbar.add_child(profile_name)
+	var create = Button.new()
+	create.text = "Create profile"
+	create.pressed.connect(_create_profile)
+	toolbar.add_child(create)
+	profile_status = Label.new()
+	profile_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	profile_status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	toolbar.add_child(profile_status)
+	var problem: String = profile_store.initialize()
+	if not problem.is_empty():
+		profile_status.text = problem
+		profile_status.tooltip_text = problem
+		profile_selector.disabled = true
+		profile_name.editable = false
+		create.disabled = true
+		return
+	_refresh_profiles()
+
+func _refresh_profiles(message: String = "") -> void:
+	profile_selector.clear()
+	var active_index = -1
+	for entry in profile_store.list_profiles():
+		profile_selector.add_item(entry.name)
+		var index = profile_selector.item_count - 1
+		profile_selector.set_item_metadata(index, entry.profile_id)
+		if entry.profile_id == profile_store.active_id:
+			active_index = index
+	profile_selector.select(active_index)
+	if message.is_empty():
+		message = "Active: " + str(profile_store.profile.get("name", ""))
+	if not profile_store.warnings.is_empty():
+		message += " | " + "; ".join(PackedStringArray(profile_store.warnings))
+	profile_status.text = message
+	profile_status.tooltip_text = message
+
+func _profile_selected(index: int) -> void:
+	var id = str(profile_selector.get_item_metadata(index))
+	var problem: String = profile_store.switch_profile(id)
+	_refresh_profiles(problem)
+
+func _create_profile() -> void:
+	var result: Dictionary = profile_store.create_profile(profile_name.text)
+	if not result.error.is_empty():
+		_refresh_profiles(result.error)
+		return
+	profile_name.clear()
+	var problem: String = profile_store.switch_profile(result.id)
+	_refresh_profiles(problem)

@@ -60,7 +60,7 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 
 ## P — Profiles and two collections
 
-### P1 — Profile foundation
+### P1 — Profile foundation (implemented, pending local verification)
 - [ ] Versioned profile storage under user://profiles/; default profile, create/switch profiles, safe save/load and backup/recovery.
 - [ ] Shared inventory operations keyed by stable card ID: count, add, remove, validate nonnegative quantities; handle unknown IDs without losing data.
 - [ ] Test two profiles and persistence across restart; no res:// changes.

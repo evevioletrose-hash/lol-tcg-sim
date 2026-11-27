@@ -101,3 +101,7 @@ LOL_PROVENANCE edition=tabletop failures=0
 ```
 
 All five commands exited 0. Working tree clean. Only expected untyped warnings for 1-055 and 1-244. Automated A3b acceptance complete; manual provenance UI and earlier reconciliation/cancel edge checks remain. No claims of actual physical verification. P1 next; preserve namespace and ownership independence.
+
+## P1: Profile foundation (pending local acceptance)
+
+Independent versioned local profile store, default and named profiles, active pointer, separate physical and earned-in-game collections with edition-qualified keys, count/add/remove/adjust, preserved unknown IDs, verified temporary saves and previous-valid backups. Normal workshop profile selector/create controls; no profile writes from developer archivist or catalogue tests. Disposable --profile-test covers isolation, fresh-instance reload, stale session, recovery and refusal to reset corrupt files. Actual process restart and graphical review pending. See profile-schema.md. No quantity editing UI, deck implementation, account system or cross-file atomic guarantee yet.
