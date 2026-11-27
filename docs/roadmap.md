@@ -79,7 +79,8 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 
 ## V — Card presentation vertical slice
 
-- [ ] V1: Artwork resolver, shared aperture and missing-art fallback implemented; pending local verification. Explicit tabletop ID binding for existing 1-001.jpg; no invented art or card stats.
+- [x] V1: Artwork resolver, shared aperture and missing-art fallback verified. Existing 1-001.jpg is a temporary full-card reference photo, not isolated artwork.
+- [ ] Actual artwork sourcing, cropping and production workflow explicitly deferred by owner; do not block layout work on it.
 - [ ] V2: Make one beautiful B.B. using shared components (Pop Heart); typography, readable text, Style/Groove iconography and card back.
 - [ ] V3: Support Item, Surprise and landscape Place layouts, retaining existing scene reuse where sensible.
 - [ ] V4: Inspect original 3D card, bind its printed fields to the catalogue, and provide optional 2D/3D workshop preview for supported assets.
@@ -125,6 +126,6 @@ A3a core verified at f388570; A3b core verified at 16a1726.
 2. A2: editable workshop + save/reload (core verified; manual edge checks remain).
 3. A3a: import reconciliation (core verified); A3b: provenance and verification (core verified).
 4. P1: profile foundation (core verified); P2: physical collection (core verified); P3: in-game collection (core verified).
-5. V1: artwork binding and fallback (proposed next), then V2: first polished B.B. presentation; review each slice together. Deck building and test packs remain available alternatives. Rules work remains independent and may be interleaved in small checkpoints.
+5. V1: artwork binding and fallback (verified); V2: first polished B.B. presentation (next, artwork workflow deferred); review each slice together. Deck building and test packs remain available alternatives. Rules work remains independent and may be interleaved in small checkpoints.
 
 At the end of each checkpoint: update this file and the restoration journal; keep the next action small enough for a single shared review.

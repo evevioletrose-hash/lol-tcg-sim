@@ -9,3 +9,7 @@ Shared Card/img/Artwork contains an aspect-preserving TextureRect and a neutral 
 To add another verified asset, import it in Godot and add an explicit edition-qualified mapping; preserve sources separately in the archive. No implicit filename search. Runtime loads use ResourceLoader; when an export preset is introduced, include these dynamically referenced artwork assets (export all resources or explicit selections), and test exported builds. There is no export verification yet.
 
 Run -- --card-artwork-test after editor import. Exercises existing supported typed scenes, known asset, wrong edition, missing path, fallbacks, visibility, face-down behavior and reuse of one card. Expected at the original catalogue: 1 available, 305 placeholders, 5 unsupported Place records. Real rendered composition, image suitability and layout remain for manual inspection. V2 will refine the first B.B. design and typography; V3 extends the design to other types, V4 3D binding, V5 finishes/animation.
+
+### Local acceptance / artwork workflow deferred
+
+At 23055ac the full regression and import passed, including LOL_ARTWORK available=1 placeholders=305 unsupported=5 failures=0. Owner screenshot shows the reference photograph of an entire physical Pop Heart card nested inside the card aperture. This is not a final art asset; owner explicitly deferred art workflow decisions. Retain this as a temporary test binding and use placeholders as needed in further layout work. No assumed extraction/cropping, replacement imagery or source claims. Exported build packaging still untested.
